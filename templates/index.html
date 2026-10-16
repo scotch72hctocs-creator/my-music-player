@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Music Player</title>
+<style>
+:root{color-scheme:dark;--bg:#090909;--panel:#171717;--line:#333;--text:#f4f4f4;--muted:#aaa;--accent:#d9d9d9}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1000px;margin:auto;padding:20px}h1{margin:0 0 6px;font-size:1.8rem}h2{font-size:1.15rem;margin:0 0 12px}p,.muted{color:var(--muted)}.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+input,select,button{font:inherit;border-radius:9px;border:1px solid #444;padding:10px;background:#0d0d0d;color:var(--text);min-width:0}
+input,select{width:100%}button{cursor:pointer;background:#292929}button:hover{background:#3a3a3a}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.row button{flex:0 0 auto}.small{font-size:.9rem}.song{border:1px solid #383838;border-radius:12px;padding:12px;margin:9px 0}.song h3{font-size:1rem;margin:0 0 5px}.song p{margin:4px 0}.song .row{margin-top:10px}.song .row button{flex:1}.pill{border:1px solid #555;border-radius:999px;padding:3px 8px;color:#ccc;font-size:.8rem}.empty{padding:16px;color:var(--muted);text-align:center}.notice{font-size:.9rem;color:#cfcfcf;line-height:1.6}a{color:#ddd}
+@media(max-width:600px){main{padding:12px}.grid{grid-template-columns:1fr}h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>♫ My Music Player</h1>
+  <p>完全無料・APIキー不要の試作版。検索はYouTubeの検索ページを開きます。</p>
+</header>
+
+<section class="panel">
+<h2>曲を検索</h2>
+<form id="searchForm">
+  <div class="grid">
+    <label>曲名・歌手・アルバムなど<input id="query" placeholder="例：宇多田ヒカル First Love" required></label>
+    <label>年代
+      <select id="decade"><option value="">指定なし</option><option>1960年代</option><option>1970年代</option><option>1980年代</option><option>1990年代</option><option>2000年代</option><option>2010年代</option><option>2020年代</option></select>
+    </label>
+    <label>ジャンル<select id="region"><option value="">邦楽・洋楽どちらも</option><option value="邦楽">邦楽</option><option value="洋楽">洋楽</option></select></label>
+  </div>
+  <div class="row" style="margin-top:10px"><button type="submit">YouTubeで検索</button></div>
+</form>
+<p class="notice">検索ボタンを押すとYouTubeの検索結果が開きます。再生はYouTubeアプリ／サイト側で行います。検索結果の自動取り込みはAPIを使わないため行わず、気に入った曲は下のフォームから登録します。</p>
+</section>
+
+<section class="panel">
+<h2>曲を登録</h2>
+<form id="addForm">
+  <div class="grid">
+    <label>曲名<input id="title" required placeholder="曲名"></label>
+    <label>歌手名<input id="artist" placeholder="歌手・バンド名"></label>
+    <label>アルバム名<input id="album" placeholder="アルバム名"></label>
+    <label>発売年<input id="year" type="number" min="1900" max="2100" placeholder="例：1998"></label>
+    <label>分類<select id="language"><option value="邦楽">邦楽</option><option value="洋楽">洋楽</option><option value="その他">その他</option></select></label>
+    <label>YouTube URL<input id="url" type="url" placeholder="https://www.youtube.com/watch?v=..."></label>
+  </div>
+  <div class="row" style="margin-top:10px"><button type="submit">ライブラリに登録</button></div>
+</form>
+</section>
+
+<section class="panel">
+<h2>マイライブラリ</h2>
+<div class="grid">
+<label>表示<select id="view"><option value="all">すべて</option><option value="favorites">お気に入り</option></select></label>
+<label>年代で絞り込み<select id="filterDecade"><option value="">すべての年代</option><option>1960年代</option><option>1970年代</option><option>1980年代</option><option>1990年代</option><option>2000年代</option><option>2010年代</option><option>2020年代</option></select></label>
+<label>邦楽・洋楽<select id="filterLanguage"><option value="">すべて</option><option>邦楽</option><option>洋楽</option><option>その他</option></select></label>
+<label>キーワード<input id="filterText" placeholder="曲名・歌手・アルバム"></label>
+</div>
+<div id="songs"></div>
+<div class="row">
+<button id="exportBtn" type="button">バックアップを書き出す</button>
+<button id="importBtn" type="button">バックアップを読み込む</button>
+<input id="importFile" type="file" accept="application/json,.json" hidden>
+</div>
+<p class="notice">データはこのブラウザー内に保存されます。ブラウザーのデータ削除や別端末への自動同期には対応していません。定期的にバックアップを書き出してください。</p>
+</section>
+
+<section class="panel">
+<h2>プレイリスト</h2>
+<div class="row"><input id="playlistName" placeholder="新しいプレイリスト名"><button id="createPlaylist" type="button">作成</button></div>
+<div id="playlists"></div>
+</section>
+</main>
+<script>
+const KEY='mmp_free_songs_v1', PLAYKEY='mmp_free_playlists_v1';
+let songs=load(KEY,[]), playlists=load(PLAYKEY,[]);
+function load(k,f){try{return JSON.parse(localStorage.getItem(k))||f}catch{return f}}
+function save(){localStorage.setItem(KEY,JSON.stringify(songs));localStorage.setItem(PLAYKEY,JSON.stringify(playlists))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function decade(y){if(!y)return '';let d=Math.floor(Number(y)/10)*10;return d+'年代'}
+document.getElementById('searchForm').addEventListener('submit',e=>{
+ e.preventDefault();let terms=[document.getElementById('query').value,document.getElementById('decade').value,document.getElementById('region').value].filter(Boolean).join(' ');
+ window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(terms),'_blank','noopener');
+});
+document.getElementById('addForm').addEventListener('submit',e=>{
+ e.preventDefault();songs.unshift({id:Date.now().toString(),title:title.value.trim(),artist:artist.value.trim(),album:album.value.trim(),year:year.value,language:language.value,url:url.value.trim(),favorite:false});
+ save();e.target.reset();render();
+});
+function render(){
+ const view=document.getElementById('view').value, dec=document.getElementById('filterDecade').value, lang=document.getElementById('filterLanguage').value, q=document.getElementById('filterText').value.toLowerCase();
+ const filtered=songs.filter(s=>(view!=='favorites'||s.favorite)&&(!dec||decade(s.year)===dec)&&(!lang||s.language===lang)&&(!q||[s.title,s.artist,s.album].join(' ').toLowerCase().includes(q)));
+ const root=document.getElementById('songs');
+ root.innerHTML=filtered.length?filtered.map(s=>`<article class="song"><h3>${esc(s.title)} <span class="pill">${esc(s.language||'')}</span></h3><p>${esc(s.artist)} ${s.album?'／'+esc(s.album):''}</p><p class="muted">${esc(s.year||'発売年未登録')} ${s.year?'・'+esc(decade(s.year)):''}</p><div class="row">${s.url?`<button data-act="play" data-id="${s.id}">YouTubeで開く</button>`:`<button data-act="search" data-id="${s.id}">YouTubeで探す</button>`}<button data-act="fav" data-id="${s.id}">${s.favorite?'★ お気に入り解除':'☆ お気に入り'}</button><button data-act="playlist" data-id="${s.id}">プレイリストへ</button><button data-act="delete" data-id="${s.id}">削除</button></div></article>`).join(''):'<div class="empty">まだ曲がないか、条件に合う曲がありません。</div>';
+ renderPlaylists();
+}
+document.getElementById('songs').addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;const s=songs.find(x=>x.id===b.dataset.id);if(!s)return;
+ if(b.dataset.act==='play'&&s.url)window.open(s.url,'_blank','noopener');
+ if(b.dataset.act==='search')window.open('https://www.youtube.com/results?search_query='+encodeURIComponent([s.title,s.artist].filter(Boolean).join(' ')),'_blank','noopener');
+ if(b.dataset.act==='fav')s.favorite=!s.favorite;
+ if(b.dataset.act==='delete'){if(!confirm('この曲を削除しますか？'))return;songs=songs.filter(x=>x.id!==s.id);playlists.forEach(p=>p.songIds=p.songIds.filter(id=>id!==s.id))}
+ if(b.dataset.act==='playlist'){if(!playlists.length){alert('先にプレイリストを作成してね');return}const names=playlists.map((p,i)=>`${i+1}: ${p.name}`).join('\\n');const n=prompt('追加先の番号を入力してください\\n'+names,'1');const p=playlists[Number(n)-1];if(p&&!p.songIds.includes(s.id))p.songIds.push(s.id)}
+ save();render();
+});
+['view','filterDecade','filterLanguage','filterText'].forEach(id=>document.getElementById(id).addEventListener('input',render));
+document.getElementById('createPlaylist').addEventListener('click',()=>{const n=document.getElementById('playlistName').value.trim();if(!n)return;playlists.push({id:Date.now().toString(),name:n,songIds:[]});document.getElementById('playlistName').value='';save();render()});
+function renderPlaylists(){const root=document.getElementById('playlists');root.innerHTML=playlists.length?playlists.map(p=>`<div class="song"><h3>${esc(p.name)}</h3><p>${p.songIds.length} 曲</p><div>${p.songIds.map(id=>songs.find(s=>s.id===id)).filter(Boolean).map(s=>`<span class="pill">${esc(s.title)}</span>`).join(' ')}</div><div class="row"><button data-plact="open" data-id="${p.id}">曲を表示</button><button data-plact="delete" data-id="${p.id}">リスト削除</button></div></div>`).join(''):'<p class="muted">プレイリストはまだありません。</p>'}
+document.getElementById('playlists').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const p=playlists.find(x=>x.id===b.dataset.id);if(!p)return;if(b.dataset.plact==='delete'){playlists=playlists.filter(x=>x.id!==p.id)}else{const names=p.songIds.map(id=>songs.find(s=>s.id===id)).filter(Boolean).map(s=>s.title+' / '+s.artist).join('\\n');alert(p.name+'\\n\\n'+(names||'曲はまだ登録されていません'))}save();render()});
+document.getElementById('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({songs,playlists},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my_music_player_backup.json';a.click();URL.revokeObjectURL(a.href)});
+document.getElementById('importBtn').addEventListener('click',()=>document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.songs)||!Array.isArray(d.playlists))throw Error();if(confirm('現在のライブラリをバックアップの内容で置き換えますか？')){songs=d.songs;playlists=d.playlists;save();render()}}catch{alert('バックアップファイルを読み込めませんでした')}e.target.value=''});
+render();
+</script>
+</body>
+</html>
