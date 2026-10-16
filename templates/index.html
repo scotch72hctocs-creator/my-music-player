@@ -227,6 +227,49 @@ urlInput.addEventListener('input', () => {
     urlMessage.textContent = 'URLを確認してください。YouTubeの動画URLを入力してね。';
   }
 });
+  urlInput.addEventListener('change', async () => {
+  const value = urlInput.value.trim();
+  const videoId = getYouTubeVideoId(value);
+
+  if (!videoId || !/^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
+    return;
+  }
+
+  urlMessage.textContent = '動画情報を取得しています...';
+
+  try {
+    const oembedUrl =
+      'https://www.youtube.com/oembed?url=' +
+      encodeURIComponent(
+        'https://www.youtube.com/watch?v=' + videoId
+      ) +
+      '&format=json';
+
+    const response = await fetch(oembedUrl);
+
+    if (!response.ok) {
+      throw new Error('動画情報を取得できませんでした');
+    }
+
+    const data = await response.json();
+    const titleField = document.getElementById('title');
+    const artistField = document.getElementById('artist');
+
+    if (titleField && !titleField.value.trim()) {
+      titleField.value = data.title || '';
+    }
+
+    if (artistField && !artistField.value.trim()) {
+      artistField.value = data.author_name || '';
+    }
+
+    urlMessage.textContent =
+      '✓ 情報を取得しました。曲名と投稿者名を確認してください。';
+  } catch {
+    urlMessage.textContent =
+      '動画IDは確認できましたが、情報を取得できませんでした。手入力してください。';
+  }
+});
 document.getElementById('addForm').addEventListener('submit',e=>{
  e.preventDefault();songs.unshift({id:Date.now().toString(),title:title.value.trim(),artist:artist.value.trim(),album:album.value.trim(),year:year.value,language:language.value,url:url.value.trim(),favorite:false});
  save();e.target.reset();render();
@@ -320,5 +363,5 @@ render();
 </script>
 </body>
 </html>
-  
+
     
