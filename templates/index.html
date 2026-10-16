@@ -203,6 +203,17 @@ function getYouTubeVideoId(value) {
       if (parsed.pathname === '/watch') {
         return parsed.searchParams.get('v');
       }
+
+      const match = parsed.pathname.match(/^\/(embed|shorts|live)\/([^/]+)/);
+      return match ? match[2] : null;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 urlInput.addEventListener('input', () => {
   const value = urlInput.value.trim();
 
