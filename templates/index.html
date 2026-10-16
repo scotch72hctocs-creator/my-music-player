@@ -103,7 +103,14 @@ input,select{width:100%}button{cursor:pointer;background:#292929}button:hover{ba
   <h1>♫ My Music Player</h1>
   <p>完全無料・APIキー不要の試作版。検索はYouTubeの検索ページを開きます。</p>
 </header>
-
+<section class="panel" id="playerPanel">
+  <h2>🎵 アプリ内プレーヤー</h2>
+  <div id="playerMessage" class="notice">
+    ライブラリの曲から「アプリ内で再生」を選んでね。
+  </div>
+  <div id="youtubePlayer"></div>
+  <div id="playerInfo" class="muted"></div>
+</section>
 <section class="panel">
 <h2>曲を検索</h2>
 <form id="searchForm">
@@ -172,16 +179,78 @@ document.getElementById('addForm').addEventListener('submit',e=>{
  e.preventDefault();songs.unshift({id:Date.now().toString(),title:title.value.trim(),artist:artist.value.trim(),album:album.value.trim(),year:year.value,language:language.value,url:url.value.trim(),favorite:false});
  save();e.target.reset();render();
 });
+  function playInApp(song){
+  const message = document.getElementById('playerMessage');
+  const player = document.getElementById('youtubePlayer');
+  const info = document.getElementById('playerInfo');
+
+  const url = song.url || '';
+  let videoId = '';
+
+  try {
+    const u = new URL(url);
+
+    if (u.hostname === 'youtu.be') {
+      videoId = u.pathname.split('/').filter(Boolean)[0] || '';
+    } else if (
+      u.hostname === 'youtube.com' ||
+      u.hostname.endsWith('.youtube.com') ||
+      u.hostname === 'm.youtube.com'
+    ) {
+      videoId = u.searchParams.get('v') || '';
+      if (!videoId) {
+        const match = u.pathname.match(
+          /^\/(?:embed|shorts)\/([^/?]+)/
+        );
+        if (match) videoId = match[1];
+      }
+    }
+  } catch {}
+
+  if (!/^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
+    message.textContent =
+      '有効なYouTube動画URLを登録してね。';
+    player.replaceChildren();
+    info.textContent = '';
+    return;
+  }
+
+  message.textContent = '再生プレーヤーを読み込み中…';
+  player.replaceChildren();
+
+  const iframe = document.createElement('iframe');
+  iframe.width = '100%';
+  iframe.height = '220';
+  iframe.src =
+    'https://www.youtube-nocookie.com/embed/' +
+    videoId + '?playsinline=1';
+  iframe.title = song.title + ' - YouTubeプレーヤー';
+  iframe.setAttribute('allow',
+    'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+  iframe.setAttribute('allowfullscreen', '');
+  iframe.setAttribute('referrerpolicy',
+    'strict-origin-when-cross-origin');
+  iframe.style.border = '0';
+  iframe.style.borderRadius = '12px';
+
+  player.appendChild(iframe);
+  message.textContent =
+    '再生画面内の再生ボタンを押してね。';
+  info.textContent =
+    song.title + (song.artist ? ' / ' + song.artist : '');
+  document.getElementById('playerPanel')
+    .scrollIntoView({behavior: 'smooth', block: 'start'});
+}
 function render(){
  const view=document.getElementById('view').value, dec=document.getElementById('filterDecade').value, lang=document.getElementById('filterLanguage').value, q=document.getElementById('filterText').value.toLowerCase();
  const filtered=songs.filter(s=>(view!=='favorites'||s.favorite)&&(!dec||decade(s.year)===dec)&&(!lang||s.language===lang)&&(!q||[s.title,s.artist,s.album].join(' ').toLowerCase().includes(q)));
  const root=document.getElementById('songs');
- root.innerHTML=filtered.length?filtered.map(s=>`<article class="song"><h3>${esc(s.title)} <span class="pill">${esc(s.language||'')}</span></h3><p>${esc(s.artist)} ${s.album?'／'+esc(s.album):''}</p><p class="muted">${esc(s.year||'発売年未登録')} ${s.year?'・'+esc(decade(s.year)):''}</p><div class="row">${s.url?`<button data-act="play" data-id="${s.id}">YouTubeで開く</button>`:`<button data-act="search" data-id="${s.id}">YouTubeで探す</button>`}<button data-act="fav" data-id="${s.id}">${s.favorite?'★ お気に入り解除':'☆ お気に入り'}</button><button data-act="playlist" data-id="${s.id}">プレイリストへ</button><button data-act="delete" data-id="${s.id}">削除</button></div></article>`).join(''):'<div class="empty">まだ曲がないか、条件に合う曲がありません。</div>';
+ root.innerHTML=filtered.length?filtered.map(s=>`<article class="song"><h3>${esc(s.title)} <span class="pill">${esc(s.language||'')}</span></h3><p>${esc(s.artist)} ${s.album?'／'+esc(s.album):''}</p><p class="muted">${esc(s.year||'発売年未登録')} ${s.year?'・'+esc(decade(s.year)):''}</p><div class="row">${s.url?`<button data-act="play" data-id="${s.id}">アプリ内で再生</button>`:`<button data-act="search" data-id="${s.id}">YouTubeで探す</button>`}<button data-act="fav" data-id="${s.id}">${s.favorite?'★ お気に入り解除':'☆ お気に入り'}</button><button data-act="playlist" data-id="${s.id}">プレイリストへ</button><button data-act="delete" data-id="${s.id}">削除</button></div></article>`).join(''):'<div class="empty">まだ曲がないか、条件に合う曲がありません。</div>';
  renderPlaylists();
 }
 document.getElementById('songs').addEventListener('click',e=>{
  const b=e.target.closest('button');if(!b)return;const s=songs.find(x=>x.id===b.dataset.id);if(!s)return;
- if(b.dataset.act==='play'&&s.url)window.open(s.url,'_blank','noopener');
+if(b.dataset.act==='play')playInApp(s);
  if(b.dataset.act==='search')window.open('https://www.youtube.com/results?search_query='+encodeURIComponent([s.title,s.artist].filter(Boolean).join(' ')),'_blank','noopener');
  if(b.dataset.act==='fav')s.favorite=!s.favorite;
  if(b.dataset.act==='delete'){if(!confirm('この曲を削除しますか？'))return;songs=songs.filter(x=>x.id!==s.id);playlists.forEach(p=>p.songIds=p.songIds.filter(id=>id!==s.id))}
@@ -199,3 +268,4 @@ render();
 </script>
 </body>
 </html>
+  
