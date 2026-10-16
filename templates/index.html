@@ -270,9 +270,44 @@ urlInput.addEventListener('input', () => {
       '動画IDは確認できましたが、情報を取得できませんでした。手入力してください。';
   }
 });
-document.getElementById('addForm').addEventListener('submit',e=>{
- e.preventDefault();songs.unshift({id:Date.now().toString(),title:title.value.trim(),artist:artist.value.trim(),album:album.value.trim(),year:year.value,language:language.value,url:url.value.trim(),favorite:false});
- save();e.target.reset();render();
+document.getElementById('addForm').addEventListener('submit', e => {
+  e.preventDefault();
+
+  const titleField = document.getElementById('title');
+  const artistField = document.getElementById('artist');
+  const albumField = document.getElementById('album');
+  const yearField = document.getElementById('year');
+  const languageField = document.getElementById('language');
+  const urlField = document.getElementById('url');
+
+  const songUrl = urlField.value.trim();
+  const videoId = getYouTubeVideoId(songUrl);
+
+  if (videoId) {
+    const alreadyExists = songs.some(song => {
+      return getYouTubeVideoId(song.url || '') === videoId;
+    });
+
+    if (alreadyExists) {
+      alert('このYouTube動画はすでに登録されています。');
+      return;
+    }
+  }
+
+  songs.unshift({
+    id: Date.now().toString(),
+    title: titleField.value.trim(),
+    artist: artistField.value.trim(),
+    album: albumField.value.trim(),
+    year: yearField.value,
+    language: languageField.value,
+    url: songUrl,
+    favorite: false
+  });
+
+  save();
+  e.target.reset();
+  render();
 });
   function playInApp(song){
   const message = document.getElementById('playerMessage');
