@@ -178,10 +178,7 @@ document.getElementById('searchForm').addEventListener('submit',e=>{
  e.preventDefault();let terms=[document.getElementById('query').value,document.getElementById('decade').value,document.getElementById('region').value].filter(Boolean).join(' ');
  window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(terms),'_blank','noopener');
 });
-  } catch {
-    return null;
-  }
-}
+
 const urlInput = document.getElementById('url');
 const urlMessage = document.getElementById('urlMessage');
 
@@ -324,4 +321,4 @@ render();
 </body>
 </html>
   
-  
+    
