@@ -176,9 +176,63 @@ function load(k,f){try{return JSON.parse(localStorage.getItem(k))||f}catch{retur
 function save(){localStorage.setItem(KEY,JSON.stringify(songs));localStorage.setItem(PLAYKEY,JSON.stringify(playlists))}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function decade(y){if(!y)return '';let d=Math.floor(Number(y)/10)*10;return d+'年代'}
-document.getElementById('searchForm').addEventListener('submit',e=>{
- e.preventDefault();let terms=[document.getElementById('query').value,document.getElementById('decade').value,document.getElementById('region').value].filter(Boolean).join(' ');
- window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(terms),'_blank','noopener');
+document.getElementById('searchForm').addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const query = document.getElementById('query').value.trim();
+  const decade = document.getElementById('decade').value;
+  const region = document.getElementById('region').value;
+  const terms = [query, decade, region].filter(Boolean).join(' ');
+  const resultsBox = document.getElementById('searchResults');
+
+  resultsBox.innerHTML = '<p>検索中...</p>';
+
+  try {
+    const response = await fetch('/api/search?q=' + encodeURIComponent(terms));
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || '検索に失敗しました。');
+    }
+
+    if (!data.results || data.results.length === 0) {
+      resultsBox.innerHTML = '<p>検索結果が見つかりませんでした。</p>';
+      return;
+    }
+
+    resultsBox.innerHTML = data.results.map((video, index) => `
+      <div class="search-result-item" style="display:flex;gap:12px;align-items:center;margin:12px 0;padding:10px;border:1px solid #444;border-radius:8px;">
+        <img src="${video.thumbnail}" alt="" style="width:120px;max-width:35%;border-radius:6px;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:bold;">${esc(video.title)}</div>
+          <div>${esc(video.author)}</div>
+          <button type="button" data-search-index="${index}">この曲を登録フォームに入力</button>
+        </div>
+      </div>
+    `).join('');
+
+    resultsBox.querySelectorAll('[data-search-index]').forEach(button => {
+      button.addEventListener('click', () => {
+        const video = data.results[Number(button.dataset.searchIndex)];
+
+        document.getElementById('title').value = video.title;
+        document.getElementById('artist').value = video.author;
+        document.getElementById('url').value = video.videoUrl;
+
+        document.getElementById('url').dispatchEvent(
+          new Event('change', { bubbles: true })
+        );
+
+        document.getElementById('addForm').scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      });
+    });
+
+  } catch (error) {
+    resultsBox.innerHTML = '<p>' + esc(error.message) + '</p>';
+  }
 });
 
 const urlInput = document.getElementById('url');
