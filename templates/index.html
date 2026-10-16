@@ -135,7 +135,10 @@ input,select{width:100%}button{cursor:pointer;background:#292929}button:hover{ba
     <label>アルバム名<input id="album" placeholder="アルバム名"></label>
     <label>発売年<input id="year" type="number" min="1900" max="2100" placeholder="例：1998"></label>
     <label>分類<select id="language"><option value="邦楽">邦楽</option><option value="洋楽">洋楽</option><option value="その他">その他</option></select></label>
-    <label>YouTube URL<input id="url" type="url" placeholder="https://www.youtube.com/watch?v=..."></label>
+    <label>YouTube URL
+  <input id="url" type="url" placeholder="YouTubeのURLを貼り付け" >
+  <small id="urlMessage" class="muted">URLを貼り付けると動画IDを確認します。</small>
+</label>
   </div>
   <div class="row" style="margin-top:10px"><button type="submit">ライブラリに登録</button></div>
 </form>
@@ -174,6 +177,27 @@ function decade(y){if(!y)return '';let d=Math.floor(Number(y)/10)*10;return d+'�
 document.getElementById('searchForm').addEventListener('submit',e=>{
  e.preventDefault();let terms=[document.getElementById('query').value,document.getElementById('decade').value,document.getElementById('region').value].filter(Boolean).join(' ');
  window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(terms),'_blank','noopener');
+});
+  } catch {
+    return null;
+  }
+}
+
+urlInput.addEventListener('input', () => {
+  const value = urlInput.value.trim();
+
+  if (!value) {
+    urlMessage.textContent = 'URLを貼り付けると動画IDを確認します。';
+    return;
+  }
+
+  const videoId = getYouTubeVideoId(value);
+
+  if (videoId && /^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
+    urlMessage.textContent = '✓ YouTubeの動画IDを確認しました。';
+  } else {
+    urlMessage.textContent = 'URLを確認してください。YouTubeの動画URLを入力してね。';
+  }
 });
 document.getElementById('addForm').addEventListener('submit',e=>{
  e.preventDefault();songs.unshift({id:Date.now().toString(),title:title.value.trim(),artist:artist.value.trim(),album:album.value.trim(),year:year.value,language:language.value,url:url.value.trim(),favorite:false});
@@ -268,4 +292,5 @@ render();
 </script>
 </body>
 </html>
+  
   
