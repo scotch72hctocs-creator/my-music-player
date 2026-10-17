@@ -389,6 +389,7 @@ document.getElementById('addForm').addEventListener('submit', e => {
 });
   let currentPlaylistSongs = [];
 let currentPlaylistIndex = -1;
+  let isShuffleMode = false;
   let ytPlayer = null;
 let ytApiPromise = null;
 
@@ -469,31 +470,69 @@ async function playInApp(song) {
           message.textContent = '再生画面内の再生ボタンを押してね。';
         },
         onStateChange: event => {
-          if (event.data === YT.PlayerState.ENDED) {
-            message.textContent = '曲が終了しました。次の曲を読み込みます…';
+if (event.data === YT.PlayerState.ENDED) {
+  message.textContent = '曲が終了しました。次の曲を読み込みます…';
 
-            if (
-              currentPlaylistSongs.length &&
-              currentPlaylistIndex >= 0 &&
-              currentPlaylistIndex < currentPlaylistSongs.length
-            ) {
-              currentPlaylistIndex =
-                (currentPlaylistIndex + 1) % currentPlaylistSongs.length;
+  if (
+    currentPlaylistSongs.length &&
+    currentPlaylistIndex >= 0 &&
+    currentPlaylistIndex < currentPlaylistSongs.length
+  ) {
+    const isLastSong =
+      currentPlaylistIndex === currentPlaylistSongs.length - 1;
 
-              const nextSong = currentPlaylistSongs[currentPlaylistIndex];
+    if (isLastSong && isShuffleMode && currentPlaylistSongs.length > 1) {
+      for (let i = currentPlaylistSongs.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
 
-              if (nextSong && nextSong.url) {
-                playInApp(nextSong);
-              } else {
-                message.textContent =
-                  '次の曲にYouTube URLが登録されていません。';
-              }
-            } else {
-              message.textContent =
-                '曲が終了しました。プレイリストを選択すると自動で次の曲へ進めます。';
-            }
-          }
-        },
+        [
+          currentPlaylistSongs[i],
+          currentPlaylistSongs[j]
+        ] = [
+          currentPlaylistSongs[j],
+          currentPlaylistSongs[i]
+        ];
+      }
+
+      // 新しい順番の先頭が直前の曲と同じなら入れ替える
+      const previousSongId =
+        currentPlaylistSongs[currentPlaylistSongs.length - 1].id;
+
+      if (currentPlaylistSongs[0].id === previousSongId) {
+        const differentIndex = currentPlaylistSongs.findIndex(
+          (song, index) => index > 0 && song.id !== previousSongId
+        );
+
+        if (differentIndex > 0) {
+          [
+            currentPlaylistSongs[0],
+            currentPlaylistSongs[differentIndex]
+          ] = [
+            currentPlaylistSongs[differentIndex],
+            currentPlaylistSongs[0]
+          ];
+        }
+      }
+
+      currentPlaylistIndex = 0;
+    } else {
+      currentPlaylistIndex =
+        (currentPlaylistIndex + 1) % currentPlaylistSongs.length;
+    }
+
+    const nextSong = currentPlaylistSongs[currentPlaylistIndex];
+
+    if (nextSong && nextSong.url) {
+      playInApp(nextSong);
+    } else {
+      message.textContent =
+        '次の曲にYouTube URLが登録されていません。';
+    }
+  } else {
+    message.textContent =
+      '曲が終了しました。プレイリストを選択すると自動で次の曲へ進めます。';
+  }
+}
         onError: () => {
           message.textContent =
             'この動画は埋め込み再生できない可能性があります。';
@@ -678,6 +717,7 @@ if (
     }
 
     if (b.dataset.plact === 'shuffle') {
+      isShuffleMode = true;
       currentPlaylistSongs = [...playlistSongs];
 
       for (let i = currentPlaylistSongs.length - 1; i > 0; i--) {
