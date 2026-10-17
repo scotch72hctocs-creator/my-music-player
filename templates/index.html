@@ -376,7 +376,17 @@ const terms = [searchQuery, decade, region].filter(Boolean).join(' ');
         document.getElementById('url').dispatchEvent(
           new Event('change', { bubbles: true })
         );
+        const addForm = document.getElementById('addForm');
+        const registerAccordion = addForm.closest('details.accordion');
 
+        if (registerAccordion) {
+          registerAccordion.open = true;
+        }
+
+        addForm.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
         document.getElementById('addForm').scrollIntoView({
           behavior: 'smooth',
           block: 'start'
