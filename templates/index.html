@@ -386,6 +386,8 @@ document.getElementById('addForm').addEventListener('submit', e => {
 
   render();
 });
+  let currentPlaylistSongs = [];
+let currentPlaylistIndex = -1;
   function playInApp(song){
   const message = document.getElementById('playerMessage');
   const player = document.getElementById('youtubePlayer');
@@ -517,13 +519,19 @@ function renderPlaylists() {
             <p>${playlistSongs.length} 曲</p>
 
             <div class="row">
-              <button data-plact="open" data-id="${p.id}">
-                曲を表示
-              </button>
-              <button data-plact="delete" data-id="${p.id}">
-                リスト削除
-              </button>
-            </div>
+  <button data-plact="open" data-id="${p.id}">
+    曲を表示
+  </button>
+  <button data-plact="prev" data-id="${p.id}">
+    前の曲
+  </button>
+  <button data-plact="next" data-id="${p.id}">
+    次の曲
+  </button>
+  <button data-plact="delete" data-id="${p.id}">
+    リスト削除
+  </button>
+</div>
 
             <div data-plsongs="${p.id}" hidden>
               ${
@@ -559,6 +567,13 @@ document.getElementById('playlists').addEventListener('click', e => {
     if (!confirm('このプレイリストを削除しますか？')) return;
 
     playlists = playlists.filter(x => x.id !== p.id);
+
+    if (currentPlaylistSongs.length &&
+        currentPlaylistSongs.every(s => p.songIds.includes(s.id))) {
+      currentPlaylistSongs = [];
+      currentPlaylistIndex = -1;
+    }
+
     save();
     render();
     return;
@@ -573,16 +588,59 @@ document.getElementById('playlists').addEventListener('click', e => {
     return;
   }
 
-  if (b.dataset.plact === 'play') {
-    const song = songs.find(s => s.id === b.dataset.songid);
+  const playlistSongs = p.songIds
+    .map(id => songs.find(s => s.id === id))
+    .filter(Boolean);
 
-    if (!song) {
+  if (b.dataset.plact === 'play') {
+    const index = playlistSongs.findIndex(
+      s => s.id === b.dataset.songid
+    );
+
+    if (index < 0) {
       alert('この曲は見つかりませんでした。');
       return;
     }
 
+    currentPlaylistSongs = playlistSongs;
+    currentPlaylistIndex = index;
+    playInApp(currentPlaylistSongs[currentPlaylistIndex]);
+    return;
+  }
+
+  if (b.dataset.plact === 'prev' ||
+      b.dataset.plact === 'next') {
+
+    if (!playlistSongs.length) {
+      alert('このプレイリストには曲がありません。');
+      return;
+    }
+
+    const samePlaylist =
+      currentPlaylistSongs.length === playlistSongs.length &&
+      currentPlaylistSongs.every(
+        (s, i) => s.id === playlistSongs[i].id
+      );
+
+    if (!samePlaylist) {
+      currentPlaylistSongs = playlistSongs;
+      currentPlaylistIndex =
+        b.dataset.plact === 'next' ? -1 : 0;
+    }
+
+    if (b.dataset.plact === 'next') {
+      currentPlaylistIndex =
+        (currentPlaylistIndex + 1) % currentPlaylistSongs.length;
+    } else {
+      currentPlaylistIndex =
+        (currentPlaylistIndex - 1 + currentPlaylistSongs.length) %
+        currentPlaylistSongs.length;
+    }
+
+    const song = currentPlaylistSongs[currentPlaylistIndex];
+
     if (!song.url) {
-      alert('この曲にはYouTubeのURLが登録されていません。');
+      alert('この曲にはYouTubeのURLが登録されていません。曲を編集してURLを登録してね。');
       return;
     }
 
