@@ -575,6 +575,12 @@ async function playInApp(song) {
   const player = document.getElementById('youtubePlayer');
   const info = document.getElementById('playerInfo');
   const position = document.getElementById('playlistPosition');
+  const playerPanel = document.getElementById('playerPanel');
+  const playerAccordion = playerPanel.closest('details.accordion');
+
+  if (playerAccordion) {
+    playerAccordion.open = true;
+  }
 
   if (
     currentPlaylistSongs.length > 0 &&
