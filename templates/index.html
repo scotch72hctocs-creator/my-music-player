@@ -95,6 +95,69 @@ input,select{width:100%}button{cursor:pointer;background:#292929}button:hover{ba
     line-height:1.7;
   }
 }
+  /* スマホでの操作性を改善 */
+button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease;
+}
+
+button:active {
+  background: #505050;
+  transform: scale(0.98);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #d9d9d9;
+  outline-offset: 2px;
+}
+
+/* プレーヤーの横はみ出し防止 */
+#playerPanel,
+#youtubePlayer {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#youtubePlayer iframe {
+  display: block;
+  max-width: 100%;
+}
+
+/* 小さい画面での表示を調整 */
+@media (max-width: 600px) {
+  main {
+    width: 100%;
+    padding: 8px;
+  }
+
+  .panel {
+    min-width: 0;
+    padding: 12px;
+  }
+
+  .row {
+    min-width: 0;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+    max-width: 100%;
+  }
+
+  button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  #youtubePlayer iframe {
+    width: 100%;
+  }
+}
 </style>
 </head>
 <body>
