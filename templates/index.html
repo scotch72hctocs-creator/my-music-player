@@ -692,9 +692,30 @@ if (
         ];
       }
 
-      currentPlaylistIndex = 0;
+currentPlaylistIndex = 0;
 
-      const firstSong = currentPlaylistSongs[0];
+// 同じ曲が連続している場合は、2曲目以降と入れ替える
+if (currentPlaylistSongs.length > 1) {
+  const firstId = currentPlaylistSongs[0].id;
+
+  if (currentPlaylistSongs[1].id === firstId) {
+    const differentIndex = currentPlaylistSongs.findIndex(
+      (song, index) => index > 1 && song.id !== firstId
+    );
+
+    if (differentIndex > 0) {
+      [
+        currentPlaylistSongs[1],
+        currentPlaylistSongs[differentIndex]
+      ] = [
+        currentPlaylistSongs[differentIndex],
+        currentPlaylistSongs[1]
+      ];
+    }
+  }
+}
+
+const firstSong = currentPlaylistSongs[0];
 
       if (!firstSong.url) {
         alert('最初の曲にYouTubeのURLが登録されていません。');
