@@ -110,6 +110,7 @@ input,select{width:100%}button{cursor:pointer;background:#292929}button:hover{ba
   </div>
   <div id="youtubePlayer"></div>
   <div id="playerInfo" class="muted"></div>
+  <div id="playlistPosition" class="muted"></div>
 </section>
 <section class="panel">
 <h2>曲を検索</h2>
@@ -419,6 +420,17 @@ async function playInApp(song) {
   const message = document.getElementById('playerMessage');
   const player = document.getElementById('youtubePlayer');
   const info = document.getElementById('playerInfo');
+  const position = document.getElementById('playlistPosition');
+
+  if (
+    currentPlaylistSongs.length > 0 &&
+    currentPlaylistIndex >= 0
+  ) {
+    position.textContent =
+      `プレイリスト再生：${currentPlaylistIndex + 1} / ${currentPlaylistSongs.length} 曲目`;
+  } else {
+    position.textContent = '';
+  }
 
   const videoId = getYouTubeVideoId(song.url || '');
 
