@@ -353,18 +353,38 @@ const terms = [searchQuery, decade, region].filter(Boolean).join(' ');
       resultsBox.innerHTML = '<p>検索結果が見つかりませんでした。</p>';
       return;
     }
+  
+resultsBox.innerHTML = data.results.map((video, index) => `
+  <div class="search-result-item" style="display:flex;gap:12px;align-items:center;margin:12px 0;padding:10px;border:1px solid #444;border-radius:8px;">
+    <img src="${video.thumbnail}" alt="" style="width:120px;max-width:35%;border-radius:6px;">
 
-    resultsBox.innerHTML = data.results.map((video, index) => `
-      <div class="search-result-item" style="display:flex;gap:12px;align-items:center;margin:12px 0;padding:10px;border:1px solid #444;border-radius:8px;">
-        <img src="${video.thumbnail}" alt="" style="width:120px;max-width:35%;border-radius:6px;">
-        <div style="flex:1;min-width:0;">
-          <div style="font-weight:bold;">${esc(video.title)}</div>
-          <div>${esc(video.author)}</div>
-          <button type="button" data-search-index="${index}">この曲を登録フォームに入力</button>
-        </div>
+    <div style="flex:1;min-width:0;">
+      <div style="font-weight:bold;">${esc(video.title)}</div>
+      <div>${esc(video.author)}</div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+        <button type="button" data-preview-index="${index}">
+          ▶ 再生
+        </button>
+
+        <button type="button" data-search-index="${index}">
+          この曲を登録フォームに入力
+        </button>
       </div>
-    `).join('');
+    </div>
+  </div>
+`).join('');
+resultsBox.querySelectorAll('[data-preview-index]').forEach(button => {
+  button.addEventListener('click', () => {
+    const video = data.results[Number(button.dataset.previewIndex)];
 
+    playInApp({
+      title: video.title,
+      artist: video.author,
+      url: video.videoUrl
+    });
+  });
+});
     resultsBox.querySelectorAll('[data-search-index]').forEach(button => {
       button.addEventListener('click', () => {
         const video = data.results[Number(button.dataset.searchIndex)];
@@ -384,10 +404,6 @@ const terms = [searchQuery, decade, region].filter(Boolean).join(' ');
         }
 
         addForm.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-        document.getElementById('addForm').scrollIntoView({
           behavior: 'smooth',
           block: 'start'
         });
