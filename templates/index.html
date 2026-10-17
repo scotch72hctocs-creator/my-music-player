@@ -388,33 +388,111 @@ document.getElementById('addForm').addEventListener('submit', e => {
 });
   let currentPlaylistSongs = [];
 let currentPlaylistIndex = -1;
-  function playInApp(song){
+  let ytPlayer = null;
+let ytApiPromise = null;
+
+function loadYouTubeIframeAPI() {
+  if (window.YT && window.YT.Player) {
+    return Promise.resolve();
+  }
+
+  if (ytApiPromise) {
+    return ytApiPromise;
+  }
+
+  ytApiPromise = new Promise((resolve, reject) => {
+    window.onYouTubeIframeAPIReady = () => resolve();
+
+    const script = document.createElement('script');
+    script.src = 'https://www.youtube.com/iframe_api';
+    script.onerror = () => {
+      ytApiPromise = null;
+      reject(new Error('YouTube APIを読み込めませんでした'));
+    };
+
+    document.head.appendChild(script);
+  });
+
+  return ytApiPromise;
+}
+async function playInApp(song) {
   const message = document.getElementById('playerMessage');
   const player = document.getElementById('youtubePlayer');
   const info = document.getElementById('playerInfo');
 
-  const url = song.url || '';
-  let videoId = '';
+  const videoId = getYouTubeVideoId(song.url || '');
+
+  if (!videoId || !/^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
+    message.textContent = '有効なYouTube動画URLを登録してね。';
+    player.replaceChildren();
+    info.textContent = '';
+    return;
+  }
+
+  message.textContent = '再生プレーヤーを読み込み中…';
+  info.textContent = song.title + (song.artist ? ' / ' + song.artist : '');
+
+  player.replaceChildren();
+
+  const mount = document.createElement('div');
+  mount.id = 'youtubePlayerFrame';
+  player.appendChild(mount);
+
+  document.getElementById('playerPanel')
+    .scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   try {
-    const u = new URL(url);
+    await loadYouTubeIframeAPI();
 
-    if (u.hostname === 'youtu.be') {
-      videoId = u.pathname.split('/').filter(Boolean)[0] || '';
-    } else if (
-      u.hostname === 'youtube.com' ||
-      u.hostname.endsWith('.youtube.com') ||
-      u.hostname === 'm.youtube.com'
-    ) {
-      videoId = u.searchParams.get('v') || '';
-      if (!videoId) {
-        const match = u.pathname.match(
-          /^\/(?:embed|shorts)\/([^/?]+)/
-        );
-        if (match) videoId = match[1];
+    ytPlayer = new YT.Player('youtubePlayerFrame', {
+      width: '100%',
+      height: '220',
+      videoId: videoId,
+      playerVars: {
+        playsinline: 1,
+        rel: 0
+      },
+      events: {
+        onReady: () => {
+          message.textContent = '再生画面内の再生ボタンを押してね。';
+        },
+        onStateChange: event => {
+          if (event.data === YT.PlayerState.ENDED) {
+            message.textContent = '曲が終了しました。次の曲を読み込みます…';
+
+            if (
+              currentPlaylistSongs.length &&
+              currentPlaylistIndex >= 0 &&
+              currentPlaylistIndex < currentPlaylistSongs.length
+            ) {
+              currentPlaylistIndex =
+                (currentPlaylistIndex + 1) % currentPlaylistSongs.length;
+
+              const nextSong = currentPlaylistSongs[currentPlaylistIndex];
+
+              if (nextSong && nextSong.url) {
+                playInApp(nextSong);
+              } else {
+                message.textContent =
+                  '次の曲にYouTube URLが登録されていません。';
+              }
+            } else {
+              message.textContent =
+                '曲が終了しました。プレイリストを選択すると自動で次の曲へ進めます。';
+            }
+          }
+        },
+        onError: () => {
+          message.textContent =
+            'この動画は埋め込み再生できない可能性があります。';
+        }
       }
-    }
-  } catch {}
+    });
+  } catch (error) {
+    message.textContent =
+      'YouTubeプレーヤーを読み込めませんでした。ページを再読み込みしてね。';
+  }
+}
 
   if (!/^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
     message.textContent =
