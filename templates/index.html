@@ -494,32 +494,6 @@ async function playInApp(song) {
   }
 }
 
-  message.textContent = '再生プレーヤーを読み込み中…';
-  player.replaceChildren();
-
-  const iframe = document.createElement('iframe');
-  iframe.width = '100%';
-  iframe.height = '220';
-  iframe.src =
-    'https://www.youtube-nocookie.com/embed/' +
-    videoId + '?playsinline=1';
-  iframe.title = song.title + ' - YouTubeプレーヤー';
-  iframe.setAttribute('allow',
-    'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
-  iframe.setAttribute('allowfullscreen', '');
-  iframe.setAttribute('referrerpolicy',
-    'strict-origin-when-cross-origin');
-  iframe.style.border = '0';
-  iframe.style.borderRadius = '12px';
-
-  player.appendChild(iframe);
-  message.textContent =
-    '再生画面内の再生ボタンを押してね。';
-  info.textContent =
-    song.title + (song.artist ? ' / ' + song.artist : '');
-  document.getElementById('playerPanel')
-    .scrollIntoView({behavior: 'smooth', block: 'start'});
-}
 function render(){
  const view=document.getElementById('view').value, dec=document.getElementById('filterDecade').value, lang=document.getElementById('filterLanguage').value, q=document.getElementById('filterText').value.toLowerCase();
  const filtered=songs.filter(s=>(view!=='favorites'||s.favorite)&&(!dec||decade(s.year)===dec)&&(!lang||s.language===lang)&&(!q||[s.title,s.artist,s.album].join(' ').toLowerCase().includes(q)));
