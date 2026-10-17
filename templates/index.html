@@ -494,14 +494,6 @@ async function playInApp(song) {
   }
 }
 
-  if (!/^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
-    message.textContent =
-      '有効なYouTube動画URLを登録してね。';
-    player.replaceChildren();
-    info.textContent = '';
-    return;
-  }
-
   message.textContent = '再生プレーヤーを読み込み中…';
   player.replaceChildren();
 
