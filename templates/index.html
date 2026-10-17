@@ -242,6 +242,12 @@ details.accordion > section.panel {
       <select id="decade"><option value="">指定なし</option><option>1960年代</option><option>1970年代</option><option>1980年代</option><option>1990年代</option><option>2000年代</option><option>2010年代</option><option>2020年代</option></select>
     </label>
     <label>ジャンル<select id="region"><option value="">邦楽・洋楽どちらも</option><option value="邦楽">邦楽</option><option value="洋楽">洋楽</option></select></label>
+    <label>検索対象
+  <select id="searchCategory">
+    <option value="music" selected>音楽カテゴリ（おすすめ）</option>
+    <option value="all">すべての動画</option>
+  </select>
+</label>
   </div>
   <div class="row" style="margin-top:10px"><button type="submit">YouTubeで検索</button></div>
 </form>
@@ -321,8 +327,16 @@ document.getElementById('searchForm').addEventListener('submit', async e => {
 
   const query = document.getElementById('query').value.trim();
   const decade = document.getElementById('decade').value;
-  const region = document.getElementById('region').value;
-  const terms = [query, decade, region].filter(Boolean).join(' ');
+const region = document.getElementById('region').value;
+const category = document.getElementById('searchCategory').value;
+
+let searchQuery = query;
+
+if (category === 'music') {
+  searchQuery += ' music';
+}
+
+const terms = [searchQuery, decade, region].filter(Boolean).join(' ');
   const resultsBox = document.getElementById('searchResults');
 
   resultsBox.innerHTML = '<p>検索中...</p>';
