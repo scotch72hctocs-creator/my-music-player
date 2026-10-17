@@ -483,8 +483,112 @@ if(b.dataset.act==='play')playInApp(s);
 });
 ['view','filterDecade','filterLanguage','filterText'].forEach(id=>document.getElementById(id).addEventListener('input',render));
 document.getElementById('createPlaylist').addEventListener('click',()=>{const n=document.getElementById('playlistName').value.trim();if(!n)return;playlists.push({id:Date.now().toString(),name:n,songIds:[]});document.getElementById('playlistName').value='';save();render()});
-function renderPlaylists(){const root=document.getElementById('playlists');root.innerHTML=playlists.length?playlists.map(p=>`<div class="song"><h3>${esc(p.name)}</h3><p>${p.songIds.length} 曲</p><div>${p.songIds.map(id=>songs.find(s=>s.id===id)).filter(Boolean).map(s=>`<span class="pill">${esc(s.title)}</span>`).join(' ')}</div><div class="row"><button data-plact="open" data-id="${p.id}">曲を表示</button><button data-plact="delete" data-id="${p.id}">リスト削除</button></div></div>`).join(''):'<p class="muted">プレイリストはまだありません。</p>'}
-document.getElementById('playlists').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const p=playlists.find(x=>x.id===b.dataset.id);if(!p)return;if(b.dataset.plact==='delete'){playlists=playlists.filter(x=>x.id!==p.id)}else{const names=p.songIds.map(id=>songs.find(s=>s.id===id)).filter(Boolean).map(s=>s.title+' / '+s.artist).join('\\n');alert(p.name+'\\n\\n'+(names||'曲はまだ登録されていません'))}save();render()});
+['view','filterDecade','filterLanguage','filterText'].forEach(id =>
+  document.getElementById(id).addEventListener('input', render)
+);
+
+document.getElementById('createPlaylist').addEventListener('click', () => {
+  const n = document.getElementById('playlistName').value.trim();
+  if (!n) return;
+
+  playlists.push({
+    id: Date.now().toString(),
+    name: n,
+    songIds: []
+  });
+
+  document.getElementById('playlistName').value = '';
+  save();
+  render();
+});
+
+function renderPlaylists() {
+  const root = document.getElementById('playlists');
+
+  root.innerHTML = playlists.length
+    ? playlists.map(p => {
+        const playlistSongs = p.songIds
+          .map(id => songs.find(s => s.id === id))
+          .filter(Boolean);
+
+        return `
+          <div class="song">
+            <h3>${esc(p.name)}</h3>
+            <p>${playlistSongs.length} 曲</p>
+
+            <div class="row">
+              <button data-plact="open" data-id="${p.id}">
+                曲を表示
+              </button>
+              <button data-plact="delete" data-id="${p.id}">
+                リスト削除
+              </button>
+            </div>
+
+            <div data-plsongs="${p.id}" hidden>
+              ${
+                playlistSongs.length
+                  ? playlistSongs.map((s, i) => `
+                      <div class="row">
+                        <span>${i + 1}. ${esc(s.title)} / ${esc(s.artist || '')}</span>
+                        <button
+                          data-plact="play"
+                          data-id="${p.id}"
+                          data-songid="${s.id}">
+                          再生
+                        </button>
+                      </div>
+                    `).join('')
+                  : '<p class="muted">曲はまだ登録されていません。</p>'
+              }
+            </div>
+          </div>
+        `;
+      }).join('')
+    : '<p class="muted">プレイリストはまだありません。</p>';
+}
+
+document.getElementById('playlists').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (!b) return;
+
+  const p = playlists.find(x => x.id === b.dataset.id);
+  if (!p) return;
+
+  if (b.dataset.plact === 'delete') {
+    if (!confirm('このプレイリストを削除しますか？')) return;
+
+    playlists = playlists.filter(x => x.id !== p.id);
+    save();
+    render();
+    return;
+  }
+
+  if (b.dataset.plact === 'open') {
+    const list = document.querySelector(
+      `[data-plsongs="${p.id}"]`
+    );
+
+    if (list) list.hidden = !list.hidden;
+    return;
+  }
+
+  if (b.dataset.plact === 'play') {
+    const song = songs.find(s => s.id === b.dataset.songid);
+
+    if (!song) {
+      alert('この曲は見つかりませんでした。');
+      return;
+    }
+
+    if (!song.url) {
+      alert('この曲にはYouTubeのURLが登録されていません。');
+      return;
+    }
+
+    playInApp(song);
+  }
+});
 document.getElementById('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({songs,playlists},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my_music_player_backup.json';a.click();URL.revokeObjectURL(a.href)});
 document.getElementById('importBtn').addEventListener('click',()=>document.getElementById('importFile').click());
 document.getElementById('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.songs)||!Array.isArray(d.playlists))throw Error();if(confirm('現在のライブラリをバックアップの内容で置き換えますか？')){songs=d.songs;playlists=d.playlists;save();render()}}catch{alert('バックアップファイルを読み込めませんでした')}e.target.value=''});
@@ -492,5 +596,5 @@ render();
 </script>
 </body>
 </html>
-  
+    
     
