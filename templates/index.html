@@ -723,12 +723,20 @@ if(b.dataset.act==='play')playInApp(s);
   document.getElementById('language').value = s.language || '';
   document.getElementById('url').value = s.url || '';
 
+  const addForm = document.getElementById('addForm');
+  const registerAccordion = addForm.closest('details.accordion');
+
+  if (registerAccordion) {
+    registerAccordion.open = true;
+  }
   const form = document.getElementById('addForm');
   const submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
   if(submitButton) submitButton.textContent = '変更を保存';
 
+  document.getElementById('addForm')
+    .scrollIntoView({ behavior: 'smooth', block: 'start' });
+
   document.getElementById('title').focus();
-  window.scrollTo({top: 0, behavior: 'smooth'});
   return;
  }
  if(b.dataset.act==='search')window.open('https://www.youtube.com/results?search_query='+encodeURIComponent([s.title,s.artist].filter(Boolean).join(' ')),'_blank','noopener');
