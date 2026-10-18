@@ -47,7 +47,7 @@ def search():
                 "thumbnail": "https://i.ytimg.com/vi/" + video_id + "/mqdefault.jpg"
             })
 
-            if len(videos) >= 15:
+            if len(videos) >= 50:
                 break
 
         return jsonify({"results": videos})
