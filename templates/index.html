@@ -354,6 +354,66 @@ button:hover {
   border-color: rgba(220, 220, 220, 0.3);
   letter-spacing: 0.02em;
 }
+/* 文字と枠の重なり・窮屈さを改善 */
+.panel {
+  padding: 18px;
+}
+
+details.accordion > summary {
+  padding: 18px;
+  line-height: 1.6;
+}
+
+details.accordion > section.panel {
+  padding: 18px;
+}
+
+.song {
+  padding: 16px;
+}
+
+.song h3 {
+  line-height: 1.7;
+  margin-bottom: 8px;
+  overflow-wrap: anywhere;
+}
+
+.song p {
+  line-height: 1.7;
+  margin: 6px 0;
+  overflow-wrap: anywhere;
+}
+
+.pill {
+  line-height: 1.6;
+  padding: 4px 9px;
+}
+
+#backgroundSettings label {
+  gap: 10px;
+  line-height: 1.8;
+}
+
+/* スマホでは画面幅に合わせて調整 */
+@media (max-width: 600px) {
+  .panel,
+  details.accordion > section.panel {
+    padding: 14px;
+  }
+
+  details.accordion > summary {
+    padding: 16px 14px;
+  }
+
+  .song {
+    padding: 14px;
+  }
+
+  .song h3,
+  .song p {
+    line-height: 1.7;
+  }
+}
 </style>
 </head>
 <body>
