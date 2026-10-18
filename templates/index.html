@@ -229,7 +229,9 @@ details.accordion {
   border: 1px solid var(--line);
   border-radius: 14px;
 }
-
+details.accordion > :not(summary) {
+  font-size: 14px;
+}
 details.accordion > summary {
   display: flex;
   min-height: 46px;
