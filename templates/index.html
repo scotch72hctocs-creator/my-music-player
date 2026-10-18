@@ -260,10 +260,18 @@ body.photo-background .song {
   #backgroundSettings label { gap: 8px; margin: 15px 0; }
   #youtubePlayer iframe { width: 100%; }
 }
-  #searchResults {
+#searchResults {
   max-height: 600px;
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#searchResults * {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 </style>
 </head>
