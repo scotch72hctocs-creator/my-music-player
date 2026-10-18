@@ -927,6 +927,9 @@ onAutoplayBlocked: () => {
   message.textContent =
     '自動再生が制限されました。画面内の再生ボタンを押してね。';
 },
+onFullscreenChange: event => {
+  message.textContent = '全画面イベントを検知しました';
+},
 onStateChange: event => {
   if (event.data === YT.PlayerState.PLAYING) {
     message.textContent = '再生中です♪';
