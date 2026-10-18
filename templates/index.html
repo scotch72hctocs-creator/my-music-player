@@ -463,7 +463,7 @@ button {
   <section class="panel">
 <form id="searchForm">
   <div class="grid">
-    <label>曲名・歌手・アルバムなど<input id="query" placeholder="例：宇多田ヒカル First Love" required></label>
+    <label>曲名・歌手・アルバムなど<input id="query" placeholder="例：宇多田ヒカル First Love"></label>
     <label>年代
       <select id="decade"><option value="">指定なし</option><option>1960年代</option><option>1970年代</option><option>1980年代</option><option>1990年代</option><option>2000年代</option><option>2010年代</option><option>2020年代</option></select>
     </label>
@@ -584,11 +584,17 @@ const category = document.getElementById('searchCategory').value;
 let searchQuery = query;
 
 if (category === 'music') {
-  searchQuery += ' music';
+  searchQuery = [searchQuery, 'music'].filter(Boolean).join(' ');
 }
 
-const terms = [searchQuery, decade, region].filter(Boolean).join(' ');
-  const resultsBox = document.getElementById('searchResults');
+const terms = [searchQuery.trim(), decade, region].filter(Boolean).join(' ');
+
+if (!query && !decade && !region) {
+  alert('曲名・歌手・年代・ジャンルのいずれかを指定してね。');
+  return;
+}
+
+const resultsBox = document.getElementById('searchResults');
 
   resultsBox.innerHTML = '<p>検索中...</p>';
 
