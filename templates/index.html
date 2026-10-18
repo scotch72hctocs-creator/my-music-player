@@ -345,31 +345,33 @@ details.accordion > summary {
 <div id="playlists"></div>
   </section>
 </details>
-    <section class="panel" id="backgroundSettings">
-  <h2>背景設定</h2>
+<details class="accordion">
+  <summary>🎨 背景設定</summary>
 
-  <label>
-    背景の種類
-    <select id="backgroundMode">
-      <option value="solid">単色</option>
-      <option value="image">写真</option>
-    </select>
-  </label>
-
-  <div id="solidBackgroundSettings">
+  <section class="panel" id="backgroundSettings">
     <label>
-      背景色
-      <input type="color" id="backgroundColor" value="#090909">
+      背景の種類
+      <select id="backgroundMode">
+        <option value="solid">単色</option>
+        <option value="image">写真</option>
+      </select>
     </label>
-  </div>
 
-  <div id="imageBackgroundSettings" hidden>
-    <label>
-      背景写真
-      <input type="file" id="backgroundImage" accept="image/*">
-    </label>
-  </div>
-</section>
+    <div id="solidBackgroundSettings">
+      <label>
+        背景色
+        <input type="color" id="backgroundColor" value="#090909">
+      </label>
+    </div>
+
+    <div id="imageBackgroundSettings" hidden>
+      <label>
+        背景写真
+        <input type="file" id="backgroundImage" accept="image/*">
+      </label>
+    </div>
+  </section>
+</details>
 </main>
 <script>
 const KEY='mmp_free_songs_v1', PLAYKEY='mmp_free_playlists_v1';
