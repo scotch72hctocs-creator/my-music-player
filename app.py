@@ -18,36 +18,60 @@ def search():
     if not query:
         return jsonify({"error": "検索キーワードを入力してください。"}), 400
 
-    params = urlencode({
-        "q": query,
-        "type": "video",
-        "region": "JP"
-    })
-
-    url = "https://invidious.f5.si/api/v1/search?" + params
-    req = Request(url, headers={"User-Agent": "MyMusicPlayer/1.0"})
+    videos = []
+    seen_ids = set()
+    max_videos = 50
+    max_pages = 5
 
     try:
-        with urlopen(req, timeout=15) as response:
-            results = json.loads(response.read().decode("utf-8"))
-
-        videos = []
-
-        for item in results:
-            if item.get("type") != "video" or not item.get("videoId"):
-                continue
-
-            video_id = item["videoId"]
-
-            videos.append({
-                "videoId": video_id,
-                "title": item.get("title", ""),
-                "author": item.get("author", ""),
-                "videoUrl": "https://www.youtube.com/watch?v=" + video_id,
-                "thumbnail": "https://i.ytimg.com/vi/" + video_id + "/mqdefault.jpg"
+        for page in range(1, max_pages + 1):
+            params = urlencode({
+                "q": query,
+                "type": "video",
+                "region": "JP",
+                "page": page
             })
 
-            if len(videos) >= 50:
+            url = "https://invidious.f5.si/api/v1/search?" + params
+            req = Request(
+                url,
+                headers={"User-Agent": "MyMusicPlayer/1.0"}
+            )
+
+            with urlopen(req, timeout=15) as response:
+                results = json.loads(response.read().decode("utf-8"))
+
+            if not isinstance(results, list) or not results:
+                break
+
+            previous_count = len(videos)
+
+            for item in results:
+                if item.get("type") != "video" or not item.get("videoId"):
+                    continue
+
+                video_id = item["videoId"]
+
+                if video_id in seen_ids:
+                    continue
+
+                seen_ids.add(video_id)
+
+                videos.append({
+                    "videoId": video_id,
+                    "title": item.get("title", ""),
+                    "author": item.get("author", ""),
+                    "videoUrl": "https://www.youtube.com/watch?v=" + video_id,
+                    "thumbnail": "https://i.ytimg.com/vi/" + video_id + "/mqdefault.jpg"
+                })
+
+                if len(videos) >= max_videos:
+                    break
+
+            if len(videos) >= max_videos:
+                break
+
+            if len(videos) == previous_count:
                 break
 
         return jsonify({"results": videos})
