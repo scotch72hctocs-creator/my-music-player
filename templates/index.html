@@ -7,7 +7,6 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Special+Elite&display=swap');
 
-/* ===== 基本設定 ===== */
 :root {
   color-scheme: dark;
   --bg: #090909;
@@ -20,12 +19,15 @@
   --body-font: "BIZ UDPGothic", "Courier New", monospace;
 }
 
-* {
-  box-sizing: border-box;
+* { box-sizing: border-box; }
+
+html, body {
+  max-width: 100%;
+  margin: 0;
+  overflow-x: hidden;
 }
 
 body {
-  margin: 0;
   background: var(--bg);
   color: var(--text);
   font-family: var(--body-font);
@@ -42,36 +44,17 @@ h1, h2, h3 {
   color: #dedbd2;
   font-family: var(--app-font);
   font-weight: 400;
-  letter-spacing: 0.025em;
-  text-shadow: 0.5px 0.4px 0 rgba(180, 175, 160, 0.3);
+  letter-spacing: .025em;
+  text-shadow: .5px .4px 0 rgba(180, 175, 160, .3);
   overflow-wrap: anywhere;
 }
 
-h1 {
-  margin: 0 0 8px;
-  font-size: 1.8rem;
-  line-height: 1.4;
-}
+h1 { margin: 0 0 8px; font-size: 1.8rem; line-height: 1.4; }
+h2 { margin: 0 0 14px; font-size: 1.15rem; line-height: 1.5; }
+h3 { line-height: 1.5; }
+p, .muted { color: var(--muted); }
+a { color: #ddd; }
 
-h2 {
-  margin: 0 0 14px;
-  font-size: 1.15rem;
-  line-height: 1.5;
-}
-
-h3 {
-  line-height: 1.5;
-}
-
-p, .muted {
-  color: var(--muted);
-}
-
-a {
-  color: #ddd;
-}
-
-/* ===== パネル・入力欄 ===== */
 .panel {
   min-width: 0;
   margin: 14px 0;
@@ -81,10 +64,7 @@ a {
   border-radius: 14px;
 }
 
-input,
-select,
-textarea,
-button {
+input, select, textarea, button {
   min-width: 0;
   max-width: 100%;
   padding: 8px 10px;
@@ -96,37 +76,23 @@ button {
   font: inherit;
 }
 
-input,
-select,
-textarea {
-  width: 100%;
-}
+input, select, textarea { width: 100%; }
 
 button {
   cursor: pointer;
   background: #292929;
-  border-color: rgba(220, 220, 220, 0.28);
+  border-color: rgba(220, 220, 220, .28);
   border-radius: 10px;
   font-family: var(--app-font);
-  letter-spacing: 0.025em;
+  letter-spacing: .025em;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition: background-color .2s ease, border-color .2s ease;
 }
 
-button:hover {
-  background: #3a3a3a;
-  border-color: rgba(220, 220, 220, 0.5);
-}
-
-button:active {
-  background: #505050;
-}
-
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
+button:hover { background: #3a3a3a; border-color: rgba(220, 220, 220, .5); }
+button:active { background: #505050; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -145,82 +111,49 @@ textarea:focus-visible {
   gap: 8px;
 }
 
-.row > * {
-  flex: 1 1 0;
-}
+.row > * { flex: 1 1 0; }
+.row button { flex: 0 1 auto; }
+.small { font-size: .9rem; }
 
-.row button {
-  flex: 0 1 auto;
-}
-
-.small {
-  font-size: 0.9rem;
-}
-
-/* ===== 曲のカード ===== */
 .song {
   min-width: 0;
   margin: 10px 0;
   padding: 14px;
-  border: 1px solid rgba(220, 220, 220, 0.22);
+  border: 1px solid rgba(220, 220, 220, .22);
   border-radius: 14px;
   font-family: var(--app-font);
-  transition: border-color 0.2s ease;
+  transition: border-color .2s ease;
 }
 
-.song:hover {
-  border-color: rgba(220, 220, 220, 0.42);
-}
-
+.song:hover { border-color: rgba(220, 220, 220, .42); }
 .song h3 {
   margin: 0 0 8px;
   color: #eee9df;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.6;
-  letter-spacing: 0.025em;
+  letter-spacing: .025em;
   overflow-wrap: anywhere;
 }
-
-.song p {
-  margin: 6px 0;
-  line-height: 1.65;
-  overflow-wrap: anywhere;
-}
-
-.song .row {
-  margin-top: 12px;
-}
-
-.song .row button {
-  flex: 1 1 0;
-}
+.song p { margin: 6px 0; line-height: 1.65; overflow-wrap: anywhere; }
+.song .row { margin-top: 12px; }
+.song .row button { flex: 1 1 0; }
 
 .pill {
   display: inline-block;
   padding: 4px 9px;
-  border: 1px solid rgba(220, 220, 220, 0.3);
+  border: 1px solid rgba(220, 220, 220, .3);
   border-radius: 999px;
   color: #ccc;
   font-family: var(--app-font);
-  font-size: 0.8rem;
+  font-size: .8rem;
   line-height: 1.5;
-  letter-spacing: 0.02em;
+  letter-spacing: .02em;
 }
 
-.empty {
-  padding: 16px;
-  color: var(--muted);
-  text-align: center;
-}
+.empty { padding: 16px; color: var(--muted); text-align: center; }
+.notice { color: #cfcfcf; font-size: .9rem; line-height: 1.7; }
 
-.notice {
-  color: #cfcfcf;
-  font-size: 0.9rem;
-  line-height: 1.7;
-}
-
-/* ===== アコーディオン ===== */
 details.accordion {
   margin: 12px 0;
   overflow: hidden;
@@ -228,9 +161,8 @@ details.accordion {
   border: 1px solid var(--line);
   border-radius: 14px;
 }
-details.accordion > :not(summary) {
-  font-size: 13px;
-}
+
+details.accordion > :not(summary) { font-size: 13px; }
 details.accordion > summary {
   display: flex;
   min-height: 46px;
@@ -243,32 +175,21 @@ details.accordion > summary {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  letter-spacing: 0.035em;
+  letter-spacing: .035em;
   cursor: pointer;
   list-style: none;
   touch-action: manipulation;
-  transition: background-color 0.2s ease;
+  transition: background-color .2s ease;
 }
-
-details.accordion > summary::-webkit-details-marker {
-  display: none;
-}
-
+details.accordion > summary::-webkit-details-marker { display: none; }
 details.accordion > summary::after {
   content: "+";
   flex: 0 0 auto;
   color: #ccc;
   font-size: 1.3rem;
 }
-
-details.accordion[open] > summary::after {
-  content: "−";
-}
-
-details.accordion > summary:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
+details.accordion[open] > summary::after { content: "−"; }
+details.accordion > summary:hover { background-color: rgba(255, 255, 255, .05); }
 details.accordion > section.panel {
   margin: 0;
   padding: 18px;
@@ -277,7 +198,6 @@ details.accordion > section.panel {
   border-radius: 0;
 }
 
-/* ===== 背景設定の入力欄 ===== */
 #backgroundSettings label {
   display: flex;
   min-width: 0;
@@ -287,808 +207,688 @@ details.accordion > section.panel {
   margin: 16px 0;
   line-height: 1.7;
 }
-
-#backgroundSettings select,
-#backgroundSettings input[type="color"],
-#backgroundSettings input[type="file"] {
+#backgroundSettings select, #backgroundSettings input[type="color"], #backgroundSettings input[type="file"] {
   box-sizing: border-box;
   max-width: 100%;
   margin-top: 2px;
 }
-
 #backgroundSettings select {
-  box-sizing: border-box;
   height: 44px;
   min-height: 44px;
   padding: 0 10px;
   line-height: normal;
   vertical-align: middle;
 }
+#backgroundSettings input[type="color"] { width: 80px; height: 44px; padding: 4px; }
+#backgroundSettings input[type="file"] { min-height: 44px; padding: 8px; }
 
-#backgroundSettings input[type="color"] {
-  width: 80px;
-  height: 44px;
-  padding: 4px;
-}
+#playerPanel, #youtubePlayer { min-width: 0; max-width: 100%; }
+#youtubePlayer iframe { display: block; max-width: 100%; }
 
-#backgroundSettings input[type="file"] {
-  min-height: 44px;
-  padding: 8px;
-}
-
-/* ===== アプリ内プレーヤー ===== */
-#playerPanel,
-#youtubePlayer {
-  min-width: 0;
-  max-width: 100%;
-}
-
-#youtubePlayer iframe {
-  display: block;
-  max-width: 100%;
-}
-
-/* ===== 写真背景：透過率は0.42を維持 ===== */
 body.photo-background .panel,
 body.photo-background details.accordion,
 body.photo-background .song {
-  background-color: rgba(12, 12, 12, 0.42);
+  background-color: rgba(12, 12, 12, .42);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 
-/* ===== スマートフォン対応 ===== */
 @media (max-width: 600px) {
-  main {
-    padding: 10px;
-  }
-
-  h1 {
-    font-size: 1.45rem;
-    line-height: 1.45;
-  }
-
-  h2 {
-    font-size: 1.1rem;
-    margin-bottom: 12px;
-  }
-
-  .panel {
-    padding: 12px;
-    margin: 12px 0;
-    border-radius: 12px;
-  }
-
-  .grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
-  }
-
-input,
-select,
-textarea,
-button {
-  font-size: 16px;
-  min-height: 44px;
-  max-width: 100%;
-  line-height: 1.4;
-}
-
-  button {
-    -webkit-appearance: none;
-    appearance: none;
-  }
-
-  .row {
-    gap: 8px;
-  }
-
-  .row button {
-    flex: 1 1 100%;
-    white-space: normal;
-  }
-
-  .song {
-    padding: 13px;
-    margin: 10px 0;
-  }
-
-  .song h3 {
-    font-size: 1.05rem;
-    line-height: 1.6;
-  }
-
-  .song p {
-    line-height: 1.65;
-  }
-
-  .song .row {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  .song .row button {
-    width: 100%;
-    min-width: 0;
-    min-height: 48px;
-    padding: 10px 6px;
-    font-size: 14px;
-  }
-
-  .pill {
-    margin: 2px 0;
-  }
-
-  details.accordion {
-    margin: 10px 0;
-  }
-
-  details.accordion > summary {
+  main { padding: 10px; }
+  h1 { font-size: 1.45rem; line-height: 1.45; }
+  h2 { margin-bottom: 12px; font-size: 1.1rem; }
+  .panel { margin: 12px 0; padding: 12px; border-radius: 12px; }
+  .grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  input, select, textarea, button {
     min-height: 44px;
-    padding: 9px 13px;
-    font-size: 0.95rem;
+    max-width: 100%;
+    font-size: 16px;
+    line-height: 1.4;
   }
-
-  details.accordion > section.panel {
-    padding: 15px;
-  }
-
-  #backgroundSettings label {
-    gap: 8px;
-    margin: 15px 0;
-  }
-
-  #youtubePlayer iframe {
-    width: 100%;
-  }
-}
-  html,
-body {
-  max-width: 100%;
-  overflow-x: hidden;
+  button { -webkit-appearance: none; appearance: none; }
+  .row { gap: 8px; }
+  .row button { flex: 1 1 100%; white-space: normal; }
+  .song { margin: 10px 0; padding: 13px; }
+  .song h3 { font-size: 1.05rem; line-height: 1.6; }
+  .song p { line-height: 1.65; }
+  .song .row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .song .row button { width: 100%; min-width: 0; min-height: 48px; padding: 10px 6px; font-size: 14px; }
+  .pill { margin: 2px 0; }
+  details.accordion { margin: 10px 0; }
+  details.accordion > summary { min-height: 44px; padding: 9px 13px; font-size: .95rem; }
+  details.accordion > section.panel { padding: 15px; }
+  #backgroundSettings label { gap: 8px; margin: 15px 0; }
+  #youtubePlayer iframe { width: 100%; }
 }
 </style>
 </head>
 <body>
 <main>
-<header>
-  <h1>♫ My Music Player</h1>
-</header>
-<details class="accordion" open>
-  <summary>Player</summary>
-  <section class="panel" id="playerPanel">
-  <div id="playerMessage" class="notice"></div>
-  <div id="youtubePlayer"></div>
-  <div id="playerInfo" class="muted"></div>
-  <div id="playlistPosition" class="muted"></div>
-  </section>
-</details>
-<details class="accordion">
-  <summary>search</summary>
-  <section class="panel">
-<form id="searchForm">
-  <div class="grid">
-    <label>曲名・歌手・アルバムなど<input id="query" placeholder="例：宇多田ヒカル First Love"></label>
-    <label>年代
-      <select id="decade"><option value="">指定なし</option><option>1960年代</option><option>1970年代</option><option>1980年代</option><option>1990年代</option><option>2000年代</option><option>2010年代</option><option>2020年代</option></select>
-    </label>
-    <label>ジャンル<select id="region"><option value="">邦楽・洋楽どちらも</option><option value="邦楽">邦楽</option><option value="洋楽">洋楽</option></select></label>
-    <label>検索対象
-  <select id="searchCategory">
-    <option value="music" selected>音楽カテゴリ（おすすめ）</option>
-    <option value="all">すべての動画</option>
-  </select>
-</label>
-  </div>
-  <div class="row" style="margin-top:10px"><button type="submit">YouTubeで検索</button></div>
-</form>
-  <div id="searchResults" class="search-results" aria-live="polite"></div>
- </section>
-</details>
+  <header><h1>♫ My Music Player</h1></header>
 
-<details class="accordion">
-  <summary>add</summary>
-  <section class="panel">
-<form id="addForm">
-  <div class="grid">
-    <label>曲名<input id="title" required placeholder="曲名"></label>
-    <label>歌手名<input id="artist" placeholder="歌手・バンド名"></label>
-    <label>アルバム名<input id="album" placeholder="アルバム名"></label>
-    <label>発売年<input id="year" type="number" min="1900" max="2100" placeholder="例：1998"></label>
-    <label>分類<select id="language"><option value="邦楽">邦楽</option><option value="洋楽">洋楽</option><option value="その他">その他</option></select></label>
-    <label>YouTube URL
-  <input id="url" type="url" placeholder="YouTubeのURLを貼り付け" >
-  <small id="urlMessage" class="muted"></small>
-</label>
-  </div>
-  <div class="row" style="margin-top:10px"><button type="submit">ライブラリに登録</button></div>
-</form>
-  </section>
-</details>
+  <details class="accordion" open>
+    <summary>Player</summary>
+    <section class="panel" id="playerPanel">
+      <div id="playerMessage" class="notice"></div>
+      <div id="youtubePlayer"></div>
+      <div id="playerInfo" class="muted"></div>
+      <div id="playlistPosition" class="muted"></div>
+    </section>
+  </details>
 
-<details class="accordion">
-  <summary>My library</summary>
-  <section class="panel">
-<div class="grid">
-<label>表示<select id="view"><option value="all">すべて</option><option value="favorites">お気に入り</option></select></label>
-<label>年代で絞り込み<select id="filterDecade"><option value="">すべての年代</option><option>1960年代</option><option>1970年代</option><option>1980年代</option><option>1990年代</option><option>2000年代</option><option>2010年代</option><option>2020年代</option></select></label>
-<label>邦楽・洋楽<select id="filterLanguage"><option value="">すべて</option><option>邦楽</option><option>洋楽</option><option>その他</option></select></label>
-<label>キーワード<input id="filterText" placeholder="曲名・歌手・アルバム"></label>
-</div>
-<div id="songs"></div>
-<div class="row">
-<button id="exportBtn" type="button">バックアップを書き出す</button>
-<button id="importBtn" type="button">バックアップを読み込む</button>
-<input id="importFile" type="file" accept="application/json,.json" hidden>
-</div>
-  </section>
-</details>
+  <details class="accordion">
+    <summary>search</summary>
+    <section class="panel">
+      <form id="searchForm">
+        <div class="grid">
+          <label>曲名・歌手・アルバムなど
+            <input id="query" placeholder="例：宇多田ヒカル First Love">
+          </label>
+          <label>年代
+            <select id="decade">
+              <option value="">指定なし</option>
+              <option>1960年代</option><option>1970年代</option><option>1980年代</option>
+              <option>1990年代</option><option>2000年代</option><option>2010年代</option><option>2020年代</option>
+            </select>
+          </label>
+          <label>ジャンル
+            <select id="region">
+              <option value="">邦楽・洋楽どちらも</option>
+              <option value="邦楽">邦楽</option><option value="洋楽">洋楽</option>
+            </select>
+          </label>
+          <label>検索対象
+            <select id="searchCategory">
+              <option value="music" selected>音楽カテゴリ（おすすめ）</option>
+              <option value="all">すべての動画</option>
+            </select>
+          </label>
+        </div>
+        <div class="row" style="margin-top:10px"><button type="submit">YouTubeで検索</button></div>
+      </form>
+      <div id="searchResults" aria-live="polite"></div>
+    </section>
+  </details>
 
-<details class="accordion">
-  <summary>playlist</summary>
-  <section class="panel">
-<div class="row"><input id="playlistName" placeholder="新しいプレイリスト名"><button id="createPlaylist" type="button">作成</button></div>
-<div id="playlists"></div>
-  </section>
-</details>
-<details class="accordion">
-  <summary>background</summary>
+  <details class="accordion">
+    <summary>add</summary>
+    <section class="panel">
+      <form id="addForm">
+        <div class="grid">
+          <label>曲名<input id="title" required placeholder="曲名"></label>
+          <label>歌手名<input id="artist" placeholder="歌手・バンド名"></label>
+          <label>アルバム名<input id="album" placeholder="アルバム名"></label>
+          <label>発売年<input id="year" type="number" min="1900" max="2100" placeholder="例：1998"></label>
+          <label>分類
+            <select id="language"><option value="邦楽">邦楽</option><option value="洋楽">洋楽</option><option value="その他">その他</option></select>
+          </label>
+          <label>YouTube URL
+            <input id="url" type="url" placeholder="YouTubeのURLを貼り付け">
+            <small id="urlMessage" class="muted"></small>
+          </label>
+        </div>
+        <div class="row" style="margin-top:10px"><button type="submit">ライブラリに登録</button></div>
+      </form>
+    </section>
+  </details>
 
-  <section class="panel" id="backgroundSettings">
-    <label>
-      背景の種類
-      <select id="backgroundMode">
-        <option value="solid">単色</option>
-        <option value="image">写真</option>
-      </select>
-    </label>
-
-    <div id="solidBackgroundSettings">
-      <label>
-        背景色
-        <input type="color" id="backgroundColor" value="#090909">
-      </label>
-    </div>
-
-    <div id="imageBackgroundSettings" hidden>
-      <label>
-        背景写真
-        <input type="file" id="backgroundImage" accept="image/*">
-      </label>
-    </div>
-  </section>
-</details>
-</main>
-<script>
-const KEY='mmp_free_songs_v1', PLAYKEY='mmp_free_playlists_v1';
-  document.querySelectorAll('details.accordion').forEach(item => {
-  item.addEventListener('toggle', () => {
-    if (item.open) {
-      document.querySelectorAll('details.accordion').forEach(other => {
-        if (other !== item) {
-          other.open = false;
-        }
-      });
-    }
-  });
-});
-let songs=load(KEY,[]), playlists=load(PLAYKEY,[]);
-  let editingSongId = null;
-function load(k,f){try{return JSON.parse(localStorage.getItem(k))||f}catch{return f}}
-function save(){localStorage.setItem(KEY,JSON.stringify(songs));localStorage.setItem(PLAYKEY,JSON.stringify(playlists))}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function decade(y){if(!y)return '';let d=Math.floor(Number(y)/10)*10;return d+'年代'}
-document.getElementById('searchForm').addEventListener('submit', async e => {
-  e.preventDefault();
-
-  const query = document.getElementById('query').value.trim();
-  const decade = document.getElementById('decade').value;
-const region = document.getElementById('region').value;
-const category = document.getElementById('searchCategory').value;
-
-let searchQuery = query;
-
-if (category === 'music') {
-  searchQuery = [searchQuery, 'music'].filter(Boolean).join(' ');
-}
-
-const terms = [searchQuery.trim(), decade, region].filter(Boolean).join(' ');
-
-if (!query && !decade && !region) {
-  alert('曲名・歌手・年代・ジャンルのいずれかを指定してね。');
-  return;
-}
-
-const resultsBox = document.getElementById('searchResults');
-
-  resultsBox.innerHTML = '<p>検索中...</p>';
-
-  try {
-    const response = await fetch('/api/search?q=' + encodeURIComponent(terms));
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || '検索に失敗しました。');
-    }
-
-    if (!data.results || data.results.length === 0) {
-      resultsBox.innerHTML = '<p>検索結果が見つかりませんでした。</p>';
-      return;
-    }
-  
-resultsBox.innerHTML = data.results.map((video, index) => `
-  <div class="search-result-item" style="display:flex;gap:12px;align-items:center;margin:12px 0;padding:10px;border:1px solid #444;border-radius:8px;">
-    <img src="${video.thumbnail}" alt="" style="width:120px;max-width:35%;border-radius:6px;">
-
-    <div style="flex:1;min-width:0;">
-      <div style="font-weight:bold;">${esc(video.title)}</div>
-      <div>${esc(video.author)}</div>
-
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
-        <button type="button" data-preview-index="${index}">
-          ▶ 再生
-        </button>
-
-        <button type="button" data-search-index="${index}">
-          ▼ 登録
-        </button>
+  <details class="accordion">
+    <summary>My library</summary>
+    <section class="panel">
+      <div class="grid">
+        <label>表示<select id="view"><option value="all">すべて</option><option value="favorites">お気に入り</option></select></label>
+        <label>年代で絞り込み
+          <select id="filterDecade">
+            <option value="">すべての年代</option>
+            <option>1960年代</option><option>1970年代</option><option>1980年代</option>
+            <option>1990年代</option><option>2000年代</option><option>2010年代</option><option>2020年代</option>
+          </select>
+        </label>
+        <label>邦楽・洋楽
+          <select id="filterLanguage"><option value="">すべて</option><option>邦楽</option><option>洋楽</option><option>その他</option></select>
+        </label>
+        <label>キーワード<input id="filterText" placeholder="曲名・歌手・アルバム"></label>
       </div>
-    </div>
-  </div>
-`).join('');
-resultsBox.querySelectorAll('[data-preview-index]').forEach(button => {
-  button.addEventListener('click', () => {
-    const video = data.results[Number(button.dataset.previewIndex)];
+      <div id="songs"></div>
+      <div class="row">
+        <button id="exportBtn" type="button">バックアップを書き出す</button>
+        <button id="importBtn" type="button">バックアップを読み込む</button>
+        <input id="importFile" type="file" accept="application/json,.json" hidden>
+      </div>
+    </section>
+  </details>
 
-    playInApp({
-      title: video.title,
-      artist: video.author,
-      url: video.videoUrl
-    });
-  });
-});
-    resultsBox.querySelectorAll('[data-search-index]').forEach(button => {
-      button.addEventListener('click', () => {
-        const video = data.results[Number(button.dataset.searchIndex)];
+  <details class="accordion">
+    <summary>playlist</summary>
+    <section class="panel">
+      <div class="row"><input id="playlistName" placeholder="新しいプレイリスト名"><button id="createPlaylist" type="button">作成</button></div>
+      <div id="playlists"></div>
+    </section>
+  </details>
 
-        document.getElementById('title').value = video.title;
-        document.getElementById('artist').value = video.author;
-        document.getElementById('url').value = video.videoUrl;
+  <details class="accordion">
+    <summary>background</summary>
+    <section class="panel" id="backgroundSettings">
+      <label>背景の種類
+        <select id="backgroundMode"><option value="solid">単色</option><option value="image">写真</option></select>
+      </label>
+      <div id="solidBackgroundSettings">
+        <label>背景色<input type="color" id="backgroundColor" value="#090909"></label>
+      </div>
+      <div id="imageBackgroundSettings" hidden>
+        <label>背景写真<input type="file" id="backgroundImage" accept="image/*"></label>
+      </div>
+    </section>
+  </details>
+</main>
 
-        document.getElementById('url').dispatchEvent(
-          new Event('change', { bubbles: true })
-        );
-        const addForm = document.getElementById('addForm');
-        const registerAccordion = addForm.closest('details.accordion');
+<script>
+'use strict';
 
-        if (registerAccordion) {
-          registerAccordion.open = true;
-        }
+const SONGS_KEY = 'mmp_free_songs_v1';
+const PLAYLISTS_KEY = 'mmp_free_playlists_v1';
+const BG_MODE_KEY = 'myMusicPlayerBackgroundMode';
+const BG_COLOR_KEY = 'myMusicPlayerBackgroundColor';
+const BG_DB_NAME = 'myMusicPlayerBackgroundDB';
+const BG_STORE_NAME = 'settings';
+const BG_IMAGE_KEY = 'backgroundImage';
 
-        addForm.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      });
-    });
-
-  } catch (error) {
-    resultsBox.innerHTML = '<p>' + esc(error.message) + '</p>';
+function load(key, fallback) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key));
+    return value ?? fallback;
+  } catch {
+    return fallback;
   }
-});
+}
 
-const urlInput = document.getElementById('url');
-const urlMessage = document.getElementById('urlMessage');
+let songs = load(SONGS_KEY, []);
+let playlists = load(PLAYLISTS_KEY, []);
+let editingSongId = null;
+let currentPlaylistSongs = [];
+let currentPlaylistIndex = -1;
+let isShuffleMode = false;
+let ytPlayer = null;
+let ytApiPromise = null;
+let wasPlayingBeforeFullscreen = false;
+
+function save() {
+  localStorage.setItem(SONGS_KEY, JSON.stringify(songs));
+  localStorage.setItem(PLAYLISTS_KEY, JSON.stringify(playlists));
+}
+
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[char]);
+}
+
+function decade(year) {
+  if (!year) return '';
+  return `${Math.floor(Number(year) / 10) * 10}年代`;
+}
 
 function getYouTubeVideoId(value) {
   try {
     const parsed = new URL(value);
     const host = parsed.hostname.toLowerCase().replace(/^www\./, '');
 
-    if (host === 'youtu.be') {
-      return parsed.pathname.split('/').filter(Boolean)[0] || null;
-    }
+    if (host === 'youtu.be') return parsed.pathname.split('/').filter(Boolean)[0] || null;
 
-    if (
-      host === 'youtube.com' ||
-      host === 'm.youtube.com' ||
-      host === 'music.youtube.com' ||
-      host === 'youtube-nocookie.com'
-    ) {
-      if (parsed.pathname === '/watch') {
-        return parsed.searchParams.get('v');
-      }
-
+    if (['youtube.com', 'm.youtube.com', 'music.youtube.com', 'youtube-nocookie.com'].includes(host)) {
+      if (parsed.pathname === '/watch') return parsed.searchParams.get('v');
       const match = parsed.pathname.match(/^\/(embed|shorts|live)\/([^/]+)/);
       return match ? match[2] : null;
     }
-
     return null;
   } catch {
     return null;
   }
 }
 
+function isValidYouTubeId(id) {
+  return typeof id === 'string' && /^[a-zA-Z0-9_-]{11}$/.test(id);
+}
+
+/* アコーディオンは同時に1つだけ開く */
+document.querySelectorAll('details.accordion').forEach(item => {
+  item.addEventListener('toggle', () => {
+    if (!item.open) return;
+    document.querySelectorAll('details.accordion').forEach(other => {
+      if (other !== item) other.open = false;
+    });
+  });
+});
+
+/* YouTube検索 */
+document.getElementById('searchForm').addEventListener('submit', async event => {
+  event.preventDefault();
+
+  const query = document.getElementById('query').value.trim();
+  const selectedDecade = document.getElementById('decade').value;
+  const region = document.getElementById('region').value;
+  const category = document.getElementById('searchCategory').value;
+
+  if (!query && !selectedDecade && !region) {
+    alert('曲名・歌手・年代・ジャンルのいずれかを指定してね。');
+    return;
+  }
+
+  const searchQuery = [
+    query,
+    category === 'music' ? 'music' : '',
+    selectedDecade,
+    region
+  ].filter(Boolean).join(' ');
+
+  const resultsBox = document.getElementById('searchResults');
+  resultsBox.innerHTML = '<p>検索中...</p>';
+
+  try {
+    const response = await fetch('/api/search?q=' + encodeURIComponent(searchQuery));
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || '検索に失敗しました。');
+
+    if (!Array.isArray(data.results) || !data.results.length) {
+      resultsBox.innerHTML = '<p>検索結果が見つかりませんでした。</p>';
+      return;
+    }
+
+    resultsBox.innerHTML = data.results.map((video, index) => `
+      <div class="search-result-item" style="display:flex;gap:12px;align-items:center;margin:12px 0;padding:10px;border:1px solid #444;border-radius:8px;">
+        <img src="${esc(video.thumbnail)}" alt="" loading="lazy" style="width:120px;max-width:35%;border-radius:6px;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:bold;">${esc(video.title)}</div>
+          <div>${esc(video.author)}</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+            <button type="button" data-preview-index="${index}">▶ 再生</button>
+            <button type="button" data-search-index="${index}">▼ 登録</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    resultsBox.querySelectorAll('[data-preview-index]').forEach(button => {
+      button.addEventListener('click', () => {
+        const video = data.results[Number(button.dataset.previewIndex)];
+        playInApp({ title: video.title, artist: video.author, url: video.videoUrl });
+      });
+    });
+
+    resultsBox.querySelectorAll('[data-search-index]').forEach(button => {
+      button.addEventListener('click', () => {
+        const video = data.results[Number(button.dataset.searchIndex)];
+        document.getElementById('title').value = video.title || '';
+        document.getElementById('artist').value = video.author || '';
+        document.getElementById('url').value = video.videoUrl || '';
+        document.getElementById('url').dispatchEvent(new Event('change', { bubbles: true }));
+
+        const addForm = document.getElementById('addForm');
+        addForm.closest('details.accordion').open = true;
+        addForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  } catch (error) {
+    resultsBox.innerHTML = `<p>${esc(error.message)}</p>`;
+  }
+});
+
+/* 登録フォームのYouTube URL確認と動画情報取得 */
+const urlInput = document.getElementById('url');
+const urlMessage = document.getElementById('urlMessage');
+
 urlInput.addEventListener('input', () => {
   const value = urlInput.value.trim();
-
   if (!value) {
     urlMessage.textContent = '';
     return;
   }
-
   const videoId = getYouTubeVideoId(value);
-
-  if (videoId && /^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
-    urlMessage.textContent = '✓ YouTubeの動画IDを確認しました。';
-  } else {
-    urlMessage.textContent = 'URLを確認してください。YouTubeの動画URLを入力してね。';
-  }
+  urlMessage.textContent = isValidYouTubeId(videoId)
+    ? '✓ YouTubeの動画IDを確認しました。'
+    : 'URLを確認してください。YouTubeの動画URLを入力してね。';
 });
-  urlInput.addEventListener('change', async () => {
-  const value = urlInput.value.trim();
-  const videoId = getYouTubeVideoId(value);
 
-  if (!videoId || !/^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
-    return;
-  }
+urlInput.addEventListener('change', async () => {
+  const videoId = getYouTubeVideoId(urlInput.value.trim());
+  if (!isValidYouTubeId(videoId)) return;
 
   urlMessage.textContent = '動画情報を取得しています...';
-
   try {
-    const oembedUrl =
-      'https://www.youtube.com/oembed?url=' +
-      encodeURIComponent(
-        'https://www.youtube.com/watch?v=' + videoId
-      ) +
-      '&format=json';
-
+    const oembedUrl = 'https://www.youtube.com/oembed?url=' +
+      encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`) + '&format=json';
     const response = await fetch(oembedUrl);
-
-    if (!response.ok) {
-      throw new Error('動画情報を取得できませんでした');
-    }
-
+    if (!response.ok) throw new Error('動画情報を取得できませんでした');
     const data = await response.json();
+
     const titleField = document.getElementById('title');
     const artistField = document.getElementById('artist');
-
-    if (titleField && !titleField.value.trim()) {
-      titleField.value = data.title || '';
-    }
-
-    if (artistField && !artistField.value.trim()) {
-      artistField.value = data.author_name || '';
-    }
-
-    urlMessage.textContent =
-      '✓ 情報を取得しました。曲名と投稿者名を確認してください。';
+    if (!titleField.value.trim()) titleField.value = data.title || '';
+    if (!artistField.value.trim()) artistField.value = data.author_name || '';
+    urlMessage.textContent = '✓ 情報を取得しました。曲名と投稿者名を確認してください。';
   } catch {
-    urlMessage.textContent =
-      '動画IDは確認できましたが、情報を取得できませんでした。手入力してください。';
+    urlMessage.textContent = '動画IDは確認できましたが、情報を取得できませんでした。手入力してください。';
   }
 });
-document.getElementById('addForm').addEventListener('submit', e => {
-  e.preventDefault();
 
-  const titleField = document.getElementById('title');
-  const artistField = document.getElementById('artist');
-  const albumField = document.getElementById('album');
-  const yearField = document.getElementById('year');
-  const languageField = document.getElementById('language');
-  const urlField = document.getElementById('url');
+document.getElementById('addForm').addEventListener('submit', event => {
+  event.preventDefault();
 
-  const songUrl = urlField.value.trim();
+  const songUrl = document.getElementById('url').value.trim();
   const videoId = getYouTubeVideoId(songUrl);
 
-  if (videoId) {
-    const alreadyExists = songs.some(song => {
-      return song.id !== editingSongId &&
-        getYouTubeVideoId(song.url || '') === videoId;
-    });
-
-    if (alreadyExists) {
+  if (videoId && isValidYouTubeId(videoId)) {
+    const duplicate = songs.some(song =>
+      song.id !== editingSongId && getYouTubeVideoId(song.url || '') === videoId
+    );
+    if (duplicate) {
       alert('このYouTube動画はすでに登録されています。');
       return;
     }
   }
 
   const songData = {
-    title: titleField.value.trim(),
-    artist: artistField.value.trim(),
-    album: albumField.value.trim(),
-    year: yearField.value,
-    language: languageField.value,
+    title: document.getElementById('title').value.trim(),
+    artist: document.getElementById('artist').value.trim(),
+    album: document.getElementById('album').value.trim(),
+    year: document.getElementById('year').value,
+    language: document.getElementById('language').value,
     url: songUrl
   };
 
   if (editingSongId) {
-    const song = songs.find(s => s.id === editingSongId);
-
-    if (song) {
-      Object.assign(song, songData);
-    }
-
+    const existing = songs.find(song => song.id === editingSongId);
+    if (existing) Object.assign(existing, songData);
     editingSongId = null;
   } else {
-    songs.unshift({
-      id: Date.now().toString(),
-      ...songData,
-      favorite: false
-    });
+    songs.unshift({ id: Date.now().toString(), ...songData, favorite: false });
   }
 
   save();
-  e.target.reset();
-
-  const submitButton = e.target.querySelector(
-    'button[type="submit"], input[type="submit"]'
-  );
-  if (submitButton) submitButton.textContent = '▼ 登録';
-
+  event.currentTarget.reset();
+  const submitButton = event.currentTarget.querySelector('button[type="submit"]');
+  if (submitButton) submitButton.textContent = 'ライブラリに登録';
+  urlMessage.textContent = '';
   render();
 });
-  let currentPlaylistSongs = [];
-let currentPlaylistIndex = -1;
-  let isShuffleMode = false;
-  let ytPlayer = null;
-let ytApiPromise = null;
 
+/* YouTube IFrame API */
 function loadYouTubeIframeAPI() {
-  if (window.YT && window.YT.Player) {
-    return Promise.resolve();
-  }
-
-  if (ytApiPromise) {
-    return ytApiPromise;
-  }
+  if (window.YT && window.YT.Player) return Promise.resolve();
+  if (ytApiPromise) return ytApiPromise;
 
   ytApiPromise = new Promise((resolve, reject) => {
     window.onYouTubeIframeAPIReady = () => resolve();
-
     const script = document.createElement('script');
     script.src = 'https://www.youtube.com/iframe_api';
     script.onerror = () => {
       ytApiPromise = null;
       reject(new Error('YouTube APIを読み込めませんでした'));
     };
-
     document.head.appendChild(script);
   });
-
   return ytApiPromise;
 }
+
 async function playInApp(song) {
   const message = document.getElementById('playerMessage');
-  let wasPlayingBeforeFullscreen = false;
-  const player = document.getElementById('youtubePlayer');
+  const playerRoot = document.getElementById('youtubePlayer');
   const info = document.getElementById('playerInfo');
   const position = document.getElementById('playlistPosition');
-  const playerPanel = document.getElementById('playerPanel');
-  const playerAccordion = playerPanel.closest('details.accordion');
+  const playerAccordion = document.getElementById('playerPanel').closest('details.accordion');
 
-  if (playerAccordion) {
-    playerAccordion.open = true;
-  }
+  playerAccordion.open = true;
 
-  if (
-    currentPlaylistSongs.length > 0 &&
-    currentPlaylistIndex >= 0
-  ) {
-    position.textContent =
-      `プレイリスト再生：${currentPlaylistIndex + 1} / ${currentPlaylistSongs.length} 曲目`;
-  } else {
-    position.textContent = '';
-  }
+  position.textContent = currentPlaylistSongs.length > 0 && currentPlaylistIndex >= 0
+    ? `プレイリスト再生：${currentPlaylistIndex + 1} / ${currentPlaylistSongs.length} 曲目`
+    : '';
 
   const videoId = getYouTubeVideoId(song.url || '');
-
-  if (!videoId || !/^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
+  if (!isValidYouTubeId(videoId)) {
     message.textContent = '有効なYouTube動画URLを登録してね。';
-    player.replaceChildren();
+    playerRoot.replaceChildren();
+    ytPlayer = null;
     info.textContent = '';
     return;
   }
 
   message.textContent = '再生プレーヤーを読み込み中…';
-  info.textContent = song.title + (song.artist ? ' / ' + song.artist : '');
+  info.textContent = `${song.title || ''}${song.artist ? ' / ' + song.artist : ''}`;
 
-if (!document.getElementById('youtubePlayerFrame')) {
-  const mount = document.createElement('div');
-  mount.id = 'youtubePlayerFrame';
-  player.appendChild(mount);
-}
-
-try {
-    if (ytPlayer) {
+  if (ytPlayer) {
+    try {
       ytPlayer.loadVideoById(videoId);
       ytPlayer.playVideo();
       message.textContent = '曲を切り替えています…';
       return;
+    } catch {
+      ytPlayer = null;
     }
+  }
 
+  let mount = document.getElementById('youtubePlayerFrame');
+  if (!mount) {
+    mount = document.createElement('div');
+    mount.id = 'youtubePlayerFrame';
+    playerRoot.replaceChildren(mount);
+  }
+
+  try {
     await loadYouTubeIframeAPI();
     ytPlayer = new YT.Player('youtubePlayerFrame', {
       width: '100%',
       height: '220',
-      videoId: videoId,
-playerVars: {
-  playsinline: 1,
-  rel: 0,
-  fs: 1,
-  autoplay: 1
-},
+      videoId,
+      playerVars: { playsinline: 1, rel: 0, fs: 1, autoplay: 1 },
       events: {
-onReady: () => {
-  message.textContent = '再生を開始します…';
-  ytPlayer.playVideo();
-},
-onAutoplayBlocked: () => {
-  message.textContent =
-    '自動再生が制限されました。画面内の再生ボタンを押してね。';
-},
-onFullscreenChange: event => {
-  if (!event.data) return;
+        onReady: () => {
+          message.textContent = '再生を開始します…';
+          ytPlayer.playVideo();
+        },
+        onAutoplayBlocked: () => {
+          message.textContent = '自動再生が制限されました。画面内の再生ボタンを押してね。';
+        },
+        /* このイベントは公式APIで保証されていないため、iPhoneでの動作は未確定 */
+        onFullscreenChange: event => {
+          if (!event.data) return;
 
-  if (event.data.fullscreen === true) {
-    wasPlayingBeforeFullscreen =
-      ytPlayer.getPlayerState() === YT.PlayerState.PLAYING;
-    message.textContent = '全画面で再生中です';
-  }
-
-  if (event.data.fullscreen === false) {
-    message.textContent = '全画面を終了しました';
-
-    if (
-      wasPlayingBeforeFullscreen &&
-      ytPlayer &&
-      ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING
-    ) {
-      ytPlayer.playVideo();
-    }
-
-    wasPlayingBeforeFullscreen = false;
-  }
-},
-onStateChange: event => {
-  if (event.data === YT.PlayerState.PLAYING) {
-    message.textContent = '再生中です♪';
-  }
-
-  if (event.data === YT.PlayerState.ENDED) {
-    message.textContent = '曲が終了しました。次の曲を読み込みます…';
-
-    if (
-      currentPlaylistSongs.length &&
-      currentPlaylistIndex >= 0 &&
-      currentPlaylistIndex < currentPlaylistSongs.length
-    ) {
-      const isLastSong =
-        currentPlaylistIndex === currentPlaylistSongs.length - 1;
-
-      if (isLastSong && isShuffleMode && currentPlaylistSongs.length > 1) {
-        const previousSongId =
-          currentPlaylistSongs[currentPlaylistIndex].id;
-
-        for (let i = currentPlaylistSongs.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-
-          [
-            currentPlaylistSongs[i],
-            currentPlaylistSongs[j]
-          ] = [
-            currentPlaylistSongs[j],
-            currentPlaylistSongs[i]
-          ];
-        }
-
-        if (currentPlaylistSongs[0].id === previousSongId) {
-          const differentIndex = currentPlaylistSongs.findIndex(
-            (song, index) => index > 0 && song.id !== previousSongId
-          );
-
-          if (differentIndex > 0) {
-            [
-              currentPlaylistSongs[0],
-              currentPlaylistSongs[differentIndex]
-            ] = [
-              currentPlaylistSongs[differentIndex],
-              currentPlaylistSongs[0]
-            ];
+          if (event.data.fullscreen === true) {
+            wasPlayingBeforeFullscreen = ytPlayer.getPlayerState() === YT.PlayerState.PLAYING;
+            message.textContent = '全画面で再生中です';
           }
-        }
 
-        currentPlaylistIndex = 0;
-      } else {
-        currentPlaylistIndex =
-          (currentPlaylistIndex + 1) % currentPlaylistSongs.length;
-      }
+          if (event.data.fullscreen === false) {
+            message.textContent = '全画面を終了しました';
+            if (
+              wasPlayingBeforeFullscreen &&
+              ytPlayer &&
+              ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING
+            ) {
+              ytPlayer.playVideo();
+            }
+            wasPlayingBeforeFullscreen = false;
+          }
+        },
+        onStateChange: event => {
+          if (event.data === YT.PlayerState.PLAYING) {
+            message.textContent = '再生中です♪';
+          }
 
-      const nextSong = currentPlaylistSongs[currentPlaylistIndex];
-
-      if (nextSong && nextSong.url) {
-        playInApp(nextSong);
-      } else {
-        message.textContent =
-          '次の曲にYouTube URLが登録されていません。';
-      }
-    } else {
-      message.textContent =
-        '曲が終了しました。プレイリストを選択すると自動で次の曲へ進めます。';
-    }
-  }
-},
+          if (event.data === YT.PlayerState.ENDED) {
+            message.textContent = '曲が終了しました。次の曲を読み込みます…';
+            advancePlaylistAfterEnd(message);
+          }
+        },
         onError: () => {
-          message.textContent =
-            'この動画は埋め込み再生できない可能性があります。';
+          message.textContent = 'この動画は埋め込み再生できない可能性があります。';
         }
       }
     });
-  } catch (error) {
-    message.textContent =
-      'YouTubeプレーヤーを読み込めませんでした。ページを再読み込みしてね。';
+  } catch {
+    message.textContent = 'YouTubeプレーヤーを読み込めませんでした。ページを再読み込みしてね。';
   }
 }
 
-function render(){
- const view=document.getElementById('view').value, dec=document.getElementById('filterDecade').value, lang=document.getElementById('filterLanguage').value, q=document.getElementById('filterText').value.toLowerCase();
- const filtered=songs.filter(s=>(view!=='favorites'||s.favorite)&&(!dec||decade(s.year)===dec)&&(!lang||s.language===lang)&&(!q||[s.title,s.artist,s.album].join(' ').toLowerCase().includes(q)));
- const root=document.getElementById('songs');
- root.innerHTML=filtered.length?filtered.map(s=>`<article class="song"><h3>${esc(s.title)} <span class="pill">${esc(s.language||'')}</span></h3><p>${esc(s.artist)} ${s.album?'／'+esc(s.album):''}</p><p class="muted">${esc(s.year||'発売年未登録')} ${s.year?'・'+esc(decade(s.year)):''}</p><div class="row">${s.url?`<button data-act="play" data-id="${s.id}">▶ 再生
- </button>`:`<button data-act="search" data-id="${s.id}">YouTubeで探す</button>`}<button data-act="fav" data-id="${s.id}">${s.favorite?'★ お気に入り解除':'☆ お気に入り'}</button><button data-act="playlist" data-id="${s.id}">プレイリストへ</button><button data-act="edit" data-id="${s.id}">編集</button><button data-act="delete" data-id="${s.id}">削除</button></div></article>`).join(''):'<div class="empty">まだ曲がないか、条件に合う曲がありません。</div>';
- renderPlaylists();
-}
-document.getElementById('songs').addEventListener('click',e=>{
- const b=e.target.closest('button');if(!b)return;const s=songs.find(x=>x.id===b.dataset.id);if(!s)return;
-if(b.dataset.act==='play')playInApp(s);
-  if(b.dataset.act==='edit'){
-  editingSongId = s.id;
-  document.getElementById('title').value = s.title || '';
-  document.getElementById('artist').value = s.artist || '';
-  document.getElementById('album').value = s.album || '';
-  document.getElementById('year').value = s.year || '';
-  document.getElementById('language').value = s.language || '';
-  document.getElementById('url').value = s.url || '';
-
-  const addForm = document.getElementById('addForm');
-  const registerAccordion = addForm.closest('details.accordion');
-
-  if (registerAccordion) {
-    registerAccordion.open = true;
+function advancePlaylistAfterEnd(message) {
+  if (
+    !currentPlaylistSongs.length ||
+    currentPlaylistIndex < 0 ||
+    currentPlaylistIndex >= currentPlaylistSongs.length
+  ) {
+    message.textContent = '曲が終了しました。プレイリストを選択すると自動で次の曲へ進めます。';
+    return;
   }
-  const form = document.getElementById('addForm');
-  const submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
-  if(submitButton) submitButton.textContent = '変更を保存';
 
-  document.getElementById('addForm')
-    .scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const isLastSong = currentPlaylistIndex === currentPlaylistSongs.length - 1;
+  if (isLastSong && isShuffleMode && currentPlaylistSongs.length > 1) {
+    const previousSongId = currentPlaylistSongs[currentPlaylistIndex].id;
 
-  document.getElementById('title').focus();
-  return;
- }
- if(b.dataset.act==='search')window.open('https://www.youtube.com/results?search_query='+encodeURIComponent([s.title,s.artist].filter(Boolean).join(' ')),'_blank','noopener');
- if(b.dataset.act==='fav')s.favorite=!s.favorite;
- if(b.dataset.act==='delete'){if(!confirm('この曲を削除しますか？'))return;songs=songs.filter(x=>x.id!==s.id);playlists.forEach(p=>p.songIds=p.songIds.filter(id=>id!==s.id))}
- if(b.dataset.act==='playlist'){if(!playlists.length){alert('先にプレイリストを作成してね');return}const names=playlists.map((p,i)=>`${i+1}: ${p.name}`).join('\\n');const n=prompt('追加先の番号を入力してください\\n'+names,'1');const p=playlists[Number(n)-1];if(p&&!p.songIds.includes(s.id))p.songIds.push(s.id)}
- save();render();
+    for (let i = currentPlaylistSongs.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [currentPlaylistSongs[i], currentPlaylistSongs[j]] = [currentPlaylistSongs[j], currentPlaylistSongs[i]];
+    }
+
+    if (currentPlaylistSongs[0].id === previousSongId) {
+      const differentIndex = currentPlaylistSongs.findIndex((song, index) =>
+        index > 0 && song.id !== previousSongId
+      );
+      if (differentIndex > 0) {
+        [currentPlaylistSongs[0], currentPlaylistSongs[differentIndex]] =
+          [currentPlaylistSongs[differentIndex], currentPlaylistSongs[0]];
+      }
+    }
+    currentPlaylistIndex = 0;
+  } else {
+    currentPlaylistIndex = (currentPlaylistIndex + 1) % currentPlaylistSongs.length;
+  }
+
+  const nextSong = currentPlaylistSongs[currentPlaylistIndex];
+  if (nextSong && nextSong.url) {
+    playInApp(nextSong);
+  } else {
+    message.textContent = '次の曲にYouTube URLが登録されていません。';
+  }
+}
+
+/* ライブラリ表示 */
+function render() {
+  const view = document.getElementById('view').value;
+  const selectedDecade = document.getElementById('filterDecade').value;
+  const language = document.getElementById('filterLanguage').value;
+  const query = document.getElementById('filterText').value.toLowerCase();
+
+  const filtered = songs.filter(song =>
+    (view !== 'favorites' || song.favorite) &&
+    (!selectedDecade || decade(song.year) === selectedDecade) &&
+    (!language || song.language === language) &&
+    (!query || [song.title, song.artist, song.album].join(' ').toLowerCase().includes(query))
+  );
+
+  const root = document.getElementById('songs');
+  root.innerHTML = filtered.length ? filtered.map(song => `
+    <article class="song">
+      <h3>${esc(song.title)} <span class="pill">${esc(song.language || '')}</span></h3>
+      <p>${esc(song.artist)} ${song.album ? '／' + esc(song.album) : ''}</p>
+      <p class="muted">${esc(song.year || '発売年未登録')} ${song.year ? '・' + esc(decade(song.year)) : ''}</p>
+      <div class="row">
+        ${song.url
+          ? `<button data-act="play" data-id="${esc(song.id)}">▶ 再生</button>`
+          : `<button data-act="search" data-id="${esc(song.id)}">YouTubeで探す</button>`}
+        <button data-act="fav" data-id="${esc(song.id)}">${song.favorite ? '★ お気に入り解除' : '☆ お気に入り'}</button>
+        <button data-act="playlist" data-id="${esc(song.id)}">プレイリストへ</button>
+        <button data-act="edit" data-id="${esc(song.id)}">編集</button>
+        <button data-act="delete" data-id="${esc(song.id)}">削除</button>
+      </div>
+    </article>
+  `).join('') : '<div class="empty">まだ曲がないか、条件に合う曲がありません。</div>';
+
+  renderPlaylists();
+}
+
+document.getElementById('songs').addEventListener('click', event => {
+  const button = event.target.closest('button');
+  if (!button) return;
+  const song = songs.find(item => item.id === button.dataset.id);
+  if (!song) return;
+
+  switch (button.dataset.act) {
+    case 'play':
+      currentPlaylistSongs = [];
+      currentPlaylistIndex = -1;
+      isShuffleMode = false;
+      playInApp(song);
+      break;
+
+    case 'edit': {
+      editingSongId = song.id;
+      document.getElementById('title').value = song.title || '';
+      document.getElementById('artist').value = song.artist || '';
+      document.getElementById('album').value = song.album || '';
+      document.getElementById('year').value = song.year || '';
+      document.getElementById('language').value = song.language || '邦楽';
+      document.getElementById('url').value = song.url || '';
+      urlMessage.textContent = '';
+      const form = document.getElementById('addForm');
+      form.querySelector('button[type="submit"]').textContent = '変更を保存';
+      form.closest('details.accordion').open = true;
+      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('title').focus();
+      break;
+    }
+
+    case 'search':
+      window.open(
+        'https://www.youtube.com/results?search_query=' +
+        encodeURIComponent([song.title, song.artist].filter(Boolean).join(' ')),
+        '_blank',
+        'noopener'
+      );
+      break;
+
+    case 'fav':
+      song.favorite = !song.favorite;
+      save();
+      render();
+      break;
+
+    case 'delete':
+      if (!confirm('この曲を削除しますか？')) return;
+      songs = songs.filter(item => item.id !== song.id);
+      playlists.forEach(playlist => {
+        playlist.songIds = playlist.songIds.filter(id => id !== song.id);
+      });
+      save();
+      render();
+      break;
+
+    case 'playlist': {
+      if (!playlists.length) {
+        alert('先にプレイリストを作成してね');
+        return;
+      }
+      const names = playlists.map((playlist, index) => `${index + 1}: ${playlist.name}`).join('\n');
+      const answer = prompt('追加先の番号を入力してください\n' + names, '1');
+      if (answer === null) return;
+      const playlist = playlists[Number(answer) - 1];
+      if (playlist && !playlist.songIds.includes(song.id)) {
+        playlist.songIds.push(song.id);
+        save();
+        render();
+      }
+      break;
+    }
+  }
 });
-['view','filterDecade','filterLanguage','filterText'].forEach(id=>document.getElementById(id).addEventListener('input',render));
-document.getElementById('createPlaylist').addEventListener('click',()=>{const n=document.getElementById('playlistName').value.trim();if(!n)return;playlists.push({id:Date.now().toString(),name:n,songIds:[]});document.getElementById('playlistName').value='';save();render()});
-['view','filterDecade','filterLanguage','filterText'].forEach(id =>
-  document.getElementById(id).addEventListener('input', render)
-);
 
+['view', 'filterDecade', 'filterLanguage', 'filterText'].forEach(id => {
+  document.getElementById(id).addEventListener('input', render);
+});
+
+/* プレイリスト作成 */
 document.getElementById('createPlaylist').addEventListener('click', () => {
-  const n = document.getElementById('playlistName').value.trim();
-  if (!n) return;
-
-  playlists.push({
-    id: Date.now().toString(),
-    name: n,
-    songIds: []
-  });
-
+  const name = document.getElementById('playlistName').value.trim();
+  if (!name) return;
+  playlists.push({ id: Date.now().toString(), name, songIds: [] });
   document.getElementById('playlistName').value = '';
   save();
   render();
@@ -1096,206 +896,162 @@ document.getElementById('createPlaylist').addEventListener('click', () => {
 
 function renderPlaylists() {
   const root = document.getElementById('playlists');
+  root.innerHTML = playlists.length ? playlists.map(playlist => {
+    const playlistSongs = playlist.songIds
+      .map(id => songs.find(song => song.id === id))
+      .filter(Boolean);
 
-  root.innerHTML = playlists.length
-    ? playlists.map(p => {
-        const playlistSongs = p.songIds
-          .map(id => songs.find(s => s.id === id))
-          .filter(Boolean);
-
-        return `
-          <div class="song">
-            <h3>${esc(p.name)}</h3>
-            <p>${playlistSongs.length} 曲</p>
-
+    return `
+      <div class="song">
+        <h3>${esc(playlist.name)}</h3>
+        <p>${playlistSongs.length} 曲</p>
+        <div class="row">
+          <button data-plact="open" data-id="${esc(playlist.id)}">曲を表示</button>
+          <button data-plact="prev" data-id="${esc(playlist.id)}">前の曲</button>
+          <button data-plact="next" data-id="${esc(playlist.id)}">次の曲</button>
+          <button data-plact="shuffle" data-id="${esc(playlist.id)}">シャッフル再生</button>
+          <button data-plact="delete" data-id="${esc(playlist.id)}">リスト削除</button>
+        </div>
+        <div data-plsongs="${esc(playlist.id)}" hidden>
+          ${playlistSongs.length ? playlistSongs.map((song, index) => `
             <div class="row">
-  <button data-plact="open" data-id="${p.id}">
-    曲を表示
-  </button>
-  <button data-plact="prev" data-id="${p.id}">
-    前の曲
-  </button>
-  <button data-plact="next" data-id="${p.id}">
-    次の曲
-  </button>
-    <button data-plact="shuffle" data-id="${p.id}">
-    シャッフル再生
-  </button>
-  <button data-plact="delete" data-id="${p.id}">
-    リスト削除
-  </button>
-</div>
-
-            <div data-plsongs="${p.id}" hidden>
-              ${
-                playlistSongs.length
-                  ? playlistSongs.map((s, i) => `
-                      <div class="row">
-                        <span>${i + 1}. ${esc(s.title)} / ${esc(s.artist || '')}</span>
-                        <button
-                          data-plact="play"
-                          data-id="${p.id}"
-                          data-songid="${s.id}">
-                          再生
-                        </button>
-                      </div>
-                    `).join('')
-                  : '<p class="muted">曲はまだ登録されていません。</p>'
-              }
+              <span>${index + 1}. ${esc(song.title)} / ${esc(song.artist || '')}</span>
+              <button data-plact="play" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">再生</button>
             </div>
-          </div>
-        `;
-      }).join('')
-    : '<p class="muted">プレイリストはまだありません。</p>';
+          `).join('') : '<p class="muted">曲はまだ登録されていません。</p>'}
+        </div>
+      </div>
+    `;
+  }).join('') : '<p class="muted">プレイリストはまだありません。</p>';
 }
 
-document.getElementById('playlists').addEventListener('click', e => {
-  const b = e.target.closest('button');
-  if (!b) return;
+document.getElementById('playlists').addEventListener('click', event => {
+  const button = event.target.closest('button');
+  if (!button) return;
+  const playlist = playlists.find(item => item.id === button.dataset.id);
+  if (!playlist) return;
 
-  const p = playlists.find(x => x.id === b.dataset.id);
-  if (!p) return;
-
-  if (b.dataset.plact === 'delete') {
+  if (button.dataset.plact === 'delete') {
     if (!confirm('このプレイリストを削除しますか？')) return;
-
-    playlists = playlists.filter(x => x.id !== p.id);
-
-    if (currentPlaylistSongs.length &&
-        currentPlaylistSongs.every(s => p.songIds.includes(s.id))) {
+    playlists = playlists.filter(item => item.id !== playlist.id);
+    if (currentPlaylistSongs.length && currentPlaylistSongs.every(song => playlist.songIds.includes(song.id))) {
       currentPlaylistSongs = [];
       currentPlaylistIndex = -1;
+      isShuffleMode = false;
     }
-
     save();
     render();
     return;
   }
 
-  if (b.dataset.plact === 'open') {
-    const list = document.querySelector(
-      `[data-plsongs="${p.id}"]`
-    );
-
+  if (button.dataset.plact === 'open') {
+    const list = document.querySelector(`[data-plsongs="${CSS.escape(playlist.id)}"]`);
     if (list) list.hidden = !list.hidden;
     return;
   }
 
-  const playlistSongs = p.songIds
-    .map(id => songs.find(s => s.id === id))
+  const playlistSongs = playlist.songIds
+    .map(id => songs.find(song => song.id === id))
     .filter(Boolean);
 
-  if (b.dataset.plact === 'play') {
-    const index = playlistSongs.findIndex(
-      s => s.id === b.dataset.songid
-    );
-
+  if (button.dataset.plact === 'play') {
+    const index = playlistSongs.findIndex(song => song.id === button.dataset.songid);
     if (index < 0) {
       alert('この曲は見つかりませんでした。');
       return;
     }
-
     currentPlaylistSongs = playlistSongs;
     currentPlaylistIndex = index;
+    isShuffleMode = false;
     playInApp(currentPlaylistSongs[currentPlaylistIndex]);
     return;
   }
 
-if (
-    b.dataset.plact === 'prev' ||
-    b.dataset.plact === 'next' ||
-    b.dataset.plact === 'shuffle'
-  ) {
-    if (!playlistSongs.length) {
-      alert('このプレイリストには曲がありません。');
-      return;
-    }
-
-    if (b.dataset.plact === 'shuffle') {
-      isShuffleMode = true;
-      currentPlaylistSongs = [...playlistSongs];
-
-      for (let i = currentPlaylistSongs.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-
-        [
-          currentPlaylistSongs[i],
-          currentPlaylistSongs[j]
-        ] = [
-          currentPlaylistSongs[j],
-          currentPlaylistSongs[i]
-        ];
-      }
-
-currentPlaylistIndex = 0;
-
-// 同じ曲が連続している場合は、2曲目以降と入れ替える
-if (currentPlaylistSongs.length > 1) {
-  const firstId = currentPlaylistSongs[0].id;
-
-  if (currentPlaylistSongs[1].id === firstId) {
-    const differentIndex = currentPlaylistSongs.findIndex(
-      (song, index) => index > 1 && song.id !== firstId
-    );
-
-    if (differentIndex > 0) {
-      [
-        currentPlaylistSongs[1],
-        currentPlaylistSongs[differentIndex]
-      ] = [
-        currentPlaylistSongs[differentIndex],
-        currentPlaylistSongs[1]
-      ];
-    }
+  if (!['prev', 'next', 'shuffle'].includes(button.dataset.plact)) return;
+  if (!playlistSongs.length) {
+    alert('このプレイリストには曲がありません。');
+    return;
   }
-}
 
-const firstSong = currentPlaylistSongs[0];
+  if (button.dataset.plact === 'shuffle') {
+    isShuffleMode = true;
+    currentPlaylistSongs = [...playlistSongs];
 
-      if (!firstSong.url) {
-        alert('最初の曲にYouTubeのURLが登録されていません。');
-        return;
-      }
-
-      playInApp(firstSong);
-      return;
+    for (let i = currentPlaylistSongs.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [currentPlaylistSongs[i], currentPlaylistSongs[j]] = [currentPlaylistSongs[j], currentPlaylistSongs[i]];
     }
 
-    const samePlaylist =
-      currentPlaylistSongs.length === playlistSongs.length &&
-      currentPlaylistSongs.every(
-        (s, i) => s.id === playlistSongs[i].id
+    if (currentPlaylistSongs.length > 1 && currentPlaylistSongs[1].id === currentPlaylistSongs[0].id) {
+      const differentIndex = currentPlaylistSongs.findIndex((song, index) =>
+        index > 1 && song.id !== currentPlaylistSongs[0].id
       );
+      if (differentIndex > 0) {
+        [currentPlaylistSongs[1], currentPlaylistSongs[differentIndex]] =
+          [currentPlaylistSongs[differentIndex], currentPlaylistSongs[1]];
+      }
+    }
+
+    currentPlaylistIndex = 0;
+  } else {
+    const samePlaylist = currentPlaylistSongs.length === playlistSongs.length &&
+      currentPlaylistSongs.every((song, index) => song.id === playlistSongs[index].id);
 
     if (!samePlaylist) {
       currentPlaylistSongs = playlistSongs;
-      currentPlaylistIndex =
-        b.dataset.plact === 'next' ? -1 : 0;
+      currentPlaylistIndex = button.dataset.plact === 'next' ? -1 : 0;
+      isShuffleMode = false;
     }
 
-    if (b.dataset.plact === 'next') {
-      currentPlaylistIndex =
-        (currentPlaylistIndex + 1) % currentPlaylistSongs.length;
-    } else {
-      currentPlaylistIndex =
-        (currentPlaylistIndex - 1 + currentPlaylistSongs.length) %
-        currentPlaylistSongs.length;
-    }
-
-    const song = currentPlaylistSongs[currentPlaylistIndex];
-
-    if (!song.url) {
-      alert('この曲にはYouTubeのURLが登録されていません。曲を編集してURLを登録してね。');
-      return;
-    }
-
-    playInApp(song);
+    currentPlaylistIndex = button.dataset.plact === 'next'
+      ? (currentPlaylistIndex + 1) % currentPlaylistSongs.length
+      : (currentPlaylistIndex - 1 + currentPlaylistSongs.length) % currentPlaylistSongs.length;
   }
+
+  const song = currentPlaylistSongs[currentPlaylistIndex];
+  if (!song.url) {
+    alert('この曲にはYouTubeのURLが登録されていません。曲を編集してURLを登録してね。');
+    return;
+  }
+  playInApp(song);
 });
 
-document.getElementById('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({songs,playlists},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my_music_player_backup.json';a.click();URL.revokeObjectURL(a.href)});
-document.getElementById('importBtn').addEventListener('click',()=>document.getElementById('importFile').click());
-document.getElementById('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.songs)||!Array.isArray(d.playlists))throw Error();if(confirm('現在のライブラリをバックアップの内容で置き換えますか？')){songs=d.songs;playlists=d.playlists;save();render()}}catch{alert('バックアップファイルを読み込めませんでした')}e.target.value=''});
+/* バックアップ */
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify({ songs, playlists }, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = 'my_music_player_backup.json';
+  anchor.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+
+document.getElementById('importBtn').addEventListener('click', () => {
+  document.getElementById('importFile').click();
+});
+
+document.getElementById('importFile').addEventListener('change', async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  try {
+    const data = JSON.parse(await file.text());
+    if (!Array.isArray(data.songs) || !Array.isArray(data.playlists)) throw new Error('Invalid backup');
+
+    if (confirm('現在のライブラリをバックアップの内容で置き換えますか？')) {
+      songs = data.songs;
+      playlists = data.playlists;
+      save();
+      render();
+    }
+  } catch {
+    alert('バックアップファイルを読み込めませんでした');
+  }
+  event.target.value = '';
+});
+
+/* 背景色・写真背景 */
 const backgroundMode = document.getElementById('backgroundMode');
 const backgroundColor = document.getElementById('backgroundColor');
 const backgroundImage = document.getElementById('backgroundImage');
@@ -1303,16 +1059,13 @@ const solidSettings = document.getElementById('solidBackgroundSettings');
 const imageSettings = document.getElementById('imageBackgroundSettings');
 
 function applyBackground() {
-  const isImage = backgroundMode.value === 'image';
-  document.body.classList.toggle('photo-background', isImage);
+  const useImage = backgroundMode.value === 'image';
+  document.body.classList.toggle('photo-background', useImage);
+  solidSettings.hidden = useImage;
+  imageSettings.hidden = !useImage;
 
-  solidSettings.hidden = isImage;
-  imageSettings.hidden = !isImage;
-
-  if (isImage) {
-    document.body.style.backgroundImage = 
-      document.body.dataset.backgroundImage || 'none';
-
+  if (useImage) {
+    document.body.style.backgroundImage = document.body.dataset.backgroundImage || 'none';
     document.body.style.backgroundSize = 'cover';
     document.body.style.backgroundPosition = 'center';
     document.body.style.backgroundAttachment = 'fixed';
@@ -1322,80 +1075,34 @@ function applyBackground() {
   }
 }
 
-backgroundMode.addEventListener('change', applyBackground);
-
-backgroundColor.addEventListener('input', applyBackground);
-
-backgroundImage.addEventListener('change', () => {
-  const file = backgroundImage.files[0];
-  if (!file) return;
-
-  if (!file.type.startsWith('image/')) {
-    alert('画像ファイルを選んでね。');
-    backgroundImage.value = '';
-    return;
-  }
-
-  const reader = new FileReader();
-
-  reader.onload = () => {
-    document.body.dataset.backgroundImage = 
-      `url("${reader.result}")`;
-
-    applyBackground();
-  };
-
-  reader.readAsDataURL(file);
-});
-
-// 背景設定を保存
 function saveBackgroundSettings() {
   try {
-    localStorage.setItem('myMusicPlayerBackgroundMode', backgroundMode.value);
-    localStorage.setItem('myMusicPlayerBackgroundColor', backgroundColor.value);
-  } catch (error) {
+    localStorage.setItem(BG_MODE_KEY, backgroundMode.value);
+    localStorage.setItem(BG_COLOR_KEY, backgroundColor.value);
+  } catch {
     console.warn('背景設定を保存できませんでした。');
   }
 }
 
-// 保存した背景設定を復元
 function loadBackgroundSettings() {
   try {
-    const savedMode = localStorage.getItem('myMusicPlayerBackgroundMode');
-    const savedColor = localStorage.getItem('myMusicPlayerBackgroundColor');
-
-    if (savedMode === 'solid' || savedMode === 'image') {
-      backgroundMode.value = savedMode;
-    }
-
-    if (savedColor && /^#[0-9a-fA-F]{6}$/.test(savedColor)) {
-      backgroundColor.value = savedColor;
-    }
-  } catch (error) {
+    const mode = localStorage.getItem(BG_MODE_KEY);
+    const color = localStorage.getItem(BG_COLOR_KEY);
+    if (mode === 'solid' || mode === 'image') backgroundMode.value = mode;
+    if (color && /^#[0-9a-fA-F]{6}$/.test(color)) backgroundColor.value = color;
+  } catch {
     console.warn('背景設定を読み込めませんでした。');
   }
 }
 
-// 背景設定を変更したら保存
-backgroundMode.addEventListener('change', saveBackgroundSettings);
-backgroundColor.addEventListener('input', saveBackgroundSettings);
-
-const BACKGROUND_DB_NAME = 'myMusicPlayerBackgroundDB';
-const BACKGROUND_STORE_NAME = 'settings';
-const BACKGROUND_IMAGE_KEY = 'backgroundImage';
-
 function openBackgroundDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(BACKGROUND_DB_NAME, 1);
-
+    const request = indexedDB.open(BG_DB_NAME, 1);
     request.onupgradeneeded = () => {
-      const db = request.result;
-
-      if (!db.objectStoreNames.contains(BACKGROUND_STORE_NAME)) {
-        db.createObjectStore(BACKGROUND_STORE_NAME);
+      if (!request.result.objectStoreNames.contains(BG_STORE_NAME)) {
+        request.result.createObjectStore(BG_STORE_NAME);
       }
     };
-
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
   });
@@ -1403,51 +1110,22 @@ function openBackgroundDB() {
 
 async function saveBackgroundImage(file) {
   const db = await openBackgroundDB();
-
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction(
-      BACKGROUND_STORE_NAME,
-      'readwrite'
-    );
-
-    transaction.objectStore(BACKGROUND_STORE_NAME).put(
-      file,
-      BACKGROUND_IMAGE_KEY
-    );
-
-    transaction.oncomplete = () => {
-      db.close();
-      resolve();
-    };
-
-    transaction.onerror = () => {
-      db.close();
-      reject(transaction.error);
-    };
-
-    transaction.onabort = () => {
-      db.close();
-      reject(transaction.error);
-    };
+    const transaction = db.transaction(BG_STORE_NAME, 'readwrite');
+    transaction.objectStore(BG_STORE_NAME).put(file, BG_IMAGE_KEY);
+    transaction.oncomplete = () => { db.close(); resolve(); };
+    transaction.onerror = () => { db.close(); reject(transaction.error); };
+    transaction.onabort = () => { db.close(); reject(transaction.error); };
   });
 }
 
 async function loadBackgroundImage() {
   const db = await openBackgroundDB();
-
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction(
-      BACKGROUND_STORE_NAME,
-      'readonly'
-    );
-
-    const request = transaction.objectStore(
-      BACKGROUND_STORE_NAME
-    ).get(BACKGROUND_IMAGE_KEY);
-
+    const transaction = db.transaction(BG_STORE_NAME, 'readonly');
+    const request = transaction.objectStore(BG_STORE_NAME).get(BG_IMAGE_KEY);
     request.onsuccess = () => resolve(request.result || null);
     request.onerror = () => reject(request.error);
-
     transaction.oncomplete = () => db.close();
     transaction.onerror = () => db.close();
   });
@@ -1457,10 +1135,18 @@ function showBackgroundImage(dataUrl) {
   document.body.dataset.backgroundImage = `url("${dataUrl}")`;
 }
 
+backgroundMode.addEventListener('change', () => {
+  applyBackground();
+  saveBackgroundSettings();
+});
+backgroundColor.addEventListener('input', () => {
+  applyBackground();
+  saveBackgroundSettings();
+});
+
 backgroundImage.addEventListener('change', async () => {
   const file = backgroundImage.files[0];
   if (!file) return;
-
   if (!file.type.startsWith('image/')) {
     alert('画像ファイルを選んでね。');
     backgroundImage.value = '';
@@ -1469,22 +1155,16 @@ backgroundImage.addEventListener('change', async () => {
 
   try {
     await saveBackgroundImage(file);
-
     const reader = new FileReader();
-
     reader.onload = () => {
       showBackgroundImage(reader.result);
       backgroundMode.value = 'image';
       applyBackground();
       saveBackgroundSettings();
     };
-
-    reader.onerror = () => {
-      alert('写真を読み込めませんでした。');
-    };
-
+    reader.onerror = () => alert('写真を読み込めませんでした。');
     reader.readAsDataURL(file);
-  } catch (error) {
+  } catch {
     alert('写真を保存できませんでした。別の写真で試してね。');
   }
 });
@@ -1492,20 +1172,19 @@ backgroundImage.addEventListener('change', async () => {
 async function restoreBackgroundImage() {
   try {
     const savedImage = await loadBackgroundImage();
-
-    if (savedImage) {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        showBackgroundImage(reader.result);
-        applyBackground();
-      };
-
-      reader.readAsDataURL(savedImage);
-    } else {
+    if (!savedImage) {
       applyBackground();
+      return;
     }
-  } catch (error) {
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      showBackgroundImage(reader.result);
+      applyBackground();
+    };
+    reader.onerror = () => applyBackground();
+    reader.readAsDataURL(savedImage);
+  } catch {
     console.warn('背景写真を復元できませんでした。');
     applyBackground();
   }
@@ -1514,9 +1193,9 @@ async function restoreBackgroundImage() {
 loadBackgroundSettings();
 restoreBackgroundImage();
 render();
+
+/* iPhone Safariでの初回再生を助けるため、APIを先読みする */
 loadYouTubeIframeAPI().catch(() => {});
 </script>
 </body>
 </html>
-        
-    
