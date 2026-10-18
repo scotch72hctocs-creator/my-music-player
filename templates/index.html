@@ -896,15 +896,15 @@ if (!document.getElementById('youtubePlayerFrame')) {
   document.getElementById('playerPanel')
     .scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  try {
-    await loadYouTubeIframeAPI();
-
+try {
     if (ytPlayer) {
-  　　ytPlayer.loadVideoById(videoId);
-　　　ytPlayer.playVideo();
-  　　message.textContent = '曲を切り替えています…';
-  　　return;
-}  
+      ytPlayer.loadVideoById(videoId);
+      ytPlayer.playVideo();
+      message.textContent = '曲を切り替えています…';
+      return;
+    }
+
+    await loadYouTubeIframeAPI();
     ytPlayer = new YT.Player('youtubePlayerFrame', {
       width: '100%',
       height: '220',
@@ -1486,6 +1486,7 @@ async function restoreBackgroundImage() {
 loadBackgroundSettings();
 restoreBackgroundImage();
 render();
+loadYouTubeIframeAPI().catch(() => {});
 </script>
 </body>
 </html>
