@@ -1155,9 +1155,139 @@ function loadBackgroundSettings() {
 backgroundMode.addEventListener('change', saveBackgroundSettings);
 backgroundColor.addEventListener('input', saveBackgroundSettings);
 
-// 保存した設定を読み込んで画面に反映
+const BACKGROUND_DB_NAME = 'myMusicPlayerBackgroundDB';
+const BACKGROUND_STORE_NAME = 'settings';
+const BACKGROUND_IMAGE_KEY = 'backgroundImage';
+
+function openBackgroundDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(BACKGROUND_DB_NAME, 1);
+
+    request.onupgradeneeded = () => {
+      const db = request.result;
+
+      if (!db.objectStoreNames.contains(BACKGROUND_STORE_NAME)) {
+        db.createObjectStore(BACKGROUND_STORE_NAME);
+      }
+    };
+
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function saveBackgroundImage(file) {
+  const db = await openBackgroundDB();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(
+      BACKGROUND_STORE_NAME,
+      'readwrite'
+    );
+
+    transaction.objectStore(BACKGROUND_STORE_NAME).put(
+      file,
+      BACKGROUND_IMAGE_KEY
+    );
+
+    transaction.oncomplete = () => {
+      db.close();
+      resolve();
+    };
+
+    transaction.onerror = () => {
+      db.close();
+      reject(transaction.error);
+    };
+
+    transaction.onabort = () => {
+      db.close();
+      reject(transaction.error);
+    };
+  });
+}
+
+async function loadBackgroundImage() {
+  const db = await openBackgroundDB();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(
+      BACKGROUND_STORE_NAME,
+      'readonly'
+    );
+
+    const request = transaction.objectStore(
+      BACKGROUND_STORE_NAME
+    ).get(BACKGROUND_IMAGE_KEY);
+
+    request.onsuccess = () => resolve(request.result || null);
+    request.onerror = () => reject(request.error);
+
+    transaction.oncomplete = () => db.close();
+    transaction.onerror = () => db.close();
+  });
+}
+
+function showBackgroundImage(dataUrl) {
+  document.body.dataset.backgroundImage = `url("${dataUrl}")`;
+}
+
+backgroundImage.addEventListener('change', async () => {
+  const file = backgroundImage.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    alert('画像ファイルを選んでね。');
+    backgroundImage.value = '';
+    return;
+  }
+
+  try {
+    await saveBackgroundImage(file);
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      showBackgroundImage(reader.result);
+      backgroundMode.value = 'image';
+      applyBackground();
+      saveBackgroundSettings();
+    };
+
+    reader.onerror = () => {
+      alert('写真を読み込めませんでした。');
+    };
+
+    reader.readAsDataURL(file);
+  } catch (error) {
+    alert('写真を保存できませんでした。別の写真で試してね。');
+  }
+});
+
+async function restoreBackgroundImage() {
+  try {
+    const savedImage = await loadBackgroundImage();
+
+    if (savedImage) {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        showBackgroundImage(reader.result);
+        applyBackground();
+      };
+
+      reader.readAsDataURL(savedImage);
+    } else {
+      applyBackground();
+    }
+  } catch (error) {
+    console.warn('背景写真を復元できませんでした。');
+    applyBackground();
+  }
+}
+
 loadBackgroundSettings();
-applyBackground();
+restoreBackgroundImage();
 render();
 </script>
 </body>
