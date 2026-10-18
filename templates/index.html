@@ -899,9 +899,6 @@ if (!document.getElementById('youtubePlayerFrame')) {
   player.appendChild(mount);
 }
 
-  document.getElementById('playerPanel')
-    .scrollIntoView({ behavior: 'smooth', block: 'start' });
-
 try {
     if (ytPlayer) {
       ytPlayer.loadVideoById(videoId);
