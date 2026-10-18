@@ -929,11 +929,7 @@ onAutoplayBlocked: () => {
 },
 onFullscreenChange: event => {
   if (event.data && event.data.fullscreen === false) {
-    console.log(
-      '[全画面終了を検知]',
-      new Date().toLocaleTimeString(),
-      event.data
-    );
+　　message.textContent = '全画面を終了しました';
   }
 },
 onStateChange: event => {
