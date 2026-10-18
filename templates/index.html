@@ -911,18 +911,19 @@ playerVars: {
 },
       events: {
 onReady: () => {
-  message.textContent = '再生を開始します…';
-  ytPlayer.playVideo();
+  message.textContent =
+    '準備完了！ 動画中央の ▶ を押すと再生できます。';
 },
 onAutoplayBlocked: () => {
   message.textContent =
     '自動再生が制限されました。画面内の再生ボタンを押してね。';
 },
-        onStateChange: event => {
-  if (event.data === YT.PlayerState.ENDED) {
-      if (event.data === YT.PlayerState.PLAYING) {
+onStateChange: event => {
+  if (event.data === YT.PlayerState.PLAYING) {
     message.textContent = '再生中です♪';
   }
+
+  if (event.data === YT.PlayerState.ENDED) {
     message.textContent = '曲が終了しました。次の曲を読み込みます…';
 
     if (
