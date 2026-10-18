@@ -5,8 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>My Music Player</title>
 <style>
-:root{color-scheme:dark;--bg:#090909;--panel:#171717;--line:#333;--text:#f4f4f4;--muted:#aaa;--accent:#d9d9d9}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+:root {
+  color-scheme: dark;
+  --bg: #090909;
+  --panel: #171717;
+  --line: #333;
+  --text: #f4f4f4;
+  --muted: #aaa;
+  --accent: #d9d9d9;
+
+  /* フォントはここを変更するだけ */
+  --app-font: "Special Elite", "Courier New", monospace;
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--app-font);
+}
 main{max-width:1000px;margin:auto;padding:20px}h1{margin:0 0 6px;font-size:1.8rem}h2{font-size:1.15rem;margin:0 0 12px}p,.muted{color:var(--muted)}.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
 input,select,button{font:inherit;border-radius:9px;border:1px solid #444;padding:10px;background:#0d0d0d;color:var(--text);min-width:0}
 input,select{width:100%}button{cursor:pointer;background:#292929}button:hover{background:#3a3a3a}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.row button{flex:0 0 auto}.small{font-size:.9rem}.song{border:1px solid #383838;border-radius:12px;padding:12px;margin:9px 0}.song h3{font-size:1rem;margin:0 0 5px}.song p{margin:4px 0}.song .row{margin-top:10px}.song .row button{flex:1}.pill{border:1px solid #555;border-radius:999px;padding:3px 8px;color:#ccc;font-size:.8rem}.empty{padding:16px;color:var(--muted);text-align:center}.notice{font-size:.9rem;color:#cfcfcf;line-height:1.6}a{color:#ddd}
