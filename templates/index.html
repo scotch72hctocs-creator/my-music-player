@@ -928,11 +928,13 @@ onAutoplayBlocked: () => {
     '自動再生が制限されました。画面内の再生ボタンを押してね。';
 },
 onFullscreenChange: event => {
-  console.log(
-    '[全画面イベント]',
-    new Date().toLocaleTimeString(),
-    JSON.stringify(event)
-  );
+  if (event.data && event.data.fullscreen === false) {
+    console.log(
+      '[全画面終了を検知]',
+      new Date().toLocaleTimeString(),
+      event.data
+    );
+  }
 },
 onStateChange: event => {
   if (event.data === YT.PlayerState.PLAYING) {
