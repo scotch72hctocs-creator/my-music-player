@@ -1072,6 +1072,58 @@ const firstSong = currentPlaylistSongs[0];
 document.getElementById('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({songs,playlists},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my_music_player_backup.json';a.click();URL.revokeObjectURL(a.href)});
 document.getElementById('importBtn').addEventListener('click',()=>document.getElementById('importFile').click());
 document.getElementById('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.songs)||!Array.isArray(d.playlists))throw Error();if(confirm('現在のライブラリをバックアップの内容で置き換えますか？')){songs=d.songs;playlists=d.playlists;save();render()}}catch{alert('バックアップファイルを読み込めませんでした')}e.target.value=''});
+const backgroundMode = document.getElementById('backgroundMode');
+const backgroundColor = document.getElementById('backgroundColor');
+const backgroundImage = document.getElementById('backgroundImage');
+const solidSettings = document.getElementById('solidBackgroundSettings');
+const imageSettings = document.getElementById('imageBackgroundSettings');
+
+function applyBackground() {
+  const isImage = backgroundMode.value === 'image';
+
+  solidSettings.hidden = isImage;
+  imageSettings.hidden = !isImage;
+
+  if (isImage) {
+    document.body.style.backgroundImage = 
+      document.body.dataset.backgroundImage || 'none';
+
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.backgroundAttachment = 'fixed';
+  } else {
+    document.body.style.backgroundImage = 'none';
+    document.body.style.backgroundColor = backgroundColor.value;
+  }
+}
+
+backgroundMode.addEventListener('change', applyBackground);
+
+backgroundColor.addEventListener('input', applyBackground);
+
+backgroundImage.addEventListener('change', () => {
+  const file = backgroundImage.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    alert('画像ファイルを選んでね。');
+    backgroundImage.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    document.body.dataset.backgroundImage = 
+      `url("${reader.result}")`;
+
+    applyBackground();
+  };
+
+  reader.readAsDataURL(file);
+});
+
+applyBackground();
 render();
 </script>
 </body>
