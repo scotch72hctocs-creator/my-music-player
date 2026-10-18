@@ -234,19 +234,27 @@ details.accordion > section.panel {
     font-size: 1rem;
   }
 }
-/* レトロな活字の雰囲気 */
-body {
-  text-shadow: 0.3px 0.3px 0 rgba(244, 244, 244, 0.22);
+/* 古いタイプライター風の文字 */
+h1,
+h2,
+h3,
+details.accordion > summary,
+.song,
+button,
+.pill {
+  font-family: "Courier New", monospace;
+  font-weight: 400;
+  letter-spacing: 0.035em;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* 印字の薄れをイメージした文字色 */
 h1,
 h2,
 h3,
 details.accordion > summary {
-  letter-spacing: 0.04em;
-  text-shadow:
-    0.4px 0.3px 0 rgba(244, 244, 244, 0.3),
-    -0.3px 0 0 rgba(244, 244, 244, 0.12);
+  color: #dedbd2;
+  text-shadow: 0.5px 0.4px 0 rgba(180, 175, 160, 0.3);
 }
 </style>
 </head>
