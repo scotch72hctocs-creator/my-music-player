@@ -861,6 +861,7 @@ function loadYouTubeIframeAPI() {
 }
 async function playInApp(song) {
   const message = document.getElementById('playerMessage');
+  let wasPlayingBeforeFullscreen = false;
   const player = document.getElementById('youtubePlayer');
   const info = document.getElementById('playerInfo');
   const position = document.getElementById('playlistPosition');
@@ -928,8 +929,26 @@ onAutoplayBlocked: () => {
     '自動再生が制限されました。画面内の再生ボタンを押してね。';
 },
 onFullscreenChange: event => {
-  if (event.data && event.data.fullscreen === false) {
-　　message.textContent = '全画面を終了しました';
+  if (!event.data) return;
+
+  if (event.data.fullscreen === true) {
+    wasPlayingBeforeFullscreen =
+      ytPlayer.getPlayerState() === YT.PlayerState.PLAYING;
+    message.textContent = '全画面で再生中です';
+  }
+
+  if (event.data.fullscreen === false) {
+    message.textContent = '全画面を終了しました';
+
+    if (
+      wasPlayingBeforeFullscreen &&
+      ytPlayer &&
+      ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING
+    ) {
+      ytPlayer.playVideo();
+    }
+
+    wasPlayingBeforeFullscreen = false;
   }
 },
 onStateChange: event => {
