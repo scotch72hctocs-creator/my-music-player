@@ -264,6 +264,31 @@ details.accordion > summary {
   <h1>♫ My Music Player</h1>
   <p>完全無料・APIキー不要の試作版。検索はYouTubeの検索ページを開きます。</p>
 </header>
+  <section class="panel" id="backgroundSettings">
+  <h2>背景設定</h2>
+
+  <label>
+    背景の種類
+    <select id="backgroundMode">
+      <option value="solid">単色</option>
+      <option value="image">写真</option>
+    </select>
+  </label>
+
+  <div id="solidBackgroundSettings">
+    <label>
+      背景色
+      <input type="color" id="backgroundColor" value="#090909">
+    </label>
+  </div>
+
+  <div id="imageBackgroundSettings" hidden>
+    <label>
+      背景写真
+      <input type="file" id="backgroundImage" accept="image/*">
+    </label>
+  </div>
+</section>
 <details class="accordion" open>
   <summary>🎵 アプリ内プレーヤー</summary>
   <section class="panel" id="playerPanel">
