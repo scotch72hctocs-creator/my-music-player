@@ -290,6 +290,14 @@ details.accordion > summary {
   min-height: 44px;
   padding: 8px;
 }
+/* 写真モード：半透明の黒いパネル */
+body.photo-background .panel,
+body.photo-background details.accordion,
+body.photo-background .song {
+  background-color: rgba(12, 12, 12, 0.78);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
 </style>
 </head>
 <body>
@@ -1116,6 +1124,7 @@ const imageSettings = document.getElementById('imageBackgroundSettings');
 
 function applyBackground() {
   const isImage = backgroundMode.value === 'image';
+  document.body.classList.toggle('photo-background', isImage);
 
   solidSettings.hidden = isImage;
   imageSettings.hidden = !isImage;
