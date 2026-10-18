@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>My Music Player</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Special+Elite&display=swap');
+
+/* ===== 基本設定 ===== */
 :root {
   color-scheme: dark;
   --bg: #090909;
@@ -14,10 +16,10 @@
   --text: #f4f4f4;
   --muted: #aaa;
   --accent: #d9d9d9;
-
-  /* フォントはここを変更するだけ */
   --app-font: "Special Elite", "Courier New", monospace;
+  --body-font: "BIZ UDPGothic", "Courier New", monospace;
 }
+
 * {
   box-sizing: border-box;
 }
@@ -26,101 +28,94 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family:"BIZ UDPGothic","Courier New",monospace
+  font-family: var(--body-font);
 }
-main{max-width:1000px;margin:auto;padding:20px}h1{margin:0 0 6px;font-size:1.8rem}h2{font-size:1.15rem;margin:0 0 12px}p,.muted{color:var(--muted)}.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
-input,select,button{font:inherit;border-radius:9px;border:1px solid #444;padding:10px;background:#0d0d0d;color:var(--text);min-width:0}
-input,select{width:100%}button{cursor:pointer;background:#292929}button:hover{background:#3a3a3a}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.row button{flex:0 0 auto}.small{font-size:.9rem}.song{border:1px solid #383838;border-radius:12px;padding:12px;margin:9px 0}.song h3{font-size:1rem;margin:0 0 5px}.song p{margin:4px 0}.song .row{margin-top:10px}.song .row button{flex:1}.pill{border:1px solid #555;border-radius:999px;padding:3px 8px;color:#ccc;font-size:.8rem}.empty{padding:16px;color:var(--muted);text-align:center}.notice{font-size:.9rem;color:#cfcfcf;line-height:1.6}a{color:#ddd}
-@media(max-width:600px){
-  main{
-    padding:10px;
-  }
 
-  h1{
-    font-size:1.45rem;
-    line-height:1.4;
-  }
-
-  h2{
-    font-size:1.1rem;
-  }
-
-  .panel{
-    padding:13px;
-    margin:12px 0;
-    border-radius:12px;
-  }
-
-  .grid{
-    grid-template-columns:minmax(0,1fr);
-    gap:12px;
-  }
-
-  input,select,button{
-    font-size:16px;
-    min-height:46px;
-    padding:11px 12px;
-  }
-
-  label{
-    display:block;
-    min-width:0;
-  }
-
-  .row{
-    gap:8px;
-  }
-
-  .row button{
-    flex:1 1 100%;
-    min-height:46px;
-    white-space:normal;
-  }
-
-  .song{
-    padding:13px;
-    margin:10px 0;
-  }
-
-  .song h3{
-    font-size:1.05rem;
-    line-height:1.5;
-    overflow-wrap:anywhere;
-  }
-
-  .song p{
-    line-height:1.6;
-    overflow-wrap:anywhere;
-  }
-
-  .song .row{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:8px;
-  }
-
-  .song .row button{
-    width:100%;
-    min-width:0;
-    min-height:48px;
-    padding:10px 6px;
-    font-size:14px;
-  }
-
-  .pill{
-    display:inline-block;
-    margin:2px 0;
-  }
-
-  .notice{
-    line-height:1.7;
-  }
+main {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
 }
-  /* スマホでの操作性を改善 */
+
+h1, h2, h3 {
+  color: #dedbd2;
+  font-family: var(--app-font);
+  font-weight: 400;
+  letter-spacing: 0.025em;
+  text-shadow: 0.5px 0.4px 0 rgba(180, 175, 160, 0.3);
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 1.8rem;
+  line-height: 1.4;
+}
+
+h2 {
+  margin: 0 0 14px;
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+h3 {
+  line-height: 1.5;
+}
+
+p, .muted {
+  color: var(--muted);
+}
+
+a {
+  color: #ddd;
+}
+
+/* ===== パネル・入力欄 ===== */
+.panel {
+  min-width: 0;
+  margin: 14px 0;
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+input,
+select,
+textarea,
 button {
+  min-width: 0;
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #444;
+  border-radius: 9px;
+  background: #0d0d0d;
+  color: var(--text);
+  font: inherit;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+}
+
+button {
+  cursor: pointer;
+  background: #292929;
+  border-color: rgba(220, 220, 220, 0.28);
+  border-radius: 10px;
+  font-family: var(--app-font);
+  letter-spacing: 0.025em;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+button:hover {
+  background: #3a3a3a;
+  border-color: rgba(220, 220, 220, 0.5);
 }
 
 button:active {
@@ -130,76 +125,127 @@ button:active {
 
 button:focus-visible,
 input:focus-visible,
-select:focus-visible {
-  outline: 2px solid #d9d9d9;
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-/* プレーヤーの横はみ出し防止 */
-#playerPanel,
-#youtubePlayer {
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.row {
+  display: flex;
   min-width: 0;
-  max-width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 }
 
-#youtubePlayer iframe {
-  display: block;
-  max-width: 100%;
+.row > * {
+  flex: 1 1 0;
 }
 
-/* 小さい画面での表示を調整 */
-@media (max-width: 600px) {
-  main {
-    width: 100%;
-    padding: 8px;
-  }
-
-  .panel {
-    min-width: 0;
-    padding: 12px;
-  }
-
-  .row {
-    min-width: 0;
-  }
-
-  input,
-  select,
-  textarea {
-    font-size: 16px;
-    max-width: 100%;
-  }
-
-  button {
-    -webkit-appearance: none;
-    appearance: none;
-  }
-
-  #youtubePlayer iframe {
-    width: 100%;
-  }
+.row button {
+  flex: 0 1 auto;
 }
-  /* アコーディオンの見た目 */
-details.accordion {
-  background: #171717;
-  border: 1px solid #333;
+
+.small {
+  font-size: 0.9rem;
+}
+
+/* ===== 曲のカード ===== */
+.song {
+  min-width: 0;
+  margin: 10px 0;
+  padding: 14px;
+  border: 1px solid rgba(220, 220, 220, 0.22);
   border-radius: 14px;
-  margin: 14px 0;
+  font-family: var(--app-font);
+  transition: border-color 0.2s ease;
+}
+
+.song:hover {
+  border-color: rgba(220, 220, 220, 0.42);
+}
+
+.song h3 {
+  margin: 0 0 8px;
+  color: #eee9df;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.025em;
+  overflow-wrap: anywhere;
+}
+
+.song p {
+  margin: 6px 0;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.song .row {
+  margin-top: 12px;
+}
+
+.song .row button {
+  flex: 1 1 0;
+}
+
+.pill {
+  display: inline-block;
+  padding: 4px 9px;
+  border: 1px solid rgba(220, 220, 220, 0.3);
+  border-radius: 999px;
+  color: #ccc;
+  font-family: var(--app-font);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.empty {
+  padding: 16px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.notice {
+  color: #cfcfcf;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+/* ===== アコーディオン ===== */
+details.accordion {
+  margin: 12px 0;
   overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
 }
 
 details.accordion > summary {
-  padding: 16px;
-  cursor: pointer;
-  font-size: 1.05rem;
-  font-weight: bold;
-  list-style: none;
-  min-height: 54px;
   display: flex;
+  min-height: 46px;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  padding: 10px 15px;
+  color: #dedbd2;
+  font-family: var(--app-font);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.035em;
+  cursor: pointer;
+  list-style: none;
   touch-action: manipulation;
+  transition: background-color 0.2s ease;
 }
 
 details.accordion > summary::-webkit-details-marker {
@@ -208,62 +254,36 @@ details.accordion > summary::-webkit-details-marker {
 
 details.accordion > summary::after {
   content: "+";
-  font-size: 1.4rem;
+  flex: 0 0 auto;
   color: #ccc;
+  font-size: 1.3rem;
 }
 
 details.accordion[open] > summary::after {
   content: "−";
 }
 
+details.accordion > summary:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
 details.accordion > section.panel {
   margin: 0;
+  padding: 18px;
   border: none;
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--line);
   border-radius: 0;
 }
 
-@media (max-width: 600px) {
-  details.accordion {
-    margin: 10px 0;
-  }
-
-  details.accordion > summary {
-    padding: 15px 13px;
-    min-height: 56px;
-    font-size: 1rem;
-  }
-}
-/* 古いタイプライター風の文字 */
-h1,
-h2,
-h3,
-details.accordion > summary,
-.song,
-button,
-.pill {
-  font-family: "Courier New", monospace;
-  font-weight: 400;
-  letter-spacing: 0.035em;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* 印字の薄れをイメージした文字色 */
-h1,
-h2,
-h3,
-details.accordion > summary {
-  color: #dedbd2;
-  text-shadow: 0.5px 0.4px 0 rgba(180, 175, 160, 0.3);
-}
-/* 背景設定の文字・入力枠の重なりを調整 */
+/* ===== 背景設定の入力欄 ===== */
 #backgroundSettings label {
   display: flex;
+  min-width: 0;
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
-  margin: 14px 0;
-  line-height: 1.6;
+  margin: 16px 0;
+  line-height: 1.7;
 }
 
 #backgroundSettings select,
@@ -290,7 +310,20 @@ details.accordion > summary {
   min-height: 44px;
   padding: 8px;
 }
-/* 写真モード：半透明の黒いパネル */
+
+/* ===== アプリ内プレーヤー ===== */
+#playerPanel,
+#youtubePlayer {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#youtubePlayer iframe {
+  display: block;
+  max-width: 100%;
+}
+
+/* ===== 写真背景：透過率は0.42を維持 ===== */
 body.photo-background .panel,
 body.photo-background details.accordion,
 body.photo-background .song {
@@ -298,120 +331,110 @@ body.photo-background .song {
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
-/* ===== 音楽プレーヤーのデザイン統一 ===== */
 
-/* アコーディオンの見出し */
-details.accordion > summary {
-  letter-spacing: 0.045em;
-  transition: background-color 0.2s ease;
-}
-
-details.accordion > summary:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-/* 曲ごとのカード */
-.song {
-  border-color: rgba(220, 220, 220, 0.22);
-  border-radius: 14px;
-  transition: border-color 0.2s ease;
-}
-
-.song:hover {
-  border-color: rgba(220, 220, 220, 0.42);
-}
-
-/* 曲名 */
-.song h3 {
-  color: #eee9df;
-  font-weight: 700;
-  letter-spacing: 0.025em;
-  line-height: 1.5;
-}
-
-/* アーティスト名などの補足 */
-.song p {
-  line-height: 1.6;
-}
-
-/* ボタンの形と文字を統一 */
-button {
-  border-radius: 10px;
-  border-color: rgba(220, 220, 220, 0.28);
-  letter-spacing: 0.025em;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-/* 押したときの見た目 */
-button:hover {
-  border-color: rgba(220, 220, 220, 0.5);
-}
-
-/* 補足情報のラベル */
-.pill {
-  border-color: rgba(220, 220, 220, 0.3);
-  letter-spacing: 0.02em;
-}
-/* 文字と枠の重なり・窮屈さを改善 */
-.panel {
-  padding: 18px;
-}
-
-details.accordion > summary {
-  padding: 18px;
-  line-height: 1.6;
-}
-
-details.accordion > section.panel {
-  padding: 18px;
-}
-
-.song {
-  padding: 16px;
-}
-
-.song h3 {
-  line-height: 1.7;
-  margin-bottom: 8px;
-  overflow-wrap: anywhere;
-}
-
-.song p {
-  line-height: 1.7;
-  margin: 6px 0;
-  overflow-wrap: anywhere;
-}
-
-.pill {
-  line-height: 1.6;
-  padding: 4px 9px;
-}
-
-#backgroundSettings label {
-  gap: 10px;
-  line-height: 1.8;
-}
-
-/* スマホでは画面幅に合わせて調整 */
+/* ===== スマートフォン対応 ===== */
 @media (max-width: 600px) {
-  .panel,
-  details.accordion > section.panel {
-    padding: 14px;
+  main {
+    padding: 10px;
   }
 
-  details.accordion > summary {
-    padding: 16px 14px;
+  h1 {
+    font-size: 1.45rem;
+    line-height: 1.45;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+
+  .panel {
+    padding: 12px;
+    margin: 12px 0;
+    border-radius: 12px;
+  }
+
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font-size: 16px;
+    min-height: 46px;
+    max-width: 100%;
+  }
+
+  button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .row {
+    gap: 8px;
+  }
+
+  .row button {
+    flex: 1 1 100%;
+    white-space: normal;
   }
 
   .song {
-    padding: 14px;
+    padding: 13px;
+    margin: 10px 0;
   }
 
-  .song h3,
+  .song h3 {
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
   .song p {
-    line-height: 1.7;
+    line-height: 1.65;
+  }
+
+  .song .row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .song .row button {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    padding: 10px 6px;
+    font-size: 14px;
+  }
+
+  .pill {
+    margin: 2px 0;
+  }
+
+  details.accordion {
+    margin: 10px 0;
+  }
+
+  details.accordion > summary {
+    min-height: 44px;
+    padding: 9px 13px;
+    font-size: 0.95rem;
+  }
+
+  details.accordion > section.panel {
+    padding: 15px;
+  }
+
+  #backgroundSettings label {
+    gap: 8px;
+    margin: 15px 0;
+  }
+
+  #youtubePlayer iframe {
+    width: 100%;
   }
 }
 </style>
