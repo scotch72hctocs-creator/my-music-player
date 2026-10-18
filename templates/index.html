@@ -1123,6 +1123,40 @@ backgroundImage.addEventListener('change', () => {
   reader.readAsDataURL(file);
 });
 
+// 背景設定を保存
+function saveBackgroundSettings() {
+  try {
+    localStorage.setItem('myMusicPlayerBackgroundMode', backgroundMode.value);
+    localStorage.setItem('myMusicPlayerBackgroundColor', backgroundColor.value);
+  } catch (error) {
+    console.warn('背景設定を保存できませんでした。');
+  }
+}
+
+// 保存した背景設定を復元
+function loadBackgroundSettings() {
+  try {
+    const savedMode = localStorage.getItem('myMusicPlayerBackgroundMode');
+    const savedColor = localStorage.getItem('myMusicPlayerBackgroundColor');
+
+    if (savedMode === 'solid' || savedMode === 'image') {
+      backgroundMode.value = savedMode;
+    }
+
+    if (savedColor && /^#[0-9a-fA-F]{6}$/.test(savedColor)) {
+      backgroundColor.value = savedColor;
+    }
+  } catch (error) {
+    console.warn('背景設定を読み込めませんでした。');
+  }
+}
+
+// 背景設定を変更したら保存
+backgroundMode.addEventListener('change', saveBackgroundSettings);
+backgroundColor.addEventListener('input', saveBackgroundSettings);
+
+// 保存した設定を読み込んで画面に反映
+loadBackgroundSettings();
 applyBackground();
 render();
 </script>
