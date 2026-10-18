@@ -448,21 +448,18 @@ button {
 <main>
 <header>
   <h1>♫ My Music Player</h1>
-  <p>完全無料・APIキー不要の試作版。検索はYouTubeの検索ページを開きます。</p>
 </header>
 <details class="accordion" open>
-  <summary>🎵 アプリ内プレーヤー</summary>
+  <summary>Player</summary>
   <section class="panel" id="playerPanel">
-  <div id="playerMessage" class="notice">
-    ライブラリの曲から「アプリ内で再生」を選んでね。
-  </div>
+  <div id="playerMessage" class="notice"></div>
   <div id="youtubePlayer"></div>
   <div id="playerInfo" class="muted"></div>
   <div id="playlistPosition" class="muted"></div>
   </section>
 </details>
 <details class="accordion">
-  <summary>🔎 曲を検索</summary>
+  <summary>search</summary>
   <section class="panel">
 <form id="searchForm">
   <div class="grid">
@@ -481,12 +478,11 @@ button {
   <div class="row" style="margin-top:10px"><button type="submit">YouTubeで検索</button></div>
 </form>
   <div id="searchResults" class="search-results" aria-live="polite"></div>
-<p class="notice">検索ボタンを押すとYouTubeの検索結果が開きます。再生はYouTubeアプリ／サイト側で行います。検索結果の自動取り込みはAPIを使わないため行わず、気に入った曲は下のフォームから登録します。</p>
  </section>
 </details>
 
 <details class="accordion">
-  <summary>📝 曲を登録</summary>
+  <summary>add</summary>
   <section class="panel">
 <form id="addForm">
   <div class="grid">
@@ -497,7 +493,7 @@ button {
     <label>分類<select id="language"><option value="邦楽">邦楽</option><option value="洋楽">洋楽</option><option value="その他">その他</option></select></label>
     <label>YouTube URL
   <input id="url" type="url" placeholder="YouTubeのURLを貼り付け" >
-  <small id="urlMessage" class="muted">URLを貼り付けると動画IDを確認します。</small>
+  <small id="urlMessage" class="muted"></small>
 </label>
   </div>
   <div class="row" style="margin-top:10px"><button type="submit">ライブラリに登録</button></div>
@@ -506,7 +502,7 @@ button {
 </details>
 
 <details class="accordion">
-  <summary>🎼 マイライブラリ</summary>
+  <summary>My library</summary>
   <section class="panel">
 <div class="grid">
 <label>表示<select id="view"><option value="all">すべて</option><option value="favorites">お気に入り</option></select></label>
@@ -520,19 +516,18 @@ button {
 <button id="importBtn" type="button">バックアップを読み込む</button>
 <input id="importFile" type="file" accept="application/json,.json" hidden>
 </div>
-<p class="notice">データはこのブラウザー内に保存されます。ブラウザーのデータ削除や別端末への自動同期には対応していません。定期的にバックアップを書き出してください。</p>
   </section>
 </details>
 
 <details class="accordion">
-  <summary>📂 プレイリスト</summary>
+  <summary>playlist</summary>
   <section class="panel">
 <div class="row"><input id="playlistName" placeholder="新しいプレイリスト名"><button id="createPlaylist" type="button">作成</button></div>
 <div id="playlists"></div>
   </section>
 </details>
 <details class="accordion">
-  <summary>🎨 背景設定</summary>
+  <summary>background</summary>
 
   <section class="panel" id="backgroundSettings">
     <label>
@@ -707,7 +702,7 @@ urlInput.addEventListener('input', () => {
   const value = urlInput.value.trim();
 
   if (!value) {
-    urlMessage.textContent = 'URLを貼り付けると動画IDを確認します。';
+    urlMessage.textContent = '';
     return;
   }
 
@@ -1481,5 +1476,5 @@ render();
 </script>
 </body>
 </html>
-      
+        
     
