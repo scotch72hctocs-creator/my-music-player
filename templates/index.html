@@ -1137,6 +1137,7 @@ if (list) {
     shouldOpen: shouldOpen
   });
 
+  console.trace('プレイリストを閉じる処理の呼び出し元');
     document.querySelectorAll('[data-plsongs]').forEach(item => {
       item.hidden = true;
     });
