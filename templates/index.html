@@ -753,7 +753,21 @@ async function playInApp(song) {
 
   message.textContent = '再生プレーヤーを読み込み中…';
 　info.textContent = `${song.title || ''}${song.artist ? ' / ' + song.artist : ''}`;
+　const openPlaylist = document.querySelector(
+  '#playlists [data-plsongs]:not([hidden])'
+);
+　const openPlaylistId = openPlaylist?.dataset.plsongs;
+
 　updatePlayingBadge();
+
+if (openPlaylistId) {
+  const playlistToOpen = document.querySelector(
+    `#playlists [data-plsongs="${CSS.escape(openPlaylistId)}"]`
+  );
+  if (playlistToOpen) {
+    playlistToOpen.hidden = false;
+  }
+}
   
   if (ytPlayer) {
     try {
