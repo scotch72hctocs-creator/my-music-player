@@ -314,6 +314,39 @@ body.photo-background .song {
 .playlist-song-remove {
   width: 0;
 }
+  /* プレイリスト全体を独立して表示 */
+.playlist-item {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 12px 0;
+  margin-bottom: 12px;
+}
+
+/* プレイリスト名の枠をなくす */
+.playlist-toggle {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 10px 0;
+  font-weight: bold;
+}
+
+/* プレイリストの操作ボタンとの間に区切り線 */
+.playlist-item > .row {
+  border-bottom: 1px solid #444;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+/* 曲ごとの区切り線 */
+.playlist-song-item {
+  border-bottom: 1px solid #444;
+  padding: 12px 0;
+}
 </style>
 </head>
 <body>
@@ -962,7 +995,7 @@ function renderPlaylists() {
       .filter(Boolean);
 
     return `
-      <div class="song">
+　　　　<div class="playlist-item">
 <button
   type="button"
   class="playlist-toggle"
