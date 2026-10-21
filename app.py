@@ -29,8 +29,8 @@ def search():
 
     videos = []
     seen_ids = set()
-    max_videos = 50
-    max_pages = 5
+    max_videos = 20
+    max_pages = 1
 
     try:
         for page in range(max_pages):
