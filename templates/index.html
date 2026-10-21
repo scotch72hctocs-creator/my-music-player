@@ -347,6 +347,18 @@ body.photo-background .song {
   border-bottom: 1px solid #444;
   padding: 12px 0;
 }
+  .playing-badge {
+  display: inline-block;
+  color: #75D6A5;
+  background: #18382B;
+  border: 1px solid #347A59;
+  border-radius: 5px;
+  padding: 3px 7px;
+  margin-right: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  white-space: nowrap;
+}
 </style>
 </head>
 <body>
@@ -1016,11 +1028,11 @@ function renderPlaylists() {
 <div data-plsongs="${esc(playlist.id)}" hidden>
   ${playlistSongs.length ? playlistSongs.map((song, index) => `
     <div class="playlist-song-item">
-<div class="playlist-song-title">
+<div class="playlist-song-title" data-songid="${esc(song.id)}">
   ${currentPlaylistSongs.length > 0 &&
     currentPlaylistIndex >= 0 &&
-    currentPlaylistSongs[currentPlaylistIndex]?.id === song.id
-      ? '▶ 再生中　'
+    String(currentPlaylistSongs[currentPlaylistIndex]?.id) === String(song.id)
+      ? '<span class="playing-badge">▶ 再生中</span> '
       : ''}
   ${index + 1}. ${esc(song.title)} / ${esc(song.artist || '')}
 </div>
