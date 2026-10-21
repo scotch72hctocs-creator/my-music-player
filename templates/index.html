@@ -553,6 +553,10 @@ function isValidYouTubeId(id) {
 document.querySelectorAll('details.accordion').forEach(item => {
   item.addEventListener('toggle', () => {
     if (!item.open) return;
+
+    // Playerを開いたときは、ほかのアコーディオンを閉じない
+    if (item.querySelector('#playerPanel')) return;
+
     document.querySelectorAll('details.accordion').forEach(other => {
       if (other !== item) other.open = false;
     });
