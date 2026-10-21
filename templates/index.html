@@ -909,6 +909,7 @@ document.getElementById('createPlaylist').addEventListener('click', () => {
 
 function renderPlaylists() {
   const root = document.getElementById('playlists');
+
   root.innerHTML = playlists.length ? playlists.map(playlist => {
     const playlistSongs = playlist.songIds
       .map(id => songs.find(song => song.id === id))
@@ -919,7 +920,7 @@ function renderPlaylists() {
         <h3>${esc(playlist.name)}</h3>
         <p>${playlistSongs.length} 曲</p>
         <div class="row">
-          <button data-plact="open" data-id="${esc(playlist.id)}">曲を表示</button>
+          <button data-plact="open" data-id="${esc(playlist.id)}">曲を表示・編集</button>
           <button data-plact="prev" data-id="${esc(playlist.id)}">前の曲</button>
           <button data-plact="next" data-id="${esc(playlist.id)}">次の曲</button>
           <button data-plact="shuffle" data-id="${esc(playlist.id)}">シャッフル再生</button>
@@ -930,6 +931,9 @@ function renderPlaylists() {
             <div class="row">
               <span>${index + 1}. ${esc(song.title)} / ${esc(song.artist || '')}</span>
               <button data-plact="play" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">再生</button>
+              <button data-plact="up" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === 0 ? 'disabled' : ''}>↑</button>
+              <button data-plact="down" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === playlistSongs.length - 1 ? 'disabled' : ''}>↓</button>
+              <button data-plact="remove" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">曲を削除</button>
             </div>
           `).join('') : '<p class="muted">曲はまだ登録されていません。</p>'}
         </div>
@@ -941,25 +945,58 @@ function renderPlaylists() {
 document.getElementById('playlists').addEventListener('click', event => {
   const button = event.target.closest('button');
   if (!button) return;
+
   const playlist = playlists.find(item => item.id === button.dataset.id);
   if (!playlist) return;
 
-  if (button.dataset.plact === 'delete') {
+  const action = button.dataset.plact;
+
+  if (action === 'delete') {
     if (!confirm('このプレイリストを削除しますか？')) return;
+
     playlists = playlists.filter(item => item.id !== playlist.id);
-    if (currentPlaylistSongs.length && currentPlaylistSongs.every(song => playlist.songIds.includes(song.id))) {
+
+    if (
+      currentPlaylistSongs.length &&
+      currentPlaylistSongs.every(song => playlist.songIds.includes(song.id))
+    ) {
       currentPlaylistSongs = [];
       currentPlaylistIndex = -1;
       isShuffleMode = false;
     }
+
     save();
     render();
     return;
   }
 
-  if (button.dataset.plact === 'open') {
-    const list = document.querySelector(`[data-plsongs="${CSS.escape(playlist.id)}"]`);
+  if (action === 'open') {
+    const list = document.querySelector(
+      `[data-plsongs="${CSS.escape(playlist.id)}"]`
+    );
     if (list) list.hidden = !list.hidden;
+    return;
+  }
+
+  const songId = button.dataset.songid;
+
+  if (action === 'up' || action === 'down' || action === 'remove') {
+    const index = playlist.songIds.findIndex(id => String(id) === String(songId));
+    if (index < 0) return;
+
+    if (action === 'remove') {
+      if (!confirm('この曲をプレイリストから削除しますか？')) return;
+      playlist.songIds.splice(index, 1);
+    } else {
+      const newIndex = action === 'up' ? index - 1 : index + 1;
+      if (newIndex < 0 || newIndex >= playlist.songIds.length) return;
+
+      [playlist.songIds[index], playlist.songIds[newIndex]] =
+        [playlist.songIds[newIndex], playlist.songIds[index]];
+    }
+
+    save();
+    renderPlaylists();
     return;
   }
 
@@ -967,12 +1004,16 @@ document.getElementById('playlists').addEventListener('click', event => {
     .map(id => songs.find(song => song.id === id))
     .filter(Boolean);
 
-  if (button.dataset.plact === 'play') {
-    const index = playlistSongs.findIndex(song => song.id === button.dataset.songid);
+  if (action === 'play') {
+    const index = playlistSongs.findIndex(
+      song => String(song.id) === String(songId)
+    );
+
     if (index < 0) {
       alert('この曲は見つかりませんでした。');
       return;
     }
+
     currentPlaylistSongs = playlistSongs;
     currentPlaylistIndex = index;
     isShuffleMode = false;
@@ -980,52 +1021,50 @@ document.getElementById('playlists').addEventListener('click', event => {
     return;
   }
 
-  if (!['prev', 'next', 'shuffle'].includes(button.dataset.plact)) return;
+  if (!['prev', 'next', 'shuffle'].includes(action)) return;
+
   if (!playlistSongs.length) {
     alert('このプレイリストには曲がありません。');
     return;
   }
 
-  if (button.dataset.plact === 'shuffle') {
+  if (action === 'shuffle') {
     isShuffleMode = true;
     currentPlaylistSongs = [...playlistSongs];
 
     for (let i = currentPlaylistSongs.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [currentPlaylistSongs[i], currentPlaylistSongs[j]] = [currentPlaylistSongs[j], currentPlaylistSongs[i]];
-    }
-
-    if (currentPlaylistSongs.length > 1 && currentPlaylistSongs[1].id === currentPlaylistSongs[0].id) {
-      const differentIndex = currentPlaylistSongs.findIndex((song, index) =>
-        index > 1 && song.id !== currentPlaylistSongs[0].id
-      );
-      if (differentIndex > 0) {
-        [currentPlaylistSongs[1], currentPlaylistSongs[differentIndex]] =
-          [currentPlaylistSongs[differentIndex], currentPlaylistSongs[1]];
-      }
+      [currentPlaylistSongs[i], currentPlaylistSongs[j]] =
+        [currentPlaylistSongs[j], currentPlaylistSongs[i]];
     }
 
     currentPlaylistIndex = 0;
   } else {
-    const samePlaylist = currentPlaylistSongs.length === playlistSongs.length &&
-      currentPlaylistSongs.every((song, index) => song.id === playlistSongs[index].id);
+    const samePlaylist =
+      currentPlaylistSongs.length === playlistSongs.length &&
+      currentPlaylistSongs.every(
+        (song, index) => song.id === playlistSongs[index].id
+      );
 
     if (!samePlaylist) {
       currentPlaylistSongs = playlistSongs;
-      currentPlaylistIndex = button.dataset.plact === 'next' ? -1 : 0;
+      currentPlaylistIndex = action === 'next' ? -1 : 0;
       isShuffleMode = false;
     }
 
-    currentPlaylistIndex = button.dataset.plact === 'next'
+    currentPlaylistIndex = action === 'next'
       ? (currentPlaylistIndex + 1) % currentPlaylistSongs.length
-      : (currentPlaylistIndex - 1 + currentPlaylistSongs.length) % currentPlaylistSongs.length;
+      : (currentPlaylistIndex - 1 + currentPlaylistSongs.length) %
+        currentPlaylistSongs.length;
   }
 
   const song = currentPlaylistSongs[currentPlaylistIndex];
+
   if (!song.url) {
     alert('この曲にはYouTubeのURLが登録されていません。曲を編集してURLを登録してね。');
     return;
   }
+
   playInApp(song);
 });
 
