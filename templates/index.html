@@ -1106,6 +1106,7 @@ document.getElementById('playlists').addEventListener('click', event => {
   if (!playlist) return;
 
   const action = button.dataset.plact;
+  console.log('プレイリストのクリック操作:', action);
 
   if (action === 'delete') {
     if (!confirm('このプレイリストを削除しますか？')) return;
