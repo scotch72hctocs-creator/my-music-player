@@ -994,6 +994,27 @@ document.getElementById('createPlaylist').addEventListener('click', () => {
   render();
 });
 
+  function updatePlayingBadge() {
+  document.querySelectorAll('.playlist-song-title').forEach(element => {
+    const songId = element.dataset.songid;
+    const isPlaying =
+      currentPlaylistSongs.length > 0 &&
+      currentPlaylistIndex >= 0 &&
+      String(currentPlaylistSongs[currentPlaylistIndex]?.id) === String(songId);
+
+    const oldBadge = element.querySelector('.playing-badge');
+    if (oldBadge) oldBadge.remove();
+
+    if (isPlaying) {
+      const badge = document.createElement('span');
+      badge.className = 'playing-badge';
+      badge.textContent = '▶ 再生中';
+      element.prepend(badge);
+      element.insertBefore(document.createTextNode(' '), badge.nextSibling);
+    }
+  });
+}
+
 function renderPlaylists() {
   const root = document.getElementById('playlists');
   const openPlaylists = new Set(
