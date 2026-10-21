@@ -273,6 +273,47 @@ body.photo-background .song {
   max-width: 100%;
   box-sizing: border-box;
 }
+  .playlist-song-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px solid #333;
+}
+
+.playlist-song-title {
+  overflow-wrap: anywhere;
+}
+
+.playlist-song-play button {
+  width: 100%;
+}
+
+.playlist-song-edit {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.playlist-song-order,
+.playlist-song-remove {
+  flex: 1;
+  min-width: 0;
+}
+
+.playlist-song-order {
+  display: flex;
+  gap: 8px;
+}
+
+.playlist-song-order button {
+  flex: 1;
+  min-width: 0;
+}
+
+.playlist-song-remove {
+  width: 0;
+}
 </style>
 </head>
 <body>
@@ -909,6 +950,11 @@ document.getElementById('createPlaylist').addEventListener('click', () => {
 
 function renderPlaylists() {
   const root = document.getElementById('playlists');
+  const openPlaylists = new Set(
+    [...root.querySelectorAll('[data-plsongs]')]
+      .filter(element => !element.hidden)
+      .map(element => element.dataset.plsongs)
+  );
 
   root.innerHTML = playlists.length ? playlists.map(playlist => {
     const playlistSongs = playlist.songIds
@@ -926,20 +972,33 @@ function renderPlaylists() {
           <button data-plact="shuffle" data-id="${esc(playlist.id)}">シャッフル再生</button>
           <button data-plact="delete" data-id="${esc(playlist.id)}">リスト削除</button>
         </div>
-        <div data-plsongs="${esc(playlist.id)}" hidden>
-          ${playlistSongs.length ? playlistSongs.map((song, index) => `
-            <div class="row">
-              <span>${index + 1}. ${esc(song.title)} / ${esc(song.artist || '')}</span>
-              <button data-plact="play" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">再生</button>
-              <button data-plact="up" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === 0 ? 'disabled' : ''}>↑</button>
-              <button data-plact="down" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === playlistSongs.length - 1 ? 'disabled' : ''}>↓</button>
-              <button data-plact="remove" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">曲を削除</button>
-            </div>
-          `).join('') : '<p class="muted">曲はまだ登録されていません。</p>'}
-        </div>
+<div data-plsongs="${esc(playlist.id)}" hidden>
+  ${playlistSongs.length ? playlistSongs.map((song, index) => `
+    <div class="playlist-song-item">
+      <div class="playlist-song-title">
+        ${index + 1}. ${esc(song.title)} / ${esc(song.artist || '')}
       </div>
+      <div class="playlist-song-play">
+        <button data-plact="play" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">再生</button>
+      </div>
+      <div class="playlist-song-edit">
+        <div class="playlist-song-order">
+          <button data-plact="up" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === 0 ? 'disabled' : ''}>↑</button>
+          <button data-plact="down" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === playlistSongs.length - 1 ? 'disabled' : ''}>↓</button>
+        </div>
+        <button class="playlist-song-remove" data-plact="remove" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">曲を削除</button>
+      </div>
+    </div>
+  `).join('') : '<p class="muted">曲はまだ登録されていません。</p>'}
+</div>
     `;
   }).join('') : '<p class="muted">プレイリストはまだありません。</p>';
+    openPlaylists.forEach(id => {
+    const element = root.querySelector(
+      `[data-plsongs="${CSS.escape(id)}"]`
+    );
+    if (element) element.hidden = false;
+  });
 }
 
 document.getElementById('playlists').addEventListener('click', event => {
