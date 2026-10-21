@@ -1031,6 +1031,7 @@ document.getElementById('createPlaylist').addEventListener('click', () => {
 
 function renderPlaylists() {
   const root = document.getElementById('playlists');
+  console.log('再描画直前のプレイリスト状態:', [...root.querySelectorAll('[data-plsongs]')].map(el => ({ id: el.dataset.plsongs, hidden: el.hidden })));
   const openPlaylists = new Set(
     [...root.querySelectorAll('[data-plsongs]')]
       .filter(element => !element.hidden)
