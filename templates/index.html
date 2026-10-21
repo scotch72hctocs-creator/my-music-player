@@ -1023,6 +1023,8 @@ function renderPlaylists() {
       .map(element => element.dataset.plsongs)
   );
 
+  console.log('開いているプレイリスト:', [...openPlaylists]);
+
   root.innerHTML = playlists.length ? playlists.map(playlist => {
     const playlistSongs = playlist.songIds
       .map(id => songs.find(song => song.id === id))
