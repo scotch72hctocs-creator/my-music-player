@@ -741,6 +741,7 @@ async function playInApp(song) {
 
   message.textContent = '再生プレーヤーを読み込み中…';
   info.textContent = `${song.title || ''}${song.artist ? ' / ' + song.artist : ''}`;
+  renderPlaylists();
 
   if (ytPlayer) {
     try {
@@ -1015,9 +1016,14 @@ function renderPlaylists() {
 <div data-plsongs="${esc(playlist.id)}" hidden>
   ${playlistSongs.length ? playlistSongs.map((song, index) => `
     <div class="playlist-song-item">
-      <div class="playlist-song-title">
-        ${index + 1}. ${esc(song.title)} / ${esc(song.artist || '')}
-      </div>
+<div class="playlist-song-title">
+  ${currentPlaylistSongs.length > 0 &&
+    currentPlaylistIndex >= 0 &&
+    currentPlaylistSongs[currentPlaylistIndex]?.id === song.id
+      ? '▶ 再生中　'
+      : ''}
+  ${index + 1}. ${esc(song.title)} / ${esc(song.artist || '')}
+</div>
       <div class="playlist-song-play">
         <button data-plact="play" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">再生</button>
       </div>
