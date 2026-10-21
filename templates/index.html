@@ -1129,8 +1129,13 @@ if (action === 'toggle') {
     `[data-plsongs="${CSS.escape(playlist.id)}"]`
   );
 
-  if (list) {
-    const shouldOpen = list.hidden;
+if (list) {
+  const shouldOpen = list.hidden;
+
+  console.log('プレイリスト開閉処理が実行されました', {
+    playlistId: playlist.id,
+    shouldOpen: shouldOpen
+  });
 
     document.querySelectorAll('[data-plsongs]').forEach(item => {
       item.hidden = true;
