@@ -963,9 +963,17 @@ function renderPlaylists() {
 
     return `
       <div class="song">
-        <h3>${esc(playlist.name)}</h3>
-        <p>${playlistSongs.length} 曲</p>
-        <div class="row">
+<button
+  type="button"
+  class="playlist-toggle"
+  data-plact="toggle"
+  data-id="${esc(playlist.id)}"
+  aria-expanded="${openPlaylists.has(playlist.id)}"
+>
+  ${openPlaylists.has(playlist.id) ? '▼' : '▶'}
+  ${esc(playlist.name)}（${playlistSongs.length}曲）
+</button>
+<div class="row">
           <button data-plact="open" data-id="${esc(playlist.id)}">曲を表示・編集</button>
           <button data-plact="prev" data-id="${esc(playlist.id)}">前の曲</button>
           <button data-plact="next" data-id="${esc(playlist.id)}">次の曲</button>
@@ -1029,13 +1037,39 @@ document.getElementById('playlists').addEventListener('click', event => {
     return;
   }
 
-  if (action === 'open') {
-    const list = document.querySelector(
-      `[data-plsongs="${CSS.escape(playlist.id)}"]`
-    );
-    if (list) list.hidden = !list.hidden;
-    return;
+if (action === 'toggle') {
+  const list = document.querySelector(
+    `[data-plsongs="${CSS.escape(playlist.id)}"]`
+  );
+
+  if (list) {
+    const shouldOpen = list.hidden;
+
+    document.querySelectorAll('[data-plsongs]').forEach(item => {
+      item.hidden = true;
+    });
+
+    document.querySelectorAll('.playlist-toggle').forEach(button => {
+      button.setAttribute('aria-expanded', 'false');
+      button.textContent = '▶ ' + button.textContent.trim().replace(/^[▼▶]\s*/, '');
+    });
+
+    if (shouldOpen) {
+      list.hidden = false;
+
+      const toggle = document.querySelector(
+        `.playlist-toggle[data-id="${CSS.escape(playlist.id)}"]`
+      );
+
+      if (toggle) {
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.textContent = '▼ ' + toggle.textContent.trim().replace(/^[▼▶]\s*/, '');
+      }
+    }
   }
+
+  return;
+}
 
   const songId = button.dataset.songid;
 
