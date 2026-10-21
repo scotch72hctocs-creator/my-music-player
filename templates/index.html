@@ -752,9 +752,9 @@ async function playInApp(song) {
   }
 
   message.textContent = '再生プレーヤーを読み込み中…';
-  info.textContent = `${song.title || ''}${song.artist ? ' / ' + song.artist : ''}`;
-  renderPlaylists();
-
+　info.textContent = `${song.title || ''}${song.artist ? ' / ' + song.artist : ''}`;
+　updatePlayingBadge();
+  
   if (ytPlayer) {
     try {
       ytPlayer.loadVideoById(videoId);
