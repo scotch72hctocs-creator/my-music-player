@@ -284,13 +284,6 @@ input, select, textarea, button {
   max-width: 100%;
   box-sizing: border-box;
 }
-  .playlist-song-item {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 10px 0;
-  border-bottom: 1px solid #333;
-}
 
 .playlist-song-title {
   overflow-wrap: anywhere;
@@ -784,13 +777,13 @@ async function playInApp(song) {
   }
 
   message.textContent = '再生プレーヤーを読み込み中…';
-　info.textContent = `${song.title || ''}${song.artist ? ' / ' + song.artist : ''}`;
-　const openPlaylist = document.querySelector(
+  info.textContent = `${song.title || ''}${song.artist ? ' / ' + song.artist : ''}`;
+  const openPlaylist = document.querySelector(
   '#playlists [data-plsongs]:not([hidden])'
 );
-　const openPlaylistId = openPlaylist?.dataset.plsongs;
+  const openPlaylistId = openPlaylist?.dataset.plsongs;
 
-　updatePlayingBadge();
+  updatePlayingBadge();
 
 if (openPlaylistId) {
   const playlistToOpen = document.querySelector(
@@ -1062,16 +1055,13 @@ document.getElementById('createPlaylist').addEventListener('click', () => {
 }
 
 function renderPlaylists() {
-  console.trace('renderPlaylists 呼び出し元');
   const root = document.getElementById('playlists');
-  console.log('再描画直前のプレイリスト状態:', [...root.querySelectorAll('[data-plsongs]')].map(el => ({ id: el.dataset.plsongs, hidden: el.hidden })));
   const openPlaylists = new Set(
     [...root.querySelectorAll('[data-plsongs]')]
       .filter(element => !element.hidden)
       .map(element => element.dataset.plsongs)
   );
 
-  console.log('開いているプレイリスト:', [...openPlaylists]);
 
   root.innerHTML = playlists.length ? playlists.map(playlist => {
     const playlistSongs = playlist.songIds
@@ -1079,7 +1069,7 @@ function renderPlaylists() {
       .filter(Boolean);
 
     return `
-　　　　<div class="playlist-item">
+      <div class="playlist-item">
 <button
   type="button"
   class="playlist-toggle"
@@ -1136,7 +1126,6 @@ document.getElementById('playlists').addEventListener('click', event => {
   if (!playlist) return;
 
   const action = button.dataset.plact;
-  console.log('プレイリストのクリック操作:', action);
 
   if (action === 'delete') {
     if (!confirm('このプレイリストを削除しますか？')) return;
@@ -1165,12 +1154,6 @@ if (action === 'toggle') {
 if (list) {
   const shouldOpen = list.hidden;
 
-  console.log('プレイリスト開閉処理が実行されました', {
-    playlistId: playlist.id,
-    shouldOpen: shouldOpen
-  });
-
-  console.trace('プレイリストを閉じる処理の呼び出し元');
     document.querySelectorAll('[data-plsongs]').forEach(item => {
       item.hidden = true;
     });
