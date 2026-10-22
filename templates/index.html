@@ -512,6 +512,7 @@ const BG_COLOR_KEY = 'myMusicPlayerBackgroundColor';
 const BG_DB_NAME = 'myMusicPlayerBackgroundDB';
 const BG_STORE_NAME = 'settings';
 const BG_IMAGE_KEY = 'backgroundImage';
+const LAST_PLAYED_KEY = 'mmp_last_played_song_v1';
 
 function load(key, fallback) {
   try {
@@ -776,6 +777,12 @@ async function playInApp(song) {
     return;
   }
 
+  localStorage.setItem(LAST_PLAYED_KEY, JSON.stringify({
+  videoId: videoId,
+  title: song.title || '',
+  artist: song.artist || ''
+}));
+  
   message.textContent = '再生プレーヤーを読み込み中…';
   info.textContent = `${song.title || ''}${song.artist ? ' / ' + song.artist : ''}`;
   const openPlaylist = document.querySelector(
@@ -1444,9 +1451,108 @@ async function restoreBackgroundImage() {
   }
 }
 
+async function prepareLastPlayedPlayer() {
+  let savedSong;
+
+  try {
+    savedSong = JSON.parse(localStorage.getItem(LAST_PLAYED_KEY) || 'null');
+  } catch {
+    return;
+  }
+
+  if (!savedSong || !isValidYouTubeId(savedSong.videoId)) {
+    return;
+  }
+
+  const playerRoot = document.getElementById('youtubePlayer');
+  const message = document.getElementById('playerMessage');
+  const info = document.getElementById('playerInfo');
+  const playerAccordion = document.getElementById('playerPanel')
+    .closest('details.accordion');
+
+  playerAccordion.open = true;
+
+  let mount = document.getElementById('youtubePlayerFrame');
+  if (!mount) {
+    mount = document.createElement('div');
+    mount.id = 'youtubePlayerFrame';
+    playerRoot.replaceChildren(mount);
+  }
+
+  try {
+    await loadYouTubeIframeAPI();
+
+    if (ytPlayer) return;
+
+    ytPlayer = new YT.Player('youtubePlayerFrame', {
+      width: '100%',
+      height: '220',
+      videoId: savedSong.videoId,
+      playerVars: {
+        playsinline: 1,
+        rel: 0,
+        fs: 1,
+        autoplay: 0
+      },
+      events: {
+        onReady: () => {
+          ytPlayer.cueVideoById(savedSong.videoId);
+          info.textContent =
+            `${savedSong.title || '前回の曲'}${savedSong.artist ? ' / ' + savedSong.artist : ''}`;
+          message.textContent =
+            '前回の曲を準備しました。再生ボタンで開始できます。';
+        },
+        onAutoplayBlocked: () => {
+          message.textContent =
+            '自動再生が制限されました。画面内の再生ボタンを押してね。';
+        },
+        onFullscreenChange: event => {
+          if (!event.data) return;
+
+          if (event.data.fullscreen === true) {
+            wasPlayingBeforeFullscreen =
+              ytPlayer.getPlayerState() === YT.PlayerState.PLAYING;
+            message.textContent = '全画面で再生中です';
+          }
+
+          if (event.data.fullscreen === false) {
+            message.textContent = '全画面を終了しました';
+            if (
+              wasPlayingBeforeFullscreen &&
+              ytPlayer &&
+              ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING
+            ) {
+              ytPlayer.playVideo();
+            }
+            wasPlayingBeforeFullscreen = false;
+          }
+        },
+        onStateChange: event => {
+          if (event.data === YT.PlayerState.PLAYING) {
+            message.textContent = '再生中です♪';
+          }
+
+          if (event.data === YT.PlayerState.ENDED) {
+            message.textContent =
+              '曲が終了しました。次の曲を読み込みます…';
+            advancePlaylistAfterEnd(message);
+          }
+        },
+        onError: () => {
+          message.textContent =
+            'この動画は埋め込み再生できない可能性があります。';
+        }
+      }
+    });
+  } catch {
+    message.textContent = 'プレーヤーを準備できませんでした。';
+  }
+}
+
 loadBackgroundSettings();
 restoreBackgroundImage();
 render();
+prepareLastPlayedPlayer();
 
 /* iPhone Safariでの初回再生を助けるため、APIを先読みする */
 loadYouTubeIframeAPI().catch(() => {});
