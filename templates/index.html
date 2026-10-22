@@ -294,17 +294,18 @@ input, select, textarea, button {
   overflow-wrap: anywhere;
   line-height: 1.3;
 }
-
-.playlist-song-play button {
-  width: 100%;
-}
   
   /* 曲ごとの操作ボタンを横並びにする */
 .playlist-song-edit {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
+}
+
+.playlist-song-edit > button[data-plact="play"] {
+  flex: 1;
+  min-width: 0;
 }
 
 /* プレイリスト操作ボタンを2列×2段にする */
@@ -1104,10 +1105,8 @@ function renderPlaylists() {
       : ''}
   ${index + 1}. ${esc(song.title)} / ${esc(song.artist || '')}
 </div>
-      <div class="playlist-song-play">
-        <button data-plact="play" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">再生</button>
-      </div>
       <div class="playlist-song-edit">
+        <button data-plact="play" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">再生</button>
         <div class="playlist-song-order">
           <button data-plact="up" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === 0 ? 'disabled' : ''}>↑</button>
           <button data-plact="down" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === playlistSongs.length - 1 ? 'disabled' : ''}>↓</button>
