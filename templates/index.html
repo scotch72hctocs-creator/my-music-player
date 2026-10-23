@@ -1038,6 +1038,24 @@ document.getElementById('songs').addEventListener('click', event => {
         playlist.songIds.push(song.id);
         save();
         render();
+
+        const libraryAccordion = document.getElementById('songs')
+          .closest('details.accordion');
+        const playlistAccordion = document.getElementById('playlists')
+          .closest('details.accordion');
+
+        libraryAccordion.open = false;
+        playlistAccordion.open = true;
+
+        const playlistToggle = playlistAccordion.querySelector(
+          `.playlist-toggle[data-id="${CSS.escape(playlist.id)}"]`
+        );
+        if (playlistToggle) playlistToggle.click();
+
+        playlistAccordion.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
       }
       break;
     }
