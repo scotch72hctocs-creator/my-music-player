@@ -18,6 +18,7 @@
   --accent: #d9d9d9;
   --app-font: "Special Elite", "Courier New", monospace;
   --body-font: "BIZ UDPGothic", "Courier New", monospace;
+  --base-font-size: 13px;
 }
 
 * { box-sizing: border-box; }
@@ -153,7 +154,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 }
 
 .empty { padding: 16px; color: var(--muted); text-align: center; }
-.notice { color: #cfcfcf; font-size: .9rem; line-height: 1.7; }
+.notice { color: #cfcfcf; font-size: var(--base-font-size); line-height: 1.7; }
 
 details.accordion {
   margin: 12px 0;
@@ -163,7 +164,7 @@ details.accordion {
   border-radius: 14px;
 }
 
-details.accordion > :not(summary) { font-size: 13px; }
+details.accordion > :not(summary) { font-size: var(--base-font-size); }
 details.accordion > summary {
   display: flex;
   min-height: 46px;
@@ -240,12 +241,20 @@ body.photo-background .song {
   h2 { margin-bottom: 12px; font-size: 1.1rem; }
   .panel { margin: 12px 0; padding: 12px; border-radius: 12px; }
   .grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+
 input, select, textarea, button {
     max-width: 100%;
-    font-size: 16px;
     line-height: 1.4;
-  }
+}
 
+input, select, textarea {
+    font-size: 16px;
+}
+
+button {
+    font-size: var(--base-font-size);
+}
+  
   input, select, textarea {
     min-height: 44px;
   }
@@ -263,7 +272,7 @@ input, select, textarea, button {
   .song h3 { font-size: 1.05rem; line-height: 1.6; }
   .song p { line-height: 1.65; }
   .song .row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-  .song .row button { width: 100%; min-width: 0; min-height: 44px; padding: 6px 6px; font-size: 14px; }
+  .song .row button { width: 100%; min-width: 0; min-height: 44px; padding: 6px 6px; }
   .pill { margin: 2px 0; }
   details.accordion { margin: 10px 0; }
   details.accordion > summary { min-height: 44px; padding: 7px 13px; font-size: .95rem; }
