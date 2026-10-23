@@ -716,9 +716,9 @@ document.getElementById('searchForm').addEventListener('submit', async event => 
           <div>${esc(video.author)}</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
             <button type="button" data-preview-index="${index}">▶ 再生</button>
-            <button
-　  type="button"
-  　　data-search-index="${index}"
+　　<button
+  　　　type="button"
+  　　　data-search-index="${index}"
   　　　${registeredVideoIds.has(getYouTubeVideoId(video.videoUrl || '')) ? 'disabled' : ''}
 　　　　>${registeredVideoIds.has(getYouTubeVideoId(video.videoUrl || '')) ? '追加済み' : 'ライブラリへ'}</button>
           </div>
