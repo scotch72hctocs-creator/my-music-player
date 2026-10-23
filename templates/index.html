@@ -702,7 +702,12 @@ document.getElementById('searchForm').addEventListener('submit', async event => 
       resultsBox.innerHTML = '<p>検索結果が見つかりませんでした。</p>';
       return;
     }
-
+　const registeredVideoIds = new Set(
+  songs
+    .map(song => getYouTubeVideoId(song.url || ''))
+    .filter(Boolean)
+);
+    
     resultsBox.innerHTML = data.results.map((video, index) => `
       <div class="search-result-item" style="display:flex;gap:12px;align-items:center;margin:12px 0;padding:10px;border:1px solid #444;border-radius:8px;">
         <img src="${esc(video.thumbnail)}" alt="" loading="lazy" style="width:120px;max-width:35%;border-radius:6px;">
@@ -711,7 +716,11 @@ document.getElementById('searchForm').addEventListener('submit', async event => 
           <div>${esc(video.author)}</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
             <button type="button" data-preview-index="${index}">▶ 再生</button>
-            <button type="button" data-search-index="${index}">ライブラリへ</button>
+            <button
+　  type="button"
+  　　data-search-index="${index}"
+  　　　${registeredVideoIds.has(getYouTubeVideoId(video.videoUrl || '')) ? 'disabled' : ''}
+　　　　>${registeredVideoIds.has(getYouTubeVideoId(video.videoUrl || '')) ? '追加済み' : 'ライブラリへ'}</button>
           </div>
         </div>
       </div>
