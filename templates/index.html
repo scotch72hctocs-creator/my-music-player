@@ -390,6 +390,75 @@ button {
   font-weight: bold;
   white-space: nowrap;
 }
+
+  /* プレイリスト選択画面 */
+#playlistSelectModal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+#playlistSelectModal[hidden] {
+  display: none;
+}
+
+.playlist-select-panel {
+  width: 100%;
+  max-width: 360px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 20px;
+  border: 1px solid #444;
+  border-radius: 14px;
+  background: #171717;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.playlist-select-panel h3 {
+  margin: 0 0 12px;
+}
+
+.playlist-select-panel p {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: #ccc;
+}
+
+#playlistSelectOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#playlistSelectOptions button,
+#playlistSelectCancel {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px;
+  border: 1px solid #555;
+  border-radius: 8px;
+  background: #292929;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+#playlistSelectOptions button:active,
+#playlistSelectCancel:active {
+  background: #444;
+}
+
+#playlistSelectCancel {
+  margin-top: 14px;
+  background: #1c1c1c;
+}
+  
 </style>
 </head>
 <body>
@@ -1025,16 +1094,25 @@ document.getElementById('songs').addEventListener('click', event => {
       render();
       break;
 
-    case 'playlist': {
-      if (!playlists.length) {
-        alert('先にプレイリストを作成してね');
-        return;
-      }
-      const names = playlists.map((playlist, index) => `${index + 1}: ${playlist.name}`).join('\n');
-      const answer = prompt('追加先の番号を入力してください\n' + names, '1');
-      if (answer === null) return;
-      const playlist = playlists[Number(answer) - 1];
-      if (playlist && !playlist.songIds.includes(song.id)) {
+case 'playlist': {
+  if (!playlists.length) {
+    alert('先にプレイリストを作成してね');
+    return;
+  }
+
+  const modal = document.getElementById('playlistSelectModal');
+  const options = document.getElementById('playlistSelectOptions');
+  const cancel = document.getElementById('playlistSelectCancel');
+
+  options.replaceChildren();
+
+  playlists.forEach(playlist => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = playlist.name;
+
+    button.addEventListener('click', () => {
+      if (!playlist.songIds.includes(song.id)) {
         playlist.songIds.push(song.id);
         save();
         render();
@@ -1050,14 +1128,30 @@ document.getElementById('songs').addEventListener('click', event => {
         const playlistToggle = playlistAccordion.querySelector(
           `.playlist-toggle[data-id="${CSS.escape(playlist.id)}"]`
         );
+
         if (playlistToggle) playlistToggle.click();
 
         playlistAccordion.scrollIntoView({
           behavior: 'smooth',
           block: 'start'
         });
+      } else {
+        alert('この曲はすでにプレイリストに入っています。');
       }
-      break;
+
+      modal.hidden = true;
+    });
+
+    options.appendChild(button);
+  });
+
+  modal.hidden = false;
+
+  cancel.onclick = () => {
+    modal.hidden = true;
+  };
+
+  break;
     }
   }
 });
@@ -1593,5 +1687,16 @@ prepareLastPlayedPlayer();
 /* iPhone Safariでの初回再生を助けるため、APIを先読みする */
 loadYouTubeIframeAPI().catch(() => {});
 </script>
+
+  <!-- プレイリスト選択画面 -->
+<div id="playlistSelectModal" hidden>
+  <div class="playlist-select-panel">
+    <h3>プレイリストに追加</h3>
+    <p>追加先のプレイリストを選んでください。</p>
+    <div id="playlistSelectOptions"></div>
+    <button type="button" id="playlistSelectCancel">キャンセル</button>
+  </div>
+</div>
+  
 </body>
 </html>
