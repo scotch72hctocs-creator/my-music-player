@@ -1059,7 +1059,7 @@ function render() {
 
   const root = document.getElementById('songs');
   root.innerHTML = filtered.length ? filtered.map(song => `
-    <article class="song" data-songid="${esc(song.id)}">
+    <article class="song ${String(selectedSongId) === String(song.id) ? 'selected' : ''}" data-songid="${esc(song.id)}">
 <h3>
   ${currentPlaylistSongs.length > 0 &&
     currentPlaylistIndex >= 0 &&
@@ -1090,6 +1090,15 @@ document.getElementById('songs').addEventListener('click', event => {
   if (!button) return;
   const song = songs.find(item => item.id === button.dataset.id);
   if (!song) return;
+  
+  if (!button) {
+    const article = event.target.closest('.song');
+    if (!article) return;
+
+    selectedSongId = article.dataset.songid;
+    render();
+    return;
+  }
 
   switch (button.dataset.act) {
 case 'play':
