@@ -1059,7 +1059,14 @@ function render() {
   const root = document.getElementById('songs');
   root.innerHTML = filtered.length ? filtered.map(song => `
     <article class="song" data-songid="${esc(song.id)}">
-      <h3>${esc(song.title)} <span class="pill">${esc(song.language || '')}</span></h3>
+<h3>
+  ${currentPlaylistSongs.length > 0 &&
+    currentPlaylistIndex >= 0 &&
+    String(currentPlaylistSongs[currentPlaylistIndex]?.id) === String(song.id)
+      ? '<span class="playing-badge">▶ 再生中</span> '
+      : ''}
+  ${esc(song.title)} <span class="pill">${esc(song.language || '')}</span>
+</h3>
       <p>${esc(song.artist)} ${song.album ? '／' + esc(song.album) : ''}</p>
       <p class="muted">${esc(song.year || '発売年未登録')} ${song.year ? '・' + esc(decade(song.year)) : ''}</p>
       <div class="row">
@@ -1084,12 +1091,13 @@ document.getElementById('songs').addEventListener('click', event => {
   if (!song) return;
 
   switch (button.dataset.act) {
-    case 'play':
-      currentPlaylistSongs = [];
-      currentPlaylistIndex = -1;
-      isShuffleMode = false;
-      playInApp(song);
-      break;
+case 'play':
+  currentPlaylistSongs = [song];
+  currentPlaylistIndex = 0;
+  isShuffleMode = false;
+  playInApp(song);
+  render();
+  break;
 
     case 'edit': {
       editingSongId = song.id;
