@@ -191,6 +191,8 @@ details.accordion > summary::after {
   font-size: 1.3rem;
 }
 details.accordion[open] > summary::after { content: "−"; }
+/* 編集フォームは編集時だけ表示 */
+details#addAccordion:not([open]) { display: none; }
 details.accordion > summary:hover { background-color: rgba(255, 255, 255, .05); }
 details.accordion > section.panel {
   margin: 0;
@@ -509,8 +511,8 @@ button {
     </section>
   </details>
 
-  <details class="accordion">
-    <summary>add</summary>
+  <details class="accordion" id="addAccordion">
+    <summary>曲の編集</summary>
     <section class="panel">
       <form id="addForm">
         <div class="grid">
@@ -526,7 +528,7 @@ button {
             <small id="urlMessage" class="muted"></small>
           </label>
         </div>
-        <div class="row" style="margin-top:10px"><button type="submit">ライブラリに登録</button></div>
+        <div class="row" style="margin-top:10px"><button type="submit">変更を保存</button></div>
       </form>
     </section>
   </details>
@@ -547,6 +549,9 @@ button {
           <select id="filterLanguage"><option value="">すべて</option><option>邦楽</option><option>洋楽</option><option>その他</option></select>
         </label>
         <label>キーワード<input id="filterText" placeholder="曲名・歌手・アルバム"></label>
+      </div>
+      <div class="row" style="margin-bottom:10px">
+        <button id="libraryShuffleBtn" type="button">ライブラリをランダム再生</button>
       </div>
       <div id="songs"></div>
       <div class="row">
@@ -706,7 +711,7 @@ document.getElementById('searchForm').addEventListener('submit', async event => 
           <div>${esc(video.author)}</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
             <button type="button" data-preview-index="${index}">▶ 再生</button>
-            <button type="button" data-search-index="${index}">▼ 登録</button>
+            <button type="button" data-search-index="${index}">ライブラリへ</button>
           </div>
         </div>
       </div>
@@ -722,14 +727,38 @@ document.getElementById('searchForm').addEventListener('submit', async event => 
     resultsBox.querySelectorAll('[data-search-index]').forEach(button => {
       button.addEventListener('click', () => {
         const video = data.results[Number(button.dataset.searchIndex)];
-        document.getElementById('title').value = video.title || '';
-        document.getElementById('artist').value = video.author || '';
-        document.getElementById('url').value = video.videoUrl || '';
-        document.getElementById('url').dispatchEvent(new Event('change', { bubbles: true }));
+        const videoId = getYouTubeVideoId(video.videoUrl || '');
 
-        const addForm = document.getElementById('addForm');
-        addForm.closest('details.accordion').open = true;
-        addForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (!isValidYouTubeId(videoId)) {
+          alert('この検索結果のYouTube動画URLを確認できませんでした。');
+          return;
+        }
+
+        const existingSong = songs.find(song =>
+          getYouTubeVideoId(song.url || '') === videoId
+        );
+
+        if (existingSong) {
+          button.textContent = '追加済み';
+          button.disabled = true;
+          return;
+        }
+
+        songs.unshift({
+          id: Date.now().toString() + Math.random().toString(36).slice(2, 7),
+          title: video.title || '',
+          artist: video.author || '',
+          album: '',
+          year: '',
+          language: region || 'その他',
+          url: video.videoUrl,
+          favorite: false
+        });
+
+        save();
+        render();
+        button.textContent = '追加済み';
+        button.disabled = true;
       });
     });
   } catch (error) {
@@ -800,18 +829,19 @@ document.getElementById('addForm').addEventListener('submit', event => {
     url: songUrl
   };
 
-  if (editingSongId) {
-    const existing = songs.find(song => song.id === editingSongId);
-    if (existing) Object.assign(existing, songData);
-    editingSongId = null;
-  } else {
-    songs.unshift({ id: Date.now().toString(), ...songData, favorite: false });
+  if (!editingSongId) {
+    alert('曲の追加は検索結果の「ライブラリへ」から行ってください。');
+    return;
   }
+
+  const existing = songs.find(song => song.id === editingSongId);
+  if (existing) Object.assign(existing, songData);
+  editingSongId = null;
 
   save();
   event.currentTarget.reset();
   const submitButton = event.currentTarget.querySelector('button[type="submit"]');
-  if (submitButton) submitButton.textContent = 'ライブラリに登録';
+  if (submitButton) submitButton.textContent = '変更を保存';
   urlMessage.textContent = '';
   render();
 
@@ -1019,7 +1049,7 @@ function render() {
 
   const root = document.getElementById('songs');
   root.innerHTML = filtered.length ? filtered.map(song => `
-    <article class="song">
+    <article class="song" data-songid="${esc(song.id)}">
       <h3>${esc(song.title)} <span class="pill">${esc(song.language || '')}</span></h3>
       <p>${esc(song.artist)} ${song.album ? '／' + esc(song.album) : ''}</p>
       <p class="muted">${esc(song.year || '発売年未登録')} ${song.year ? '・' + esc(decade(song.year)) : ''}</p>
@@ -1158,6 +1188,47 @@ case 'playlist': {
 
 ['view', 'filterDecade', 'filterLanguage', 'filterText'].forEach(id => {
   document.getElementById(id).addEventListener('input', render);
+});
+
+/* 表示中のライブラリ曲をランダム再生 */
+document.getElementById('libraryShuffleBtn').addEventListener('click', () => {
+  const visibleIds = [...document.querySelectorAll('#songs article.song')]
+    .map(element => element.dataset.songid);
+  const librarySongs = visibleIds
+    .map(id => songs.find(song => String(song.id) === String(id)))
+    .filter(song => song && song.url);
+
+  if (!librarySongs.length) {
+    alert('ランダム再生できる曲がありません。');
+    return;
+  }
+
+  currentPlaylistSongs = [...librarySongs];
+
+  for (let i = currentPlaylistSongs.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [currentPlaylistSongs[i], currentPlaylistSongs[j]] =
+      [currentPlaylistSongs[j], currentPlaylistSongs[i]];
+  }
+
+  const lastPlayed = load(LAST_PLAYED_KEY, null);
+  if (
+    currentPlaylistSongs.length > 1 &&
+    lastPlayed?.videoId &&
+    getYouTubeVideoId(currentPlaylistSongs[0].url || '') === lastPlayed.videoId
+  ) {
+    const differentIndex = currentPlaylistSongs.findIndex(song =>
+      getYouTubeVideoId(song.url || '') !== lastPlayed.videoId
+    );
+    if (differentIndex > 0) {
+      [currentPlaylistSongs[0], currentPlaylistSongs[differentIndex]] =
+        [currentPlaylistSongs[differentIndex], currentPlaylistSongs[0]];
+    }
+  }
+
+  currentPlaylistIndex = 0;
+  isShuffleMode = true;
+  playInApp(currentPlaylistSongs[currentPlaylistIndex]);
 });
 
 /* プレイリスト作成 */
