@@ -745,8 +745,16 @@ document.getElementById('addForm').addEventListener('submit', event => {
   if (submitButton) submitButton.textContent = 'ライブラリに登録';
   urlMessage.textContent = '';
   render();
-});
 
+  const addAccordion = event.currentTarget.closest('details.accordion');
+  const libraryAccordion = document.getElementById('songs')
+    .closest('details.accordion');
+
+  addAccordion.open = false;
+  libraryAccordion.open = true;
+  libraryAccordion.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+  
 /* YouTube IFrame API */
 function loadYouTubeIframeAPI() {
   if (window.YT && window.YT.Player) return Promise.resolve();
