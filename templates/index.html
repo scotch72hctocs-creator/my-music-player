@@ -1116,7 +1116,7 @@ document.getElementById('songs').addEventListener('click', event => {
     const article = event.target.closest('.song');
     if (!article) return;
 
-    selectedSongId = article.dataset.songid;
+    selectSong(article.dataset.songid);
     render();
     return;
   }
