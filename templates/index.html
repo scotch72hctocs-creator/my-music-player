@@ -1586,7 +1586,8 @@ function applyBackground() {
     document.body.dataset.backgroundImage =
       'url("/static/my_music_player_background_1920x1080.png")';
     document.body.style.backgroundImage = document.body.dataset.backgroundImage;
-    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundSize = 'contain';
+document.body.style.backgroundRepeat = 'no-repeat';
     document.body.style.backgroundPosition = 'center';
     document.body.style.backgroundAttachment = 'fixed';
   } else if (useImage) {
