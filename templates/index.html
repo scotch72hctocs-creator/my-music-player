@@ -1064,8 +1064,10 @@ function render() {
     (!query || [song.title, song.artist, song.album].join(' ').toLowerCase().includes(query))
   );
 
-  const root = document.getElementById('songs');
-  root.innerHTML = filtered.length ? filtered.map(song => `
+const root = document.getElementById('songs');
+const selectedSong = songs.find(song => String(song.id) === String(selectedSongId));
+root.innerHTML = filtered.length ? filtered.map(song => `
+
     <article class="song ${String(selectedSongId) === String(song.id) ? 'selected' : ''}" data-songid="${esc(song.id)}">
 <h3>
   ${currentPlaylistSongs.length > 0 &&
