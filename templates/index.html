@@ -1087,11 +1087,9 @@ root.innerHTML = filtered.length ? filtered.map(song => `
 
     <article class="song ${String(selectedSongId) === String(song.id) ? 'selected' : ''}" data-songid="${esc(song.id)}">
 <h3>
-  ${currentPlaylistSongs.length > 0 &&
-    currentPlaylistIndex >= 0 &&
-    String(currentPlaylistSongs[currentPlaylistIndex]?.id) === String(song.id)
-      ? '<span class="playing-badge">▶ 再生中</span> '
-      : ''}
+${isSongPlaying(song.id)
+  ? '<span class="playing-badge">▶ 再生中</span> '
+  : ''}
   ${esc(song.title)} <span class="pill">${esc(song.language || '')}</span>
 </h3>
       <p>${esc(song.artist)} ${song.album ? '／' + esc(song.album) : ''}</p>
