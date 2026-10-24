@@ -1339,7 +1339,7 @@ function renderPlaylists() {
 <div data-plsongs="${esc(playlist.id)}" hidden>
   ${playlistSongs.length ? playlistSongs.map((song, index) => `
     <div class="playlist-song-item">
-<div class="playlist-song-title" data-songid="${esc(song.id)}">
+<div class="playlist-song-title ${String(selectedSongId) === String(song.id) ? 'selected' : ''}" data-songid="${esc(song.id)}">
   ${currentPlaylistSongs.length > 0 &&
     currentPlaylistIndex >= 0 &&
     String(currentPlaylistSongs[currentPlaylistIndex]?.id) === String(song.id)
@@ -1347,14 +1347,18 @@ function renderPlaylists() {
       : ''}
   ${index + 1}. ${esc(song.title)} / ${esc(song.artist || '')}
 </div>
-      <div class="playlist-song-edit">
-        <button data-plact="play" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">再生</button>
-        <div class="playlist-song-order">
-          <button data-plact="up" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === 0 ? 'disabled' : ''}>↑</button>
-          <button data-plact="down" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === playlistSongs.length - 1 ? 'disabled' : ''}>↓</button>
-        </div>
-        <button class="playlist-song-remove" data-plact="remove" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">曲を削除</button>
-      </div>
+
+<div class="playlist-song-edit">
+  <button data-plact="play" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">再生</button>
+
+  ${String(selectedSongId) === String(song.id) ? `
+    <div class="playlist-song-order">
+      <button data-plact="up" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === 0 ? 'disabled' : ''}>↑</button>
+      <button data-plact="down" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === playlistSongs.length - 1 ? 'disabled' : ''}>↓</button>
+    </div>
+    <button class="playlist-song-remove" data-plact="remove" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">曲を削除</button>
+  ` : ''}
+</div>
     </div>
   `).join('') : '<p class="muted">曲はまだ登録されていません。</p>'}
 </div>
