@@ -541,20 +541,26 @@ button {
   <details class="accordion">
     <summary>My library</summary>
     <section class="panel">
-      <div class="grid">
-        <label>表示<select id="view"><option value="all">すべて</option><option value="favorites">お気に入り</option></select></label>
-        <label>年代で絞り込み
-          <select id="filterDecade">
-            <option value="">すべての年代</option>
-            <option>1960年代</option><option>1970年代</option><option>1980年代</option>
-            <option>1990年代</option><option>2000年代</option><option>2010年代</option><option>2020年代</option>
-          </select>
-        </label>
-        <label>キーワード<input id="filterText" placeholder="曲名・歌手・アルバム"></label>
-      </div>
-      <div class="row" style="margin-bottom:10px">
-        <button id="libraryShuffleBtn" type="button">ライブラリをランダム再生</button>
-      </div>
+<div class="row" style="align-items:end; gap:8px;">
+  <label style="flex:1; min-width:0;">
+    キーワード
+    <input id="filterText" placeholder="曲名・歌手・アルバム">
+  </label>
+  <button id="viewToggleBtn" type="button"
+    aria-label="お気に入り表示の切り替え"
+    aria-pressed="false"
+    style="flex:0 0 44px; width:44px; min-width:44px; padding:0;">
+    ☆
+  </button>
+</div>
+<div class="row" style="margin-bottom:10px; gap:8px;">
+  <button id="librarySearchBtn" type="button" style="flex:1;">
+    検索
+  </button>
+  <button id="libraryShuffleBtn" type="button" style="flex:1;">
+    ランダム再生
+  </button>
+</div>
       <div id="songs"></div>
       <div class="row">
         <button id="exportBtn" type="button">バックアップを書き出す</button>
@@ -1057,16 +1063,18 @@ function advancePlaylistAfterEnd(message) {
 
 /* ライブラリ表示 */
 function render() {
-  const view = document.getElementById('view').value;
-  const selectedDecade = document.getElementById('filterDecade').value;
-  const query = document.getElementById('filterText').value.toLowerCase();
-
+  const view = document.getElementById('viewToggleBtn').getAttribute('aria-pressed') === 'true'
+    ? 'favorites'
+    : 'all';
+  const selectedDecade = document.getElementById('filterDecade')?.value || '';
+  const query = document.getElementById('librarySearchBtn').dataset.query || '';
+  
   const filtered = songs.filter(song =>
     (view !== 'favorites' || song.favorite) &&
     (!selectedDecade || decade(song.year) === selectedDecade) &&
     (!query || [song.title, song.artist, song.album].join(' ').toLowerCase().includes(query))
   );
-
+  
 const root = document.getElementById('songs');
 root.innerHTML = filtered.length ? filtered.map(song => `
 
@@ -1226,8 +1234,22 @@ case 'playlist': {
   }
 });
 
-['view', 'filterDecade', 'filterText'].forEach(id => {
-  document.getElementById(id).addEventListener('input', render);
+// キーワード入力時は検索せず、入力内容だけ保持する
+// 検索ボタンを押したときに絞り込みを実行する
+document.getElementById('librarySearchBtn').addEventListener('click', () => {
+  const searchBtn = document.getElementById('librarySearchBtn');
+  searchBtn.dataset.query = document.getElementById('filterText').value.trim().toLowerCase();
+  render();
+});
+
+// お気に入り表示の切り替え
+const viewToggleBtn = document.getElementById('viewToggleBtn');
+
+viewToggleBtn.addEventListener('click', () => {
+  const isFavorites = viewToggleBtn.getAttribute('aria-pressed') === 'true';
+  viewToggleBtn.setAttribute('aria-pressed', String(!isFavorites));
+  viewToggleBtn.textContent = isFavorites ? '☆' : '★';
+  render();
 });
 
 /* 表示中のライブラリ曲をランダム再生 */
