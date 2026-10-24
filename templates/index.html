@@ -1086,7 +1086,6 @@ function render() {
   );
 
 const root = document.getElementById('songs');
-const selectedSong = songs.find(song => String(song.id) === String(selectedSongId));
 root.innerHTML = filtered.length ? filtered.map(song => `
 
     <article class="song ${isSongSelected(song.id) ? 'selected' : ''}" data-songid="${esc(song.id)}">
