@@ -1354,7 +1354,7 @@ function renderPlaylists() {
 <div data-plsongs="${esc(playlist.id)}" hidden>
   ${playlistSongs.length ? playlistSongs.map((song, index) => `
     <div class="playlist-song-item">
-<div class="playlist-song-title ${String(selectedSongId) === String(song.id) ? 'selected' : ''}" data-songid="${esc(song.id)}">
+<div class="playlist-song-title ${isSongSelected(song.id) ? 'selected' : ''}" data-songid="${esc(song.id)}">
 ${isSongPlaying(song.id)
   ? '<span class="playing-badge">▶ 再生中</span> '
   : ''}
