@@ -1301,11 +1301,7 @@ document.getElementById('createPlaylist').addEventListener('click', () => {
   function updatePlayingBadge() {
   document.querySelectorAll('.playlist-song-title').forEach(element => {
     const songId = element.dataset.songid;
-    const isPlaying =
-      currentPlaylistSongs.length > 0 &&
-      currentPlaylistIndex >= 0 &&
-      String(currentPlaylistSongs[currentPlaylistIndex]?.id) === String(songId);
-
+    const isPlaying = isSongPlaying(songId);
     const oldBadge = element.querySelector('.playing-badge');
     if (oldBadge) oldBadge.remove();
 
