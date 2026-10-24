@@ -1089,7 +1089,7 @@ const root = document.getElementById('songs');
 const selectedSong = songs.find(song => String(song.id) === String(selectedSongId));
 root.innerHTML = filtered.length ? filtered.map(song => `
 
-    <article class="song ${String(selectedSongId) === String(song.id) ? 'selected' : ''}" data-songid="${esc(song.id)}">
+    <article class="song ${isSongSelected(song.id) ? 'selected' : ''}" data-songid="${esc(song.id)}">
 <h3>
 ${isSongPlaying(song.id)
   ? '<span class="playing-badge">▶ 再生中</span> '
