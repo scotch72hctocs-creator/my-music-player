@@ -576,7 +576,11 @@ button {
     <summary>background</summary>
     <section class="panel" id="backgroundSettings">
       <label>背景の種類
-        <select id="backgroundMode"><option value="solid">単色</option><option value="image">写真</option></select>
+        <select id="backgroundMode">
+  <option value="music">Music（初期背景）</option>
+  <option value="image">写真</option>
+  <option value="solid">単色</option>
+</select>
       </label>
       <div id="solidBackgroundSettings">
         <label>背景色<input type="color" id="backgroundColor" value="#090909"></label>
@@ -1569,13 +1573,25 @@ const solidSettings = document.getElementById('solidBackgroundSettings');
 const imageSettings = document.getElementById('imageBackgroundSettings');
 
 function applyBackground() {
-  const useImage = backgroundMode.value === 'image';
-  document.body.classList.toggle('photo-background', useImage);
-  solidSettings.hidden = useImage;
-  imageSettings.hidden = !useImage;
+  const mode = backgroundMode.value;
 
-  if (useImage) {
-    document.body.style.backgroundImage = document.body.dataset.backgroundImage || 'none';
+  const useImage = mode === 'image';
+  const useMusic = mode === 'music';
+
+  document.body.classList.toggle('photo-background', useImage || useMusic);
+  solidSettings.hidden = mode !== 'solid';
+  imageSettings.hidden = mode !== 'image';
+
+  if (useMusic) {
+    document.body.dataset.backgroundImage =
+      'url("/static/my_music_player_background_1920x1080.png")';
+    document.body.style.backgroundImage = document.body.dataset.backgroundImage;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.backgroundAttachment = 'fixed';
+  } else if (useImage) {
+    document.body.style.backgroundImage =
+      document.body.dataset.backgroundImage || 'none';
     document.body.style.backgroundSize = 'cover';
     document.body.style.backgroundPosition = 'center';
     document.body.style.backgroundAttachment = 'fixed';
@@ -1598,8 +1614,14 @@ function loadBackgroundSettings() {
   try {
     const mode = localStorage.getItem(BG_MODE_KEY);
     const color = localStorage.getItem(BG_COLOR_KEY);
-    if (mode === 'solid' || mode === 'image') backgroundMode.value = mode;
-    if (color && /^#[0-9a-fA-F]{6}$/.test(color)) backgroundColor.value = color;
+
+    if (mode === 'music' || mode === 'solid' || mode === 'image') {
+      backgroundMode.value = mode;
+    }
+
+    if (color && /^#[0-9a-fA-F]{6}$/.test(color)) {
+      backgroundColor.value = color;
+    }
   } catch {
     console.warn('背景設定を読み込めませんでした。');
   }
@@ -1681,11 +1703,18 @@ backgroundImage.addEventListener('change', async () => {
 
 async function restoreBackgroundImage() {
   try {
-    const savedImage = await loadBackgroundImage();
-    if (!savedImage) {
-      applyBackground();
-      return;
-    }
+const savedImage = await loadBackgroundImage();
+
+if (!savedImage) {
+  const savedMode = localStorage.getItem(BG_MODE_KEY);
+
+  if (!savedMode) {
+    backgroundMode.value = 'music';
+  }
+
+  applyBackground();
+  return;
+}
 
     const reader = new FileReader();
     reader.onload = () => {
