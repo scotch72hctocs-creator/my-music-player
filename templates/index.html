@@ -1364,7 +1364,7 @@ ${isSongPlaying(song.id)
 <div class="playlist-song-edit">
   <button data-plact="play" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">再生</button>
 
-  ${String(selectedSongId) === String(song.id) ? `
+${isSongSelected(song.id) ? `
     <div class="playlist-song-order">
       <button data-plact="up" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === 0 ? 'disabled' : ''}>↑</button>
       <button data-plact="down" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === playlistSongs.length - 1 ? 'disabled' : ''}>↓</button>
