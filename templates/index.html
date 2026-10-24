@@ -1086,7 +1086,6 @@ ${isSongPlaying(song.id)
   ${esc(song.title)}
 </h3>
       <p>${esc(song.artist)} ${song.album ? '／' + esc(song.album) : ''}</p>
-      <p class="muted">${esc(song.year || '発売年未登録')} ${song.year ? '・' + esc(decade(song.year)) : ''}</p>
       <div class="row">
         ${song.url
           ? `<button data-act="play" data-id="${esc(song.id)}">▶ 再生</button>`
