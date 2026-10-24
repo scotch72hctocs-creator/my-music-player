@@ -1104,7 +1104,7 @@ ${isSongPlaying(song.id)
           : `<button data-act="search" data-id="${esc(song.id)}">YouTubeで探す</button>`}
       </div>
 
-      ${String(selectedSongId) === String(song.id) ? `
+      ${isSongSelected(song.id) ? `
         <div class="row">
           <button data-act="fav" data-id="${esc(song.id)}">${song.favorite ? '★ お気に入り解除' : '☆ お気に入り'}</button>
           <button data-act="playlist" data-id="${esc(song.id)}">プレイリストへ</button>
