@@ -506,12 +506,6 @@ button {
               <option>1990年代</option><option>2000年代</option><option>2010年代</option><option>2020年代</option>
             </select>
           </label>
-          <label>ジャンル
-            <select id="region">
-              <option value="">邦楽・洋楽どちらも</option>
-              <option value="邦楽">邦楽</option><option value="洋楽">洋楽</option>
-            </select>
-          </label>
           <label>検索対象
             <select id="searchCategory">
               <option value="music" selected>音楽カテゴリ（おすすめ）</option>
@@ -534,9 +528,6 @@ button {
           <label>歌手名<input id="artist" placeholder="歌手・バンド名"></label>
           <label>アルバム名<input id="album" placeholder="アルバム名"></label>
           <label>発売年<input id="year" type="number" min="1900" max="2100" placeholder="例：1998"></label>
-          <label>分類
-            <select id="language"><option value="邦楽">邦楽</option><option value="洋楽">洋楽</option><option value="その他">その他</option></select>
-          </label>
           <label>YouTube URL
             <input id="url" type="url" placeholder="YouTubeのURLを貼り付け">
             <small id="urlMessage" class="muted"></small>
@@ -558,9 +549,6 @@ button {
             <option>1960年代</option><option>1970年代</option><option>1980年代</option>
             <option>1990年代</option><option>2000年代</option><option>2010年代</option><option>2020年代</option>
           </select>
-        </label>
-        <label>邦楽・洋楽
-          <select id="filterLanguage"><option value="">すべて</option><option>邦楽</option><option>洋楽</option><option>その他</option></select>
         </label>
         <label>キーワード<input id="filterText" placeholder="曲名・歌手・アルバム"></label>
       </div>
@@ -704,19 +692,17 @@ document.getElementById('searchForm').addEventListener('submit', async event => 
 
   const query = document.getElementById('query').value.trim();
   const selectedDecade = document.getElementById('decade').value;
-  const region = document.getElementById('region').value;
   const category = document.getElementById('searchCategory').value;
 
-  if (!query && !selectedDecade && !region) {
-    alert('曲名・歌手・年代・ジャンルのいずれかを指定してね。');
+  if (!query && !selectedDecade) {
+    alert('曲名・歌手・アルバム、または年代を指定してね。');
     return;
   }
 
   const searchQuery = [
     query,
     category === 'music' ? 'music' : '',
-    selectedDecade,
-    region
+    selectedDecade
   ].filter(Boolean).join(' ');
 
   const resultsBox = document.getElementById('searchResults');
@@ -788,7 +774,6 @@ document.getElementById('searchForm').addEventListener('submit', async event => 
           artist: video.author || '',
           album: '',
           year: '',
-          language: region || 'その他',
           url: video.videoUrl,
           favorite: false
         });
@@ -863,7 +848,6 @@ document.getElementById('addForm').addEventListener('submit', event => {
     artist: document.getElementById('artist').value.trim(),
     album: document.getElementById('album').value.trim(),
     year: document.getElementById('year').value,
-    language: document.getElementById('language').value,
     url: songUrl
   };
 
@@ -1075,13 +1059,11 @@ function advancePlaylistAfterEnd(message) {
 function render() {
   const view = document.getElementById('view').value;
   const selectedDecade = document.getElementById('filterDecade').value;
-  const language = document.getElementById('filterLanguage').value;
   const query = document.getElementById('filterText').value.toLowerCase();
 
   const filtered = songs.filter(song =>
     (view !== 'favorites' || song.favorite) &&
     (!selectedDecade || decade(song.year) === selectedDecade) &&
-    (!language || song.language === language) &&
     (!query || [song.title, song.artist, song.album].join(' ').toLowerCase().includes(query))
   );
 
@@ -1093,7 +1075,7 @@ root.innerHTML = filtered.length ? filtered.map(song => `
 ${isSongPlaying(song.id)
   ? '<span class="playing-badge">▶ 再生中</span> '
   : ''}
-  ${esc(song.title)} <span class="pill">${esc(song.language || '')}</span>
+  ${esc(song.title)}
 </h3>
       <p>${esc(song.artist)} ${song.album ? '／' + esc(song.album) : ''}</p>
       <p class="muted">${esc(song.year || '発売年未登録')} ${song.year ? '・' + esc(decade(song.year)) : ''}</p>
@@ -1147,7 +1129,6 @@ case 'play':
       document.getElementById('artist').value = song.artist || '';
       document.getElementById('album').value = song.album || '';
       document.getElementById('year').value = song.year || '';
-      document.getElementById('language').value = song.language || '邦楽';
       document.getElementById('url').value = song.url || '';
       urlMessage.textContent = '';
       const form = document.getElementById('addForm');
@@ -1245,7 +1226,7 @@ case 'playlist': {
   }
 });
 
-['view', 'filterDecade', 'filterLanguage', 'filterText'].forEach(id => {
+['view', 'filterDecade', 'filterText'].forEach(id => {
   document.getElementById(id).addEventListener('input', render);
 });
 
