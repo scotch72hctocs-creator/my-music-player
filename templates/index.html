@@ -1318,6 +1318,12 @@ document.getElementById('createPlaylist').addEventListener('click', () => {
   });
 }
 
+function getPlaylistSongs(playlist) {
+  return playlist.songIds
+    .map(id => songs.find(song => song.id === id))
+    .filter(Boolean);
+}
+  
 function renderPlaylists() {
   const root = document.getElementById('playlists');
   const openPlaylists = new Set(
@@ -1328,9 +1334,7 @@ function renderPlaylists() {
 
 
   root.innerHTML = playlists.length ? playlists.map(playlist => {
-    const playlistSongs = playlist.songIds
-      .map(id => songs.find(song => song.id === id))
-      .filter(Boolean);
+const playlistSongs = getPlaylistSongs(playlist);
 
     return `
       <div class="playlist-item">
@@ -1476,9 +1480,7 @@ if (list) {
     return;
   }
 
-  const playlistSongs = playlist.songIds
-    .map(id => songs.find(song => song.id === id))
-    .filter(Boolean);
+const playlistSongs = getPlaylistSongs(playlist);
 
   if (action === 'play') {
     const index = playlistSongs.findIndex(
