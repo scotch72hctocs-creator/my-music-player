@@ -731,7 +731,7 @@ document.getElementById('searchForm').addEventListener('submit', async event => 
       resultsBox.innerHTML = '<p>検索結果が見つかりませんでした。</p>';
       return;
     }
-　const registeredVideoIds = new Set(
+    const registeredVideoIds = new Set(
   songs
     .map(song => getYouTubeVideoId(song.url || ''))
     .filter(Boolean)
@@ -1331,7 +1331,6 @@ function renderPlaylists() {
       .filter(element => !element.hidden)
       .map(element => element.dataset.plsongs)
   );
-
 
   root.innerHTML = playlists.length ? playlists.map(playlist => {
 const playlistSongs = getPlaylistSongs(playlist);
