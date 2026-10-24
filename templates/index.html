@@ -1101,10 +1101,7 @@ root.innerHTML = filtered.length ? filtered.map(song => `
 
 document.getElementById('songs').addEventListener('click', event => {
   const button = event.target.closest('button');
-  if (!button) return;
-  const song = songs.find(item => item.id === button.dataset.id);
-  if (!song) return;
-  
+
   if (!button) {
     const article = event.target.closest('.song');
     if (!article) return;
@@ -1113,6 +1110,9 @@ document.getElementById('songs').addEventListener('click', event => {
     render();
     return;
   }
+
+  const song = songs.find(item => String(item.id) === String(button.dataset.id));
+  if (!song) return;
 
   switch (button.dataset.act) {
 case 'play':
