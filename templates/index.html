@@ -625,6 +625,9 @@ let songs = load(SONGS_KEY, []);
 let playlists = load(PLAYLISTS_KEY, []);
 let editingSongId = null;
 let selectedSongId = null;
+  function selectSong(songId) {
+  selectedSongId = songId;
+}
 let currentPlaylistSongs = [];
 let currentPlaylistIndex = -1;
 let isShuffleMode = false;
