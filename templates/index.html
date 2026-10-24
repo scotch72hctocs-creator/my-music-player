@@ -1083,11 +1083,16 @@ root.innerHTML = filtered.length ? filtered.map(song => `
         ${song.url
           ? `<button data-act="play" data-id="${esc(song.id)}">▶ 再生</button>`
           : `<button data-act="search" data-id="${esc(song.id)}">YouTubeで探す</button>`}
-        <button data-act="fav" data-id="${esc(song.id)}">${song.favorite ? '★ お気に入り解除' : '☆ お気に入り'}</button>
-        <button data-act="playlist" data-id="${esc(song.id)}">プレイリストへ</button>
-        <button data-act="edit" data-id="${esc(song.id)}">編集</button>
-        <button data-act="delete" data-id="${esc(song.id)}">削除</button>
       </div>
+
+      ${String(selectedSongId) === String(song.id) ? `
+        <div class="row">
+          <button data-act="fav" data-id="${esc(song.id)}">${song.favorite ? '★ お気に入り解除' : '☆ お気に入り'}</button>
+          <button data-act="playlist" data-id="${esc(song.id)}">プレイリストへ</button>
+          <button data-act="edit" data-id="${esc(song.id)}">編集</button>
+          <button data-act="delete" data-id="${esc(song.id)}">削除</button>
+        </div>
+      ` : ''}
     </article>
   `).join('') : '<div class="empty">まだ曲がないか、条件に合う曲がありません。</div>';
 
