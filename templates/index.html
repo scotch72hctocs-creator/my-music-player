@@ -628,6 +628,13 @@ let selectedSongId = null;
   function selectSong(songId) {
   selectedSongId = songId;
 }
+function isSongPlaying(songId) {
+  return (
+    currentPlaylistSongs.length > 0 &&
+    currentPlaylistIndex >= 0 &&
+    String(currentPlaylistSongs[currentPlaylistIndex]?.id) === String(songId)
+  );
+}
 let currentPlaylistSongs = [];
 let currentPlaylistIndex = -1;
 let isShuffleMode = false;
@@ -1350,11 +1357,9 @@ function renderPlaylists() {
   ${playlistSongs.length ? playlistSongs.map((song, index) => `
     <div class="playlist-song-item">
 <div class="playlist-song-title ${String(selectedSongId) === String(song.id) ? 'selected' : ''}" data-songid="${esc(song.id)}">
-  ${currentPlaylistSongs.length > 0 &&
-    currentPlaylistIndex >= 0 &&
-    String(currentPlaylistSongs[currentPlaylistIndex]?.id) === String(song.id)
-      ? '<span class="playing-badge">▶ 再生中</span> '
-      : ''}
+${isSongPlaying(song.id)
+  ? '<span class="playing-badge">▶ 再生中</span> '
+  : ''}
   ${index + 1}. ${esc(song.title)} / ${esc(song.artist || '')}
 </div>
 
