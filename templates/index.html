@@ -379,20 +379,6 @@ button {
   border-bottom: 1px solid #444;
   padding: 8px 0;
 }
-
-.song.selected {
-  border: 1px solid #75D6A5;
-  border-radius: 8px;
-  background: rgba(117, 214, 165, 0.08);
-  padding: 8px;
-}
-
-.playlist-song-title.selected {
-  border: 1px solid #75D6A5;
-  border-radius: 8px;
-  background: rgba(117, 214, 165, 0.08);
-  padding: 8px;
-}
   
   .playing-badge {
   display: inline-block;
@@ -506,12 +492,6 @@ button {
               <option>1990年代</option><option>2000年代</option><option>2010年代</option><option>2020年代</option>
             </select>
           </label>
-          <label>ジャンル
-            <select id="region">
-              <option value="">邦楽・洋楽どちらも</option>
-              <option value="邦楽">邦楽</option><option value="洋楽">洋楽</option>
-            </select>
-          </label>
           <label>検索対象
             <select id="searchCategory">
               <option value="music" selected>音楽カテゴリ（おすすめ）</option>
@@ -534,9 +514,6 @@ button {
           <label>歌手名<input id="artist" placeholder="歌手・バンド名"></label>
           <label>アルバム名<input id="album" placeholder="アルバム名"></label>
           <label>発売年<input id="year" type="number" min="1900" max="2100" placeholder="例：1998"></label>
-          <label>分類
-            <select id="language"><option value="邦楽">邦楽</option><option value="洋楽">洋楽</option><option value="その他">その他</option></select>
-          </label>
           <label>YouTube URL
             <input id="url" type="url" placeholder="YouTubeのURLを貼り付け">
             <small id="urlMessage" class="muted"></small>
@@ -558,9 +535,6 @@ button {
             <option>1960年代</option><option>1970年代</option><option>1980年代</option>
             <option>1990年代</option><option>2000年代</option><option>2010年代</option><option>2020年代</option>
           </select>
-        </label>
-        <label>邦楽・洋楽
-          <select id="filterLanguage"><option value="">すべて</option><option>邦楽</option><option>洋楽</option><option>その他</option></select>
         </label>
         <label>キーワード<input id="filterText" placeholder="曲名・歌手・アルバム"></label>
       </div>
@@ -624,21 +598,6 @@ function load(key, fallback) {
 let songs = load(SONGS_KEY, []);
 let playlists = load(PLAYLISTS_KEY, []);
 let editingSongId = null;
-let selectedSongId = null;
-function selectSong(songId) {
-  selectedSongId = songId;
-}
-
-function isSongSelected(songId) {
-  return String(selectedSongId) === String(songId);
-}
-function isSongPlaying(songId) {
-  return (
-    currentPlaylistSongs.length > 0 &&
-    currentPlaylistIndex >= 0 &&
-    String(currentPlaylistSongs[currentPlaylistIndex]?.id) === String(songId)
-  );
-}
 let currentPlaylistSongs = [];
 let currentPlaylistIndex = -1;
 let isShuffleMode = false;
@@ -704,19 +663,17 @@ document.getElementById('searchForm').addEventListener('submit', async event => 
 
   const query = document.getElementById('query').value.trim();
   const selectedDecade = document.getElementById('decade').value;
-  const region = document.getElementById('region').value;
   const category = document.getElementById('searchCategory').value;
 
-  if (!query && !selectedDecade && !region) {
-    alert('曲名・歌手・年代・ジャンルのいずれかを指定してね。');
+  if (!query && !selectedDecade) {
+    alert('曲名・歌手・アルバム、または年代を指定してね。');
     return;
   }
 
   const searchQuery = [
     query,
     category === 'music' ? 'music' : '',
-    selectedDecade,
-    region
+    selectedDecade
   ].filter(Boolean).join(' ');
 
   const resultsBox = document.getElementById('searchResults');
@@ -731,12 +688,7 @@ document.getElementById('searchForm').addEventListener('submit', async event => 
       resultsBox.innerHTML = '<p>検索結果が見つかりませんでした。</p>';
       return;
     }
-    const registeredVideoIds = new Set(
-  songs
-    .map(song => getYouTubeVideoId(song.url || ''))
-    .filter(Boolean)
-);
-    
+
     resultsBox.innerHTML = data.results.map((video, index) => `
       <div class="search-result-item" style="display:flex;gap:12px;align-items:center;margin:12px 0;padding:10px;border:1px solid #444;border-radius:8px;">
         <img src="${esc(video.thumbnail)}" alt="" loading="lazy" style="width:120px;max-width:35%;border-radius:6px;">
@@ -745,11 +697,7 @@ document.getElementById('searchForm').addEventListener('submit', async event => 
           <div>${esc(video.author)}</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
             <button type="button" data-preview-index="${index}">▶ 再生</button>
-<button
-  type="button"
-  data-search-index="${index}"
-  ${registeredVideoIds.has(getYouTubeVideoId(video.videoUrl || '')) ? 'disabled' : ''}
->${registeredVideoIds.has(getYouTubeVideoId(video.videoUrl || '')) ? '追加済み' : 'ライブラリへ'}</button>
+            <button type="button" data-search-index="${index}">ライブラリへ</button>
           </div>
         </div>
       </div>
@@ -788,7 +736,6 @@ document.getElementById('searchForm').addEventListener('submit', async event => 
           artist: video.author || '',
           album: '',
           year: '',
-          language: region || 'その他',
           url: video.videoUrl,
           favorite: false
         });
@@ -863,7 +810,6 @@ document.getElementById('addForm').addEventListener('submit', event => {
     artist: document.getElementById('artist').value.trim(),
     album: document.getElementById('album').value.trim(),
     year: document.getElementById('year').value,
-    language: document.getElementById('language').value,
     url: songUrl
   };
 
@@ -1075,42 +1021,29 @@ function advancePlaylistAfterEnd(message) {
 function render() {
   const view = document.getElementById('view').value;
   const selectedDecade = document.getElementById('filterDecade').value;
-  const language = document.getElementById('filterLanguage').value;
   const query = document.getElementById('filterText').value.toLowerCase();
 
   const filtered = songs.filter(song =>
     (view !== 'favorites' || song.favorite) &&
     (!selectedDecade || decade(song.year) === selectedDecade) &&
-    (!language || song.language === language) &&
     (!query || [song.title, song.artist, song.album].join(' ').toLowerCase().includes(query))
   );
 
-const root = document.getElementById('songs');
-root.innerHTML = filtered.length ? filtered.map(song => `
-
-    <article class="song ${isSongSelected(song.id) ? 'selected' : ''}" data-songid="${esc(song.id)}">
-<h3>
-${isSongPlaying(song.id)
-  ? '<span class="playing-badge">▶ 再生中</span> '
-  : ''}
-  ${esc(song.title)} <span class="pill">${esc(song.language || '')}</span>
-</h3>
+  const root = document.getElementById('songs');
+  root.innerHTML = filtered.length ? filtered.map(song => `
+    <article class="song" data-songid="${esc(song.id)}">
+      <h3>${esc(song.title)}</h3>
       <p>${esc(song.artist)} ${song.album ? '／' + esc(song.album) : ''}</p>
       <p class="muted">${esc(song.year || '発売年未登録')} ${song.year ? '・' + esc(decade(song.year)) : ''}</p>
       <div class="row">
         ${song.url
           ? `<button data-act="play" data-id="${esc(song.id)}">▶ 再生</button>`
           : `<button data-act="search" data-id="${esc(song.id)}">YouTubeで探す</button>`}
+        <button data-act="fav" data-id="${esc(song.id)}">${song.favorite ? '★ お気に入り解除' : '☆ お気に入り'}</button>
+        <button data-act="playlist" data-id="${esc(song.id)}">プレイリストへ</button>
+        <button data-act="edit" data-id="${esc(song.id)}">編集</button>
+        <button data-act="delete" data-id="${esc(song.id)}">削除</button>
       </div>
-
-      ${isSongSelected(song.id) ? `
-        <div class="row">
-          <button data-act="fav" data-id="${esc(song.id)}">${song.favorite ? '★ お気に入り解除' : '☆ お気に入り'}</button>
-          <button data-act="playlist" data-id="${esc(song.id)}">プレイリストへ</button>
-          <button data-act="edit" data-id="${esc(song.id)}">編集</button>
-          <button data-act="delete" data-id="${esc(song.id)}">削除</button>
-        </div>
-      ` : ''}
     </article>
   `).join('') : '<div class="empty">まだ曲がないか、条件に合う曲がありません。</div>';
 
@@ -1119,27 +1052,17 @@ ${isSongPlaying(song.id)
 
 document.getElementById('songs').addEventListener('click', event => {
   const button = event.target.closest('button');
-
-  if (!button) {
-    const article = event.target.closest('.song');
-    if (!article) return;
-
-    selectSong(article.dataset.songid);
-    render();
-    return;
-  }
-
-  const song = songs.find(item => String(item.id) === String(button.dataset.id));
+  if (!button) return;
+  const song = songs.find(item => item.id === button.dataset.id);
   if (!song) return;
 
   switch (button.dataset.act) {
-case 'play':
-  currentPlaylistSongs = [song];
-  currentPlaylistIndex = 0;
-  isShuffleMode = false;
-  playInApp(song);
-  render();
-  break;
+    case 'play':
+      currentPlaylistSongs = [];
+      currentPlaylistIndex = -1;
+      isShuffleMode = false;
+      playInApp(song);
+      break;
 
     case 'edit': {
       editingSongId = song.id;
@@ -1147,7 +1070,6 @@ case 'play':
       document.getElementById('artist').value = song.artist || '';
       document.getElementById('album').value = song.album || '';
       document.getElementById('year').value = song.year || '';
-      document.getElementById('language').value = song.language || '邦楽';
       document.getElementById('url').value = song.url || '';
       urlMessage.textContent = '';
       const form = document.getElementById('addForm');
@@ -1288,7 +1210,6 @@ document.getElementById('libraryShuffleBtn').addEventListener('click', () => {
   currentPlaylistIndex = 0;
   isShuffleMode = true;
   playInApp(currentPlaylistSongs[currentPlaylistIndex]);
-  render();
 });
 
 /* プレイリスト作成 */
@@ -1304,7 +1225,11 @@ document.getElementById('createPlaylist').addEventListener('click', () => {
   function updatePlayingBadge() {
   document.querySelectorAll('.playlist-song-title').forEach(element => {
     const songId = element.dataset.songid;
-    const isPlaying = isSongPlaying(songId);
+    const isPlaying =
+      currentPlaylistSongs.length > 0 &&
+      currentPlaylistIndex >= 0 &&
+      String(currentPlaylistSongs[currentPlaylistIndex]?.id) === String(songId);
+
     const oldBadge = element.querySelector('.playing-badge');
     if (oldBadge) oldBadge.remove();
 
@@ -1318,12 +1243,6 @@ document.getElementById('createPlaylist').addEventListener('click', () => {
   });
 }
 
-function getPlaylistSongs(playlist) {
-  return playlist.songIds
-    .map(id => songs.find(song => song.id === id))
-    .filter(Boolean);
-}
-  
 function renderPlaylists() {
   const root = document.getElementById('playlists');
   const openPlaylists = new Set(
@@ -1332,8 +1251,11 @@ function renderPlaylists() {
       .map(element => element.dataset.plsongs)
   );
 
+
   root.innerHTML = playlists.length ? playlists.map(playlist => {
-const playlistSongs = getPlaylistSongs(playlist);
+    const playlistSongs = playlist.songIds
+      .map(id => songs.find(song => song.id === id))
+      .filter(Boolean);
 
     return `
       <div class="playlist-item">
@@ -1356,24 +1278,22 @@ const playlistSongs = getPlaylistSongs(playlist);
 <div data-plsongs="${esc(playlist.id)}" hidden>
   ${playlistSongs.length ? playlistSongs.map((song, index) => `
     <div class="playlist-song-item">
-<div class="playlist-song-title ${isSongSelected(song.id) ? 'selected' : ''}" data-songid="${esc(song.id)}">
-${isSongPlaying(song.id)
-  ? '<span class="playing-badge">▶ 再生中</span> '
-  : ''}
+<div class="playlist-song-title" data-songid="${esc(song.id)}">
+  ${currentPlaylistSongs.length > 0 &&
+    currentPlaylistIndex >= 0 &&
+    String(currentPlaylistSongs[currentPlaylistIndex]?.id) === String(song.id)
+      ? '<span class="playing-badge">▶ 再生中</span> '
+      : ''}
   ${index + 1}. ${esc(song.title)} / ${esc(song.artist || '')}
 </div>
-
-<div class="playlist-song-edit">
-  <button data-plact="play" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">再生</button>
-
-${isSongSelected(song.id) ? `
-    <div class="playlist-song-order">
-      <button data-plact="up" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === 0 ? 'disabled' : ''}>↑</button>
-      <button data-plact="down" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === playlistSongs.length - 1 ? 'disabled' : ''}>↓</button>
-    </div>
-    <button class="playlist-song-remove" data-plact="remove" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">曲を削除</button>
-  ` : ''}
-</div>
+      <div class="playlist-song-edit">
+        <button data-plact="play" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">再生</button>
+        <div class="playlist-song-order">
+          <button data-plact="up" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === 0 ? 'disabled' : ''}>↑</button>
+          <button data-plact="down" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}" ${index === playlistSongs.length - 1 ? 'disabled' : ''}>↓</button>
+        </div>
+        <button class="playlist-song-remove" data-plact="remove" data-id="${esc(playlist.id)}" data-songid="${esc(song.id)}">曲を削除</button>
+      </div>
     </div>
   `).join('') : '<p class="muted">曲はまだ登録されていません。</p>'}
 </div>
@@ -1389,15 +1309,7 @@ ${isSongSelected(song.id) ? `
 
 document.getElementById('playlists').addEventListener('click', event => {
   const button = event.target.closest('button');
-
-  if (!button) {
-    const title = event.target.closest('.playlist-song-title');
-    if (!title) return;
-
-    selectSong(title.dataset.songid);
-    renderPlaylists();
-    return;
-  }
+  if (!button) return;
 
   const playlist = playlists.find(item => item.id === button.dataset.id);
   if (!playlist) return;
@@ -1479,7 +1391,9 @@ if (list) {
     return;
   }
 
-const playlistSongs = getPlaylistSongs(playlist);
+  const playlistSongs = playlist.songIds
+    .map(id => songs.find(song => song.id === id))
+    .filter(Boolean);
 
   if (action === 'play') {
     const index = playlistSongs.findIndex(
