@@ -1370,7 +1370,15 @@ function renderPlaylists() {
 
 document.getElementById('playlists').addEventListener('click', event => {
   const button = event.target.closest('button');
-  if (!button) return;
+
+  if (!button) {
+    const title = event.target.closest('.playlist-song-title');
+    if (!title) return;
+
+    selectedSongId = title.dataset.songid;
+    renderPlaylists();
+    return;
+  }
 
   const playlist = playlists.find(item => item.id === button.dataset.id);
   if (!playlist) return;
