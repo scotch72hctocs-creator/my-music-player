@@ -625,8 +625,12 @@ let songs = load(SONGS_KEY, []);
 let playlists = load(PLAYLISTS_KEY, []);
 let editingSongId = null;
 let selectedSongId = null;
-  function selectSong(songId) {
+function selectSong(songId) {
   selectedSongId = songId;
+}
+
+function isSongSelected(songId) {
+  return String(selectedSongId) === String(songId);
 }
 function isSongPlaying(songId) {
   return (
