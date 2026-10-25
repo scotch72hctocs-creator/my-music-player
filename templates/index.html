@@ -1007,7 +1007,8 @@ async function playInApp(song) {
 );
   const openPlaylistId = openPlaylist?.dataset.plsongs;
 
-  updatePlayingBadge();
+render();
+updatePlayingBadge();
 
 if (openPlaylistId) {
   const playlistToOpen = document.querySelector(
@@ -1092,15 +1093,41 @@ if (openPlaylistId) {
   }
 }
 
-  function playAdjacentSong(direction) {
-    document.getElementById('playerPrevBtn').addEventListener('click', () => {
+function playAdjacentSong(direction) {
+  if (!currentPlaylistSongs.length || currentPlaylistIndex < 0) {
+    const message = document.getElementById('playerMessage');
+    if (message) {
+      message.textContent = '先にライブラリかプレイリストから曲を再生してね。';
+    }
+    return;
+  }
+  
+  const length = currentPlaylistSongs.length;
+  currentPlaylistIndex =
+    (currentPlaylistIndex + direction + length) % length;
+
+  const song = currentPlaylistSongs[currentPlaylistIndex];
+
+  if (!song || !song.url) {
+    const message = document.getElementById('playerMessage');
+    if (message) {
+      message.textContent = 'この曲にはYouTubeのURLが登録されていません。';
+    }
+    return;
+  }
+
+  playInApp(song);
+}
+  
+document.getElementById('playerPrevBtn').addEventListener('click', () => {
   playAdjacentSong(-1);
 });
 
 document.getElementById('playerNextBtn').addEventListener('click', () => {
   playAdjacentSong(1);
 });
-    document.getElementById('playerShuffleBtn').addEventListener('click', () => {
+
+document.getElementById('playerShuffleBtn').addEventListener('click', () => {
   if (!currentPlaylistSongs.length || currentPlaylistIndex < 0) {
     const message = document.getElementById('playerMessage');
     if (message) {
@@ -1132,31 +1159,6 @@ document.getElementById('playerNextBtn').addEventListener('click', () => {
 
   playInApp(currentSong);
 });
-    
-  if (!currentPlaylistSongs.length || currentPlaylistIndex < 0) {
-    const message = document.getElementById('playerMessage');
-    if (message) {
-      message.textContent = '先にライブラリかプレイリストから曲を再生してね。';
-    }
-    return;
-  }
-
-  const length = currentPlaylistSongs.length;
-  currentPlaylistIndex =
-    (currentPlaylistIndex + direction + length) % length;
-
-  const song = currentPlaylistSongs[currentPlaylistIndex];
-
-  if (!song || !song.url) {
-    const message = document.getElementById('playerMessage');
-    if (message) {
-      message.textContent = 'この曲にはYouTubeのURLが登録されていません。';
-    }
-    return;
-  }
-
-  playInApp(song);
-}
   
 function advancePlaylistAfterEnd(message) {
   if (
