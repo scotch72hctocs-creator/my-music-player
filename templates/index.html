@@ -522,7 +522,7 @@ details.accordion .panel label {
       <div id="youtubePlayer"></div>
       <div id="playerInfo" class="muted"></div>
       <div id="playlistPosition" class="muted"></div>
-      <div id="playerControls" class="player-controls">
+      <div id="playerControls" class="player-controls" hidden>
       <button type="button" id="playerPrevBtn">⏮ 前の曲</button>
       <button type="button" id="playerNextBtn">次の曲 ⏭</button>
       <button type="button" id="playerShuffleBtn">🔀 ランダム再生</button>
@@ -980,6 +980,8 @@ async function playInApp(song) {
   const playerAccordion = document.getElementById('playerPanel').closest('details.accordion');
 
   playerAccordion.open = true;
+  const playerControls = document.getElementById('playerControls');
+if (playerControls) playerControls.hidden = false;
 
   position.textContent = currentPlaylistSongs.length > 0 && currentPlaylistIndex >= 0
     ? `プレイリスト再生：${currentPlaylistIndex + 1} / ${currentPlaylistSongs.length} 曲目`
