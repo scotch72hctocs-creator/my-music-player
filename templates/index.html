@@ -528,7 +528,19 @@ details.accordion .panel label {
             </select>
           </label>
         </div>
-        <div class="row" style="margin-top:10px"><button type="submit">YouTubeで検索</button></div>
+
+        <div style="margin-top:12px;">
+          <label>検索方法</label>
+          <div class="row" id="searchOrderButtons" style="gap:8px;">
+            <button type="button" data-order="relevance" aria-pressed="true" style="flex:1;">おすすめ順</button>
+            <button type="button" data-order="viewCount" aria-pressed="false" style="flex:1;">再生回数順</button>
+            <button type="button" data-order="date" aria-pressed="false" style="flex:1;">新着順</button>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <button type="submit">YouTubeで検索</button>
+        </div>
       </form>
       <div id="searchResults" aria-live="polite"></div>
     </section>
@@ -707,6 +719,22 @@ document.querySelectorAll('details.accordion').forEach(item => {
   });
 });
 
+/* 検索方法の選択 */
+let selectedSearchOrder = 'relevance';
+
+document.querySelectorAll('#searchOrderButtons button[data-order]').forEach(button => {
+  button.addEventListener('click', () => {
+    selectedSearchOrder = button.dataset.order;
+
+    document.querySelectorAll('#searchOrderButtons button[data-order]').forEach(item => {
+      item.setAttribute(
+        'aria-pressed',
+        String(item.dataset.order === selectedSearchOrder)
+      );
+    });
+  });
+});
+  
 /* YouTube検索 */
 document.getElementById('searchForm').addEventListener('submit', async event => {
   event.preventDefault();
@@ -730,7 +758,10 @@ document.getElementById('searchForm').addEventListener('submit', async event => 
   resultsBox.innerHTML = '<p>検索中...</p>';
 
   try {
-    const response = await fetch('/api/search?q=' + encodeURIComponent(searchQuery));
+const response = await fetch(
+  '/api/search?q=' + encodeURIComponent(searchQuery) +
+  '&order=' + encodeURIComponent(selectedSearchOrder)
+);
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || '検索に失敗しました。');
 
