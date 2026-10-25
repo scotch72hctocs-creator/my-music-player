@@ -529,7 +529,7 @@ details.accordion .panel label {
       <div id="playerControls" class="player-controls" hidden>
       <button type="button" id="playerPrevBtn">◀ 前の曲</button>
       <button type="button" id="playerNextBtn">次の曲 ▶</button>
-      <button type="button" id="playerShuffleBtn">∽ ランダム再生</button>
+      <button type="button" id="playerShuffleBtn">ランダム再生</button>
 </div>
     </section>
   </details>
@@ -1503,8 +1503,8 @@ const playlistSongs = getPlaylistSongs(playlist);
   ${esc(playlist.name)}（${playlistSongs.length}曲）
 </button>
 <div class="row">
-          <button data-plact="prev" data-id="${esc(playlist.id)}">前の曲</button>
-          <button data-plact="next" data-id="${esc(playlist.id)}">次の曲</button>
+          <button data-plact="prev" data-id="${esc(playlist.id)}">◀　前の曲</button>
+          <button data-plact="next" data-id="${esc(playlist.id)}">次の曲　▶</button>
           <button data-plact="shuffle" data-id="${esc(playlist.id)}">シャッフル再生</button>
           <button data-plact="delete" data-id="${esc(playlist.id)}">リスト削除</button>
         </div>
