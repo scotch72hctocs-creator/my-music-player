@@ -490,6 +490,25 @@ details.accordion .panel label {
   align-items: flex-start;
   gap: 4px;
 }
+
+  .player-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.player-controls button {
+  flex: 1 1 110px;
+  max-width: 100%;
+  padding: 8px 12px;
+}
+
+#playerShuffleBtn {
+  flex-basis: 100%;
+}
+  
 </style>
 </head>
 <body>
@@ -503,6 +522,11 @@ details.accordion .panel label {
       <div id="youtubePlayer"></div>
       <div id="playerInfo" class="muted"></div>
       <div id="playlistPosition" class="muted"></div>
+      <div id="playerControls" class="player-controls">
+      <button type="button" id="playerPrevBtn">⏮ 前の曲</button>
+      <button type="button" id="playerNextBtn">次の曲 ⏭</button>
+      <button type="button" id="playerShuffleBtn">🔀 ランダム再生</button>
+</div>
     </section>
   </details>
 
@@ -663,6 +687,8 @@ function isSongPlaying(songId) {
 let currentPlaylistSongs = [];
 let currentPlaylistIndex = -1;
 let isShuffleMode = false;
+let currentPlaybackSource = 'library';
+let shuffleHistory = [];
 let ytPlayer = null;
 let ytApiPromise = null;
 let wasPlayingBeforeFullscreen = false;
@@ -1066,6 +1092,72 @@ if (openPlaylistId) {
   }
 }
 
+  function playAdjacentSong(direction) {
+    document.getElementById('playerPrevBtn').addEventListener('click', () => {
+  playAdjacentSong(-1);
+});
+
+document.getElementById('playerNextBtn').addEventListener('click', () => {
+  playAdjacentSong(1);
+});
+    document.getElementById('playerShuffleBtn').addEventListener('click', () => {
+  if (!currentPlaylistSongs.length || currentPlaylistIndex < 0) {
+    const message = document.getElementById('playerMessage');
+    if (message) {
+      message.textContent = '先にライブラリかプレイリストから曲を再生してね。';
+    }
+    return;
+  }
+
+  const currentSong = currentPlaylistSongs[currentPlaylistIndex];
+  const remainingSongs = currentPlaylistSongs.filter(
+    (_, index) => index !== currentPlaylistIndex
+  );
+
+  for (let i = remainingSongs.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [remainingSongs[i], remainingSongs[j]] =
+      [remainingSongs[j], remainingSongs[i]];
+  }
+
+  currentPlaylistSongs = [currentSong, ...remainingSongs];
+  currentPlaylistIndex = 0;
+  isShuffleMode = true;
+  shuffleHistory = [];
+
+  const message = document.getElementById('playerMessage');
+  if (message) {
+    message.textContent = 'ランダム再生モードにしました。';
+  }
+
+  playInApp(currentSong);
+});
+    
+  if (!currentPlaylistSongs.length || currentPlaylistIndex < 0) {
+    const message = document.getElementById('playerMessage');
+    if (message) {
+      message.textContent = '先にライブラリかプレイリストから曲を再生してね。';
+    }
+    return;
+  }
+
+  const length = currentPlaylistSongs.length;
+  currentPlaylistIndex =
+    (currentPlaylistIndex + direction + length) % length;
+
+  const song = currentPlaylistSongs[currentPlaylistIndex];
+
+  if (!song || !song.url) {
+    const message = document.getElementById('playerMessage');
+    if (message) {
+      message.textContent = 'この曲にはYouTubeのURLが登録されていません。';
+    }
+    return;
+  }
+
+  playInApp(song);
+}
+  
 function advancePlaylistAfterEnd(message) {
   if (
     !currentPlaylistSongs.length ||
@@ -1168,13 +1260,18 @@ document.getElementById('songs').addEventListener('click', event => {
   if (!song) return;
 
   switch (button.dataset.act) {
-case 'play':
-  currentPlaylistSongs = [song];
-  currentPlaylistIndex = 0;
+case 'play': {
+  currentPlaybackSource = 'library';
+  currentPlaylistSongs = songs.filter(item => item.url);
+  currentPlaylistIndex = currentPlaylistSongs.findIndex(
+    item => String(item.id) === String(song.id)
+  );
   isShuffleMode = false;
+  shuffleHistory = [];
   playInApp(song);
   render();
   break;
+}
 
     case 'edit': {
       editingSongId = song.id;
@@ -1311,6 +1408,8 @@ document.getElementById('libraryShuffleBtn').addEventListener('click', () => {
   }
 
   currentPlaylistSongs = [...librarySongs];
+  currentPlaybackSource = 'library';
+  shuffleHistory = [];
 
   for (let i = currentPlaylistSongs.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -1541,6 +1640,8 @@ const playlistSongs = getPlaylistSongs(playlist);
 
     currentPlaylistSongs = playlistSongs;
     currentPlaylistIndex = index;
+    currentPlaybackSource = 'playlist';
+    shuffleHistory = [];
     isShuffleMode = false;
     playInApp(currentPlaylistSongs[currentPlaylistIndex]);
     return;
