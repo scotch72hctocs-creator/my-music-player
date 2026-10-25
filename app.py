@@ -16,8 +16,9 @@ def index():
 def search():
     query = request.args.get("q", "").strip()
     order = request.args.get("order", "relevance")
-if order not in ("relevance", "viewCount", "date"):
-    order = "relevance"
+    if order not in ("relevance", "viewCount", "date"):
+        order = "relevance"
+
     if not query:
         return jsonify({"error": "検索キーワードを入力してください。"}), 400
 
